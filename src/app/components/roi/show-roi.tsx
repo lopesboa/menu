@@ -1,10 +1,13 @@
 import { Icon } from "@iconify-icon/react"
 import { Dialog } from "../ui/dialog"
 
-export function ShowROI({ onCloseDemo, onStartNow }) {
-	const handleOnCloseDemoROI = () => {
-		onCloseDemo()
-	}
+export function ShowROI({
+	onCloseDemo,
+	onStartNow,
+}: {
+	onStartNow: () => void
+	onCloseDemo: () => void
+}) {
 	return (
 		<Dialog id="roi">
 			<div
