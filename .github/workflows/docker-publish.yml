@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'develop'
 
 permissions:
   contents: read
@@ -29,6 +30,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set image tag
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "TAG=prod" >> $GITHUB_ENV
+          else
+            echo "TAG=staging" >> $GITHUB_ENV
+          fi
       - name: Build and push image
         uses: docker/build-push-action@v6
         with:
@@ -37,6 +45,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/lopesboa/menubao-marketing:prod
+            ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
 
