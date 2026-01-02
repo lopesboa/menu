@@ -43,7 +43,7 @@ export default defineConfig(({ mode }) => {
 				output: {
 					manualChunks: (id) => {
 						if (id.includes("node_modules")) {
-							if (["react", "react-dom"].includes(id)) {
+							if (id.includes("react-dom") || id.includes("react")) {
 								return "react-vendor"
 							}
 
