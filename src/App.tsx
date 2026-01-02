@@ -173,7 +173,7 @@ function App() {
 					<h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight">
 						Pronto para otimizar
 						<br />
-						sua operação?
+						suas operações?
 					</h2>
 					<p className="text-lg text-slate-400">
 						Junte-se a mais de 500 restaurantes que escalaram com o Menu Bão.
