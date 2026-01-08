@@ -26,6 +26,7 @@ export function DemoSales() {
 			>
 				<button
 					type="button"
+					name="Fechar Demo"
 					onClick={handleToggleDemoSales}
 					className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors"
 				>

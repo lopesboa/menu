@@ -38,6 +38,7 @@ export function Button({
 	return (
 		<button
 			type={type}
+			name={children as string}
 			className={cn(
 				baseStyle,
 				widthStyle,

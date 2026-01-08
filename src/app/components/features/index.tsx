@@ -13,6 +13,7 @@ export function FeaturesSection() {
 					<div className="space-y-4">
 						<button
 							type="button"
+							name="Cardápio Digital"
 							className="feature-nav-btn w-full text-left p-6 rounded-xl border border-transparent hover:bg-white/5 transition-all group active"
 							data-target="card-1"
 						>
@@ -31,6 +32,7 @@ export function FeaturesSection() {
 
 						<button
 							type="button"
+							name="Analytics em Tempo Real"
 							className="feature-nav-btn w-full text-left p-6 rounded-xl border border-transparent hover:bg-white/5 transition-all group"
 							data-target="card-2"
 						>
@@ -49,6 +51,7 @@ export function FeaturesSection() {
 
 						<button
 							type="button"
+							name="Controle de Estoque"
 							className="feature-nav-btn w-full text-left p-6 rounded-xl border border-transparent hover:bg-white/5 transition-all group"
 							data-target="card-3"
 						>
@@ -168,6 +171,7 @@ export function FeaturesSection() {
 					<div className="absolute -bottom-16 right-0 flex gap-2">
 						<button
 							type="button"
+							name="Navegar para esquerda"
 							className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
 							id="prev-card"
 						>
@@ -175,6 +179,7 @@ export function FeaturesSection() {
 						</button>
 						<button
 							type="button"
+							name="Navegar para direita"
 							className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
 							id="next-card"
 						>
