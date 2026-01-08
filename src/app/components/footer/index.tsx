@@ -18,18 +18,21 @@ export function Footer() {
 				<div className="flex gap-4">
 					<a
 						href="/"
+						aria-label="Siga nossa página no twitter"
 						className="text-slate-500 hover:text-white transition-colors"
 					>
 						<Icon icon="brandico:twitter-bird" />
 					</a>
 					<a
 						href="/"
+						aria-label="Siga nossa página no Instagram"
 						className="text-slate-500 hover:text-white transition-colors"
 					>
 						<Icon icon="brandico:instagram" />
 					</a>
 					<a
 						href="/"
+						aria-label="Siga nossa página no Github"
 						className="text-slate-500 hover:text-white transition-colors"
 					>
 						<Icon icon="brandico:github" />

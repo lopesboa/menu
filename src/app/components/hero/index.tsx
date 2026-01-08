@@ -84,6 +84,7 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 						type="button"
 						onClick={handleOnStartNow}
 						className="relative group cursor-pointer"
+						name="Começar Agora"
 					>
 						<div className="absolute -inset-0.5 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-200"></div>
 						<div className="relative px-8 py-3 bg-black rounded-full leading-none flex items-center divide-x divide-slate-600">
@@ -97,6 +98,7 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 					</button>
 					<button
 						type="button"
+						name="Ver Demo"
 						className="px-8 py-3 rounded-full text-sm font-medium text-slate-300 hover:text-white transition-colors border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10"
 						onClick={handleOnShowDemo}
 					>

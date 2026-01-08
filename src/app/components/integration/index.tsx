@@ -73,6 +73,7 @@ export function IntegrationSection() {
 				<div className="flex justify-center mt-8">
 					<a
 						href="#pricing"
+						aria-label="Saiba mais vendo todas integrações"
 						className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors"
 					>
 						Ver todas integrações <Icon icon="solar:arrow-right-linear" />

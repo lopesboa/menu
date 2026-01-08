@@ -31,6 +31,7 @@ export function ROISection() {
 
 						<button
 							type="button"
+							name="Calcular seu ROI"
 							onClick={handleOnToggleROIDemo}
 							className="relative px-6 py-2.5 rounded-lg bg-white text-black text-sm font-medium hover:bg-slate-200 transition-colors flex items-center gap-2 cursor-pointer shadow-lg hover:shadow-xl hover:scale-105 transform duration-200"
 						>

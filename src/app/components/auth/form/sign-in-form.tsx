@@ -17,6 +17,7 @@ export function SignInForm() {
 					<span className="text-xs font-medium text-slate-300">Senha</span>
 					<a
 						href="/forget-password"
+						aria-label="Não lembra sua senha? Redefina clicando aqui"
 						className="text-xs text-indigo-400 hover:text-indigo-300"
 					>
 						Esqueceu?

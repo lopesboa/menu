@@ -16,6 +16,7 @@ export function ShowROI({
 			>
 				<button
 					type="button"
+					name="Fechar Demo"
 					onClick={onCloseDemo}
 					className="absolute top-4 right-4 z-20 text-slate-500 hover:text-white transition-colors"
 				>
@@ -178,6 +179,7 @@ export function ShowROI({
 						<div className="pt-6">
 							<button
 								type="button"
+								name="Começar agora"
 								onClick={onStartNow}
 								className="w-full py-3 rounded-lg bg-white text-black font-medium hover:bg-slate-200 transition-colors shadow-lg"
 							>
