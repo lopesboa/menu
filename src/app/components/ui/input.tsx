@@ -1,9 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 
-type InputProps = React.DetailedHTMLProps<
-	React.InputHTMLAttributes<HTMLInputElement>,
-	HTMLInputElement
-> & {
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 	iconName?: string
 }
 
