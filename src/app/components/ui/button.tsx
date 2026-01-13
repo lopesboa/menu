@@ -1,3 +1,4 @@
+import { Icon } from "@iconify-icon/react"
 import type { ButtonHTMLAttributes, ReactNode } from "react"
 import { cn } from "../../utils/misc"
 
@@ -6,6 +7,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 	variant?: ButtonVariant
 	children: ReactNode
 	fullWidth?: boolean
+	loading?: boolean
 }
 
 export function Button({
@@ -15,6 +17,7 @@ export function Button({
 	fullWidth = true,
 	type = "button",
 	disabled,
+	loading,
 	...props
 }: ButtonProps) {
 	const baseStyle =
@@ -31,14 +34,14 @@ export function Button({
 			"text-indigo-400 hover:text-indigo-300 font-medium transition-colors",
 	}
 
-	const disabledStyle = disabled
-		? "relative  bg-white/10 overflow-hidden text-white hover:bg-white/15 transition-all mt-2"
-		: ""
+	const disabledStyle =
+		disabled || loading ? "opacity-50 cursor-not-allowed hover:bg-white" : ""
 
 	return (
 		<button
 			type={type}
 			name={children as string}
+			disabled={disabled || loading}
 			className={cn(
 				baseStyle,
 				widthStyle,
@@ -48,7 +51,9 @@ export function Button({
 			)}
 			{...props}
 		>
-			{variant === "secondary" ? (
+			{loading ? (
+				<Icon icon="svg-spinners:bars-scale-fade" width="24" height="24" />
+			) : variant === "secondary" ? (
 				<span className="relative z-10">{children}</span>
 			) : (
 				children
