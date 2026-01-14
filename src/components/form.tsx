@@ -1,5 +1,5 @@
 import { useId } from "react"
-import { cn } from "../utils/misc"
+import { cn } from "@/utils/misc"
 import { Input, type InputProps } from "./ui/input"
 
 export type ListOfErrors = Array<string | null | undefined> | null | undefined

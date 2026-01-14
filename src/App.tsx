@@ -12,8 +12,8 @@ import {
 	SignIn,
 	SignUp,
 	TestimonialsSection,
-} from "./app/components"
-import { Button } from "./app/components/ui/button"
+} from "@/components"
+import { Button } from "./components/ui/button"
 import {
 	DEMO_SALES_ID,
 	SIGN_IN_MODAL_ID,

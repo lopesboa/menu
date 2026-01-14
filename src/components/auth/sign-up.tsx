@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
-import { SIGN_IN_MODAL_ID, SIGN_UP_MODAL_ID } from "../../constants"
-import { useDialog, useDialogActions } from "../../store/dialog"
+import { SIGN_IN_MODAL_ID, SIGN_UP_MODAL_ID } from "@/app/constants"
+import { useDialog, useDialogActions } from "@/app/store/dialog"
 import { Button } from "../ui/button"
 import { BaseComponent } from "./base"
 import { SignUpForm } from "./form/sign-up-form"

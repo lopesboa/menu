@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import type { ButtonHTMLAttributes, ReactNode } from "react"
-import { cn } from "../../utils/misc"
+import { cn } from "@/utils/misc"
 
 type ButtonVariant = "primary" | "secondary" | "ghost"
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

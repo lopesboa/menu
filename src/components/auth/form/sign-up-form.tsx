@@ -1,9 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
-import { createOrgSlug } from "@/app/utils/misc"
 import { authClient } from "@/lib/client"
-import { SignUpFormSchema } from "../../../utils/user-validation"
+import { SignUpFormSchema } from "@/utils/user-validation"
 import { Field } from "../../form"
 import { Button } from "../../ui/button"
 
@@ -12,7 +11,6 @@ type SignUpForm = {
 	password: string
 	firstName: string
 	lastName: string
-	restaurantName: string
 	confirmPassword: string
 	redirectTo?: string
 }
@@ -34,35 +32,20 @@ export function SignUpForm() {
 			password: "",
 			confirmPassword: "",
 			redirectTo: "",
-			restaurantName: "",
 		},
 	})
 
 	const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
 		try {
 			setLoading(true)
-			await authClient.signUp.email(
-				{
-					email: data.email,
-					password: data.password,
-					name: `${data.firstName} ${data.lastName}`,
-					firstName: data.firstName,
-					lastName: data.lastName,
-					callbackURL: "/verify-password",
-				} as any,
-				{
-					onSuccess: async (ctx) => {
-						await authClient.organization.create({
-							name: data.restaurantName,
-							slug: createOrgSlug(data.restaurantName),
-							// metadata: {},
-							userId: ctx.data.user.id,
-							keepCurrentActiveOrganization: true,
-						})
-					},
-					onError: (ctx) => {},
-				},
-			)
+			await authClient.signUp.email({
+				email: data.email,
+				password: data.password,
+				name: `${data.firstName} ${data.lastName}`,
+				firstName: data.firstName,
+				lastName: data.lastName,
+				callbackURL: "/verify-password",
+			} as any)
 		} catch (error) {
 		} finally {
 			setLoading(false)
@@ -71,18 +54,6 @@ export function SignUpForm() {
 
 	return (
 		<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-			<Field
-				errors={[errors?.restaurantName?.message]}
-				className="space-y-2"
-				label="Nome do Restaurante"
-				inputProps={{
-					id: "restaurant-name",
-					type: "text",
-					placeholder: "Bistrô do Chef",
-					iconName: "solar:shop-bold-duotone",
-					...register("restaurantName"),
-				}}
-			/>
 			<div className="flex flex-row gap-4">
 				<Field
 					errors={[errors?.firstName?.message]}

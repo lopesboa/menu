@@ -36,7 +36,9 @@ export const PasswordAndConfirmPasswordSchema = z
 		}
 	})
 
-export const LoginFormSchema = z.object({
+export const MetadataSchema = z.record(z.string(), z.unknown()).optional()
+
+export const SignInFormSchema = z.object({
 	email: EmailSchema,
 	password: PasswordSchema,
 	redirectTo: z.string().optional(),
@@ -44,10 +46,12 @@ export const LoginFormSchema = z.object({
 })
 
 export const RestaurantFormSchema = z.object({
-	restaurantName: NameSchema,
 	slug: z.string(),
-	email: EmailSchema,
+	logo: z.string().optional(),
+	restaurantName: NameSchema,
+	metadata: MetadataSchema,
 	redirectTo: z.string().optional(),
+	keepCurrentActiveOrganization: z.boolean(),
 })
 
 export const SignUpFormSchema = z
@@ -56,6 +60,5 @@ export const SignUpFormSchema = z
 		lastName: NameSchema,
 		email: EmailSchema,
 		password: PasswordSchema,
-		restaurantName: NameSchema,
 	})
 	.and(PasswordAndConfirmPasswordSchema)

@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import type { PropsWithChildren } from "react"
-import { cn } from "../../utils/misc"
+import { cn } from "@/utils/misc"
 import { Dialog } from "../ui/dialog"
 
 type BaseComponentProps = PropsWithChildren & {

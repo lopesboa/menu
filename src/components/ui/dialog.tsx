@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react"
-import { useDialog } from "../../store/dialog"
-import { cn } from "../../utils/misc"
+import { useDialog } from "@/app/store/dialog"
+import { cn } from "@/utils/misc"
 
 export type DialogProps = PropsWithChildren & {
 	className?: string

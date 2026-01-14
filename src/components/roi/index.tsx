@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
-import { ROI_ID, SIGN_UP_MODAL_ID } from "../../constants"
-import { useDialogActions } from "../../store/dialog"
+import { ROI_ID, SIGN_UP_MODAL_ID } from "@/app/constants"
+import { useDialogActions } from "@/app/store/dialog"
 import { ShowROI } from "./show-roi"
 
 export function ROISection() {
