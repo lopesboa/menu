@@ -1,0 +1,78 @@
+/* Input Autofill Fix */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 30px #0a0a0a inset !important;
+	-webkit-text-fill-color: #e5e5e5 !important;
+	transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+	width: 6px;
+}
+::-webkit-scrollbar-track {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	background: #333;
+	border-radius: 10px;
+}
+
+/* Text Clip Animation */
+.clip-text-wrapper {
+	overflow: hidden;
+	display: inline-flex;
+}
+
+/* Background Column Animation */
+.bg-column {
+	transform-origin: top;
+	will-change: transform;
+}
+
+.view-section {
+	display: none;
+	opacity: 0;
+	transition:
+		opacity 0.3s ease,
+		filter 0.3s ease;
+}
+.view-section.active {
+	display: flex;
+	opacity: 1;
+}
+
+@keyframes slide-up-fade {
+	0% {
+		opacity: 0;
+		transform: translateY(12px);
+		filter: blur(4px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+		filter: blur(0);
+	}
+}
+
+@keyframes bg-reveal {
+	0% {
+		transform: scaleY(0);
+	}
+	100% {
+		transform: scaleY(1);
+	}
+}
+
+@keyframes text-reveal {
+	0% {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+}

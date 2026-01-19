@@ -44,6 +44,10 @@ jobs:
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            VITE_APP_SERVER_URL=${{ env.VITE_APP_SERVER_URL }}
+            VITE_PUBLIC_POSTHOG_HOST=${{ env.VITE_PUBLIC_POSTHOG_HOST }}
+            VITE_PUBLIC_POSTHOG_KEY=${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
