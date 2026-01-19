@@ -45,13 +45,13 @@ export const SignInFormSchema = z.object({
 	remember: z.boolean().optional(),
 })
 
-export const RestaurantFormSchema = z.object({
+export const OrganizationFormSchema = z.object({
 	slug: z.string(),
 	logo: z.string().optional(),
-	restaurantName: NameSchema,
+	organizationName: NameSchema,
 	metadata: MetadataSchema,
 	redirectTo: z.string().optional(),
-	keepCurrentActiveOrganization: z.boolean(),
+	keepCurrentActiveOrganization: z.boolean().default(false).optional(),
 })
 
 export const SignUpFormSchema = z
