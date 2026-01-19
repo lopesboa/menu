@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/react"
+import { Link } from "react-router"
 
 type NavebarProps = {
 	signUp: () => void
@@ -10,8 +11,8 @@ export function Navbar({ signIn, signUp }: NavebarProps) {
 		<nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-xl">
 			<div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
 				<header>
-					<a
-						href="/"
+					<Link
+						to="/"
 						aria-label="Navegar para o inicio"
 						className="flex items-center gap-2 group"
 					>
@@ -21,7 +22,7 @@ export function Navbar({ signIn, signUp }: NavebarProps) {
 						<span className="font-medium tracking-tight text-sm text-slate-200 group-hover:text-white transition-colors">
 							Menu Bão
 						</span>
-					</a>
+					</Link>
 				</header>
 				<div className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-400">
 					<a
