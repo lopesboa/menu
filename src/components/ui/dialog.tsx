@@ -25,7 +25,7 @@ export function Dialog({ children, className, id }: DialogProps) {
 		>
 			<div
 				className={cn(
-					"absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-300",
+					"absolute inset-0 bg-black/95 transition-opacity duration-300",
 					!openDialog ? "opacity-0" : "",
 				)}
 				id="auth-modal-backdrop"
