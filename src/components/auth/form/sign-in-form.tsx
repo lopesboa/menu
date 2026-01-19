@@ -14,7 +14,7 @@ type LogInForm = {
 	remember?: boolean
 }
 
-export function SignInForm() {
+export function SignInForm({ onNavigate }: { onNavigate?: () => void }) {
 	const [loading, setLoading] = useState(false)
 
 	const {
@@ -35,11 +35,18 @@ export function SignInForm() {
 	const onSubmit: SubmitHandler<LogInForm> = async (data) => {
 		try {
 			setLoading(true)
-			await authClient.signIn.email({
-				email: data.email,
-				password: data.password,
-				callbackURL: "/verify-password",
-			})
+			await authClient.signIn.email(
+				{
+					email: data.email,
+					password: data.password,
+					callbackURL: "/dashboard",
+				},
+				{
+					onSuccess: () => {
+						onNavigate?.()
+					},
+				},
+			)
 		} catch (error) {
 		} finally {
 			setLoading(false)

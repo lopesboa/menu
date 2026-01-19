@@ -36,7 +36,13 @@ export function SignIn() {
 						Entre na sua conta para continuar
 					</p>
 				</div>
-				<SignInForm />
+				<button
+					type="button"
+					name="Entrar Com Google"
+					className="flex w-full items-center justify-center gap-2 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm text-slate-300 cursor-pointer"
+				>
+					<Icon icon="devicon:google" width="16" /> Continual com o Google
+				</button>
 
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
@@ -49,22 +55,7 @@ export function SignIn() {
 					</div>
 				</div>
 
-				<div className="grid grid-cols-2 gap-3">
-					<button
-						type="button"
-						name="Entrar Com Google"
-						className="flex items-center justify-center gap-2 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm text-slate-300"
-					>
-						<Icon icon="devicon:google" width="16" /> Google
-					</button>
-					<button
-						type="button"
-						name="Entrar Com GitHub"
-						className="flex items-center justify-center gap-2 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm text-slate-300"
-					>
-						<Icon icon="devicon:github" width="16" /> GitHub
-					</button>
-				</div>
+				<SignInForm onNavigate={handleCloseDialog} />
 
 				<div className="text-center text-sm text-slate-500">
 					Não tem uma conta?{" "}
