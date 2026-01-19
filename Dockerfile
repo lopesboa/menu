@@ -1,5 +1,8 @@
 ARG NODE_VERSION=22.20.0
 ARG PNPM_VERSION=10.18.3
+ARG VITE_APP_SERVER_URL
+ARG VITE_PUBLIC_POSTHOG_KEY
+ARG VITE_PUBLIC_POSTHOG_HOST
 
 FROM node:${NODE_VERSION}-alpine AS base
 WORKDIR /usr/src/app
@@ -17,6 +20,10 @@ RUN --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
   --mount=type=cache,target=/root/.local/share/pnpm/store \
   pnpm install --frozen-lockfile
+
+ENV VITE_APP_SERVER_URL=${VITE_APP_SERVER_URL}
+ENV VITE_PUBLIC_POSTHOG_KEY=${VITE_PUBLIC_POSTHOG_KEY}
+ENV VITE_PUBLIC_POSTHOG_HOST=${VITE_PUBLIC_POSTHOG_HOST}
 
 COPY . .
 RUN pnpm build
