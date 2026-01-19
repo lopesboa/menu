@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/react"
+import { useEffect, useRef } from "react"
 
 type HeroSectionProps = {
 	signUp: () => void
@@ -6,41 +7,56 @@ type HeroSectionProps = {
 }
 
 export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
-	const handleOnStartNow = () => {
-		signUp()
-	}
-	const handleOnShowDemo = () => {
-		onShowDemo()
-	}
+	const sectionRef = useRef<HTMLElement>(null)
 
-	const observerOptions = {
-		threshold: 0.1,
-		rootMargin: "0px 0px -50px 0px",
-	}
+	useEffect(() => {
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: "0px 0px -50px 0px",
+		}
 
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				entry.target.classList.add("animate-reveal")
-				if (entry.target.classList.contains("reveal-trigger")) {
-					entry.target.classList.add("visible")
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					entry.target.classList.add("animate-reveal")
+					if (entry.target.classList.contains("reveal-trigger")) {
+						entry.target.classList.add("visible")
+					}
+					observer.unobserve(entry.target)
 				}
-				observer.unobserve(entry.target)
-			}
-		})
-	}, observerOptions)
+			})
+		}, observerOptions)
 
-	document
-		.querySelectorAll(".scroll-reveal, .reveal-trigger")
-		.forEach((el) => observer.observe(el))
+		const section = sectionRef.current
+		if (section) {
+			const elements = section.querySelectorAll(
+				".scroll-reveal, .reveal-trigger",
+			)
+			elements.forEach((el) => observer.observe(el))
+		}
 
-	window.addEventListener("load", () => {
-		document
-			.querySelectorAll(".text-clip-reveal")
-			.forEach((el) => el.classList.add("visible"))
-	})
+		const handleLoad = () => {
+			const textClipElements = document.querySelectorAll(".text-clip-reveal")
+			textClipElements.forEach((el) => el.classList.add("visible"))
+		}
+
+		if (document.readyState === "complete") {
+			handleLoad()
+		} else {
+			window.addEventListener("load", handleLoad)
+		}
+
+		return () => {
+			observer.disconnect()
+			window.removeEventListener("load", handleLoad)
+		}
+	}, [])
+
 	return (
-		<section className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-20">
+		<section
+			ref={sectionRef}
+			className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-20"
+		>
 			<div className="absolute inset-0 grid grid-cols-6 md:grid-cols-12 gap-0 pointer-events-none opacity-40 z-0 px-6 max-w-7xl mx-auto border-x border-white/5">
 				<div className="bg-grid-col animate-clip delay-100"></div>
 				<div className="bg-grid-col animate-clip delay-200"></div>
@@ -82,7 +98,7 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 				<div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-reveal delay-500">
 					<button
 						type="button"
-						onClick={handleOnStartNow}
+						onClick={signUp}
 						className="relative group cursor-pointer"
 						name="Começar Agora"
 					>
@@ -100,7 +116,7 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 						type="button"
 						name="Ver Demo"
 						className="px-8 py-3 rounded-full text-sm font-medium text-slate-300 hover:text-white transition-colors border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10"
-						onClick={handleOnShowDemo}
+						onClick={onShowDemo}
 					>
 						Ver Demo
 					</button>
