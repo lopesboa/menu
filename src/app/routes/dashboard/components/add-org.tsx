@@ -2,12 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
-import { useDialog, useDialogActions } from "@/app/store/dialog"
+import { useDialogActions } from "@/app/store/dialog"
+import { Button, Dialog, Stepper } from "@/components"
 import { Field } from "@/components/form"
 import { authClient } from "@/lib/client"
 import { cn, createOrgSlug } from "@/utils/misc"
 import { OrganizationFormSchema } from "@/utils/user-validation"
-import { Button, Dialog, Stepper } from "@/components"
 
 type OrganizationForm = {
 	slug: string
@@ -25,10 +25,10 @@ const steps = [
 ]
 
 export function AddOrgForm() {
-	const [loading, setLoading] = useState(false)
+	const [_loading, setLoading] = useState(false)
 	const [currentStep, setCurrentStep] = useState(1)
 	const { closeDialog } = useDialogActions()
-	const { isOpen } = useDialog()
+	// const { isOpen } = useDialog()
 
 	const {
 		register,
@@ -84,7 +84,7 @@ export function AddOrgForm() {
 	}
 
 	const isFirstStep = currentStep === 1
-	const isLastStep = currentStep === steps.length
+	// const isLastStep = currentStep === steps.length
 
 	return (
 		<Dialog id={"add-org"}>
