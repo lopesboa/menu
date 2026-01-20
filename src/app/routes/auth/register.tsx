@@ -51,8 +51,8 @@ export default function Register() {
 				} as any,
 				{
 					onSuccess() {
-						navigate("/auth/verify", {
-							state: { email: data.email },
+						navigate(data.redirectTo || "/auth/verify", {
+							state: { email: data.email, redirectTo: data.redirectTo },
 						})
 					},
 				},
