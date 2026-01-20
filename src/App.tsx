@@ -9,14 +9,18 @@ const options: Partial<PostHogConfig> = {
 } as const
 
 function App() {
-	return (
-		<PostHogProvider
-			apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
-			options={options}
-		>
-			<RouterProvider router={router} />
-		</PostHogProvider>
-	)
+	if (import.meta.env.PROD) {
+		return (
+			<PostHogProvider
+				apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
+				options={options}
+			>
+				<RouterProvider router={router} />
+			</PostHogProvider>
+		)
+	}
+
+	return <RouterProvider router={router} />
 }
 
 export default App
