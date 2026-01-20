@@ -1,24 +1,19 @@
 import { Icon } from "@iconify-icon/react"
-
+import { Link } from "react-router"
 export function AuthHeader() {
 	return (
-		<div
+		<Link
 			data-slot="auth-header"
-			className="mb-10 text-center animate-slide-up-fade delay-100"
+			to="/"
+			aria-label="Navegar para o inicio"
+			className="flex items-center justify-center gap-2 group mb-10"
 		>
-			<div
-				data-slot="auth-header-logo"
-				className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-surface border border-border shadow-2xl mb-6 shadow-neutral-900/50"
-			>
-				<Icon
-					icon="solar:hamburger-menu-bold-duotone"
-					className="text-2xl text-white"
-				/>
+			<div className="w-6 h-6 rounded bg-linear-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white">
+				<Icon icon="solar:hamburger-menu-bold-duotone" width="14" />
 			</div>
-			<h3 className="text-xl tracking-tight font-medium text-white clip-text-wrapper">
-				<span className="animate-text-reveal delay-200">MENU</span>
-				<span className="mx-1 animate-text-reveal delay-300">BÃO</span>
-			</h3>
-		</div>
+			<span className="font-medium tracking-tight text-sm text-slate-200 group-hover:text-white transition-colors">
+				Menu Bão
+			</span>
+		</Link>
 	)
 }
