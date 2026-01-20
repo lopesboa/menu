@@ -14,7 +14,6 @@ import { authClient } from "@/lib/client"
 import { cn } from "@/utils/misc"
 import { VerifyFormSchema } from "@/utils/user-validation"
 
-// 466338
 type VerifyForm = {
 	otp: string
 	redirectTo?: string
@@ -23,6 +22,7 @@ export default function Verify() {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const email = location.state?.email
+	const redirectTo = location.state?.redirectTo
 
 	const [loading, setLoading] = useState(false)
 
@@ -49,7 +49,7 @@ export default function Verify() {
 				},
 				{
 					onSuccess(ctx) {
-						navigate("/dashboard", { replace: true })
+						navigate(redirectTo || "/dashboard", { replace: true })
 					},
 				},
 			)
