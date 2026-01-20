@@ -67,3 +67,8 @@ export const VerifyFormSchema = z.object({
 	otp: z.string(),
 	redirectTo: z.string().optional(),
 })
+
+export const ForgotFormSchema = z.object({
+	email: EmailSchema,
+	redirectTo: z.string().optional(),
+})
