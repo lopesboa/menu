@@ -62,3 +62,8 @@ export const SignUpFormSchema = z
 		password: PasswordSchema,
 	})
 	.and(PasswordAndConfirmPasswordSchema)
+
+export const VerifyFormSchema = z.object({
+	otp: z.string(),
+	redirectTo: z.string().optional(),
+})
