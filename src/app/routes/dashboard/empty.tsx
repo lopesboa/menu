@@ -20,7 +20,7 @@ export default function DashboardEmpty() {
 					<EmptyMedia>
 						<Icon icon="solar:add-folder-bold-duotone" className="w-15 h-15" />
 					</EmptyMedia>
-					<EmptyTitle>Seu neg'ocio come'ca aqui.</EmptyTitle>
+					<EmptyTitle>Seu negócio começa aqui.</EmptyTitle>
 					<EmptyDescription>
 						Crie seu estabelicimento e gerencie cardápois, equipe e vendas de
 						forma simples e eficiente.
