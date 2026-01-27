@@ -52,7 +52,7 @@ export default function Login() {
 		}
 	}
 
-	const handleOnRemember = (event) => {
+	const handleOnRemember = (event: any) => {
 		setRememberMe(event.target.checked)
 	}
 
