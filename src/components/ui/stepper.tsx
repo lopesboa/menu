@@ -64,7 +64,6 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 							</span>
 						</button>
 
-						{/* Connector Line */}
 						{!isLast && (
 							<div className="flex-1 h-px bg-slate-800/80 mx-4 relative rounded-full overflow-hidden">
 								<div
