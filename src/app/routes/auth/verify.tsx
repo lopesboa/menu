@@ -48,7 +48,7 @@ export default function Verify() {
 					otp: data.otp,
 				},
 				{
-					onSuccess(ctx) {
+					onSuccess() {
 						navigate(redirectTo || "/dashboard", { replace: true })
 					},
 				},

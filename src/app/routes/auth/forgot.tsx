@@ -1,10 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
+import { useState } from "react"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
 import { Button } from "@/components"
 import { Field } from "@/components/form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
-import { type SubmitHandler, useForm } from "react-hook-form"
 import { authClient } from "@/lib/client"
 import { ForgotFormSchema } from "@/utils/user-validation"
 
@@ -40,7 +40,7 @@ export default function Forgot() {
 					type: "forget-password",
 				},
 				{
-					onSuccess(ctx) {
+					onSuccess() {
 						navigate(data?.redirectTo || "/auth/verify", {
 							replace: true,
 							state: { redirectTo: "/auth/change-password" },
