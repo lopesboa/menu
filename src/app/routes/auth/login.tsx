@@ -1,13 +1,66 @@
-import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
+import { useState } from "react"
+import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router"
+import { Input } from "@/components"
+import { Field } from "@/components/form"
+import { Button } from "@/components/ui/button"
+import { usePostHogEvent } from "@/hooks"
+import { authClient } from "@/lib/client"
+import { SignInFormSchema } from "@/utils/user-validation"
+
+type LogInForm = {
+	email: string
+	password: string
+	redirectTo?: string
+	remember?: boolean
+}
 
 export default function Login() {
+	const [loading, setLoading] = useState(false)
+	const [rememberMe, setRememberMe] = useState(false)
+	const { capture } = usePostHogEvent()
+
+	const {
+		register,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<LogInForm>({
+		resolver: zodResolver(SignInFormSchema),
+		mode: "onBlur",
+		defaultValues: {
+			email: "",
+			password: "",
+			redirectTo: "",
+			remember: false,
+		},
+	})
+
+	const onSubmit: SubmitHandler<LogInForm> = async (data) => {
+		try {
+			setLoading(true)
+			await authClient.signIn.email({
+				email: data.email,
+				password: data.password,
+				callbackURL: "/dashboard",
+				rememberMe,
+			})
+		} catch (error) {
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const handleOnRemember = (event) => {
+		setRememberMe(event.target.checked)
+	}
+
 	return (
 		<div
 			data-slot="auth-login"
 			id="view-login"
-			className="view-section active flex-col gap-5 animate-slide-up-fade delay-300"
+			className="flex flex-col gap-5 animate-slide-up-fade delay-300"
 		>
 			<div className="text-center mb-2">
 				<h2 className="text-lg font-medium text-white tracking-tight">
@@ -18,32 +71,18 @@ export default function Login() {
 				</p>
 			</div>
 
-			<div className="grid grid-cols-2 gap-3">
-				<button
-					type="button"
-					className="flex items-center justify-center gap-2 bg-surface hover:bg-neutral-900 border border-border rounded-lg py-2.5 px-4 transition-colors duration-200 group cursor-pointer"
-				>
-					<Icon
-						icon="logos:google-icon"
-						className="text-sm opacity-80 group-hover:opacity-100 transition-opacity"
-					/>
-					<span className="text-xs font-medium text-secondary group-hover:text-white">
-						Google
-					</span>
-				</button>
-				<button
-					type="button"
-					className="flex items-center justify-center gap-2 bg-surface hover:bg-neutral-900 border border-border rounded-lg py-2.5 px-4 transition-colors duration-200 group cursor-pointer"
-				>
-					<Icon
-						icon="logos:github-icon"
-						className="text-sm opacity-80 group-hover:opacity-100 transition-opacity filter invert"
-					/>
-					<span className="text-xs font-medium text-secondary group-hover:text-white">
-						GitHub
-					</span>
-				</button>
-			</div>
+			<button
+				type="button"
+				className="flex w-full items-center justify-center gap-2 bg-surface hover:bg-neutral-900 border border-border rounded-lg py-2.5 px-4 transition-colors duration-200 group cursor-pointer"
+			>
+				<Icon
+					icon="logos:google-icon"
+					className="text-sm opacity-80 group-hover:opacity-100 transition-opacity"
+				/>
+				<span className="text-xs font-medium text-secondary group-hover:text-white">
+					Continuar com Google
+				</span>
+			</button>
 
 			<div className="relative flex items-center py-2">
 				<div className="grow border-t border-neutral-800"></div>
@@ -53,20 +92,21 @@ export default function Login() {
 				<div className="grow border-t border-neutral-800"></div>
 			</div>
 
-			<form className="flex flex-col gap-4 mb-6">
-				<div className="group relative">
-					<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-						<Icon
-							icon="solar:letter-bold-duotone"
-							className="text-neutral-500 group-focus-within:text-white transition-colors"
-						/>
-					</div>
-					<input
-						type="email"
-						placeholder="voce@exemplo.com"
-						className="w-full bg-surface border border-border rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600 transition-all"
-					/>
-				</div>
+			<form
+				className="flex flex-col gap-4 mb-6"
+				onSubmit={handleSubmit(onSubmit)}
+			>
+				<Field
+					className="space-y-2"
+					label="Email"
+					errors={[errors.email?.message]}
+					inputProps={{
+						type: "email",
+						placeholder: "voce@exemplo.com",
+						iconName: "solar:letter-bold-duotone",
+						...register("email"),
+					}}
+				/>
 
 				<div className="group relative">
 					<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -75,25 +115,22 @@ export default function Login() {
 							className="text-neutral-500 group-focus-within:text-white transition-colors"
 						/>
 					</div>
-					<input
+					<Input
 						type="password"
-						placeholder="Password"
-						className="w-full bg-surface border border-border rounded-lg py-2.5 pl-10 pr-4 text-sm text-white placeholder-neutral-600 focus:outline-none focus:border-neutral-600 focus:ring-1 focus:ring-neutral-600 transition-all"
+						placeholder="••••••••"
+						iconName="solar:lock-password-bold-duotone"
+						{...register("password")}
 					/>
 				</div>
 
 				<div className="flex items-center justify-between">
 					<label className="flex items-center gap-2 cursor-pointer group">
-						<div className="relative flex items-center">
-							<input
-								type="checkbox"
-								className="peer h-3.5 w-3.5 appearance-none rounded border border-neutral-700 checked:bg-white checked:border-white transition-all"
-							/>
-							<Icon
-								icon="solar:check-read-linear"
-								className="absolute inset-0 m-auto text-black text-[10px] opacity-0 peer-checked:opacity-100 pointer-events-none"
-							/>
-						</div>
+						<input
+							type="checkbox"
+							className="mt-0.5 h-4 w-4 rounded border-slate-600 bg-[#16181d] text-indigo-500 focus:ring-indigo-500/50 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer"
+							onClick={handleOnRemember}
+						/>
+
 						<span className="text-xs text-secondary group-hover:text-white transition-colors">
 							Me Lembrar
 						</span>
@@ -106,7 +143,15 @@ export default function Login() {
 					</Link>
 				</div>
 
-				<Button type="submit">Entrar na plataforma</Button>
+				<Button
+					onClick={() => {
+						capture("button_clicked", { button_name: "login" })
+					}}
+					loading={loading}
+					type="submit"
+				>
+					Entrar na plataforma
+				</Button>
 			</form>
 
 			<p className="text-center text-xs text-secondary">
@@ -114,6 +159,7 @@ export default function Login() {
 				<Link
 					to="/auth/register"
 					className="text-white hover:underline underline-offset-2 cursor-pointer"
+					onClick={() => capture("link_clicked", { link_name: "register" })}
 				>
 					Criar conta
 				</Link>

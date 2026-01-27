@@ -41,7 +41,7 @@ export function SignIn() {
 					name="Entrar Com Google"
 					className="flex w-full items-center justify-center gap-2 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm text-slate-300 cursor-pointer"
 				>
-					<Icon icon="devicon:google" width="16" /> Continual com o Google
+					<Icon icon="devicon:google" width="16" /> Continuar com o Google
 				</button>
 
 				<div className="relative">
