@@ -10,6 +10,7 @@ const Login = lazy(() => import("./auth/login"))
 const Forgot = lazy(() => import("./auth/forgot"))
 const Register = lazy(() => import("./auth/register"))
 const Verify = lazy(() => import("./auth/verify"))
+const ChangePassword = lazy(() => import("./auth/change-password"))
 const Dashboard = lazy(() => import("./dashboard"))
 const DashboardHome = lazy(() => import("./dashboard/dashboard-home"))
 const DashboardEmpty = lazy(() => import("./dashboard/empty"))
@@ -29,10 +30,11 @@ export const router = createBrowserRouter([
 		path: "auth",
 		Component: AuthLayout,
 		children: [
-			{ index: true, path: "login", Component: Login },
+			{ path: "login", Component: Login },
 			{ path: "register", Component: Register },
 			{ path: "forgot", Component: Forgot },
 			{ path: "verify", Component: Verify },
+			{ path: "change-password", Component: ChangePassword },
 		],
 	},
 
