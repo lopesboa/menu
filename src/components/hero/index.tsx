@@ -1,12 +1,12 @@
 import { Icon } from "@iconify-icon/react"
 import { useEffect, useRef } from "react"
+import { Link } from "react-router"
 
 type HeroSectionProps = {
-	signUp: () => void
 	onShowDemo: () => void
 }
 
-export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
+export function HeroSection({ onShowDemo }: HeroSectionProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 
 	useEffect(() => {
@@ -99,14 +99,17 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 					<button
 						className="group relative cursor-pointer"
 						name="Começar Agora"
-						onClick={signUp}
 						type="button"
 					>
 						<div className="absolute -inset-0.5 rounded-full bg-linear-to-r from-indigo-500 to-purple-600 opacity-50 blur transition duration-200 group-hover:opacity-100" />
 						<div className="relative flex items-center divide-x divide-slate-600 rounded-full bg-black px-8 py-3 leading-none">
-							<span className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white">
+							<Link
+								aria-label="Navegar para criar conta"
+								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
+								to="/auth/register"
+							>
 								Começar Agora
-							</span>
+							</Link>
 							<span className="pl-4 text-slate-400 text-sm transition-colors group-hover:text-slate-200">
 								<Icon icon="solar:arrow-right-bold-duotone" />
 							</span>
