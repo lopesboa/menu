@@ -1,6 +1,5 @@
 import "./styles.css"
 import { Outlet } from "react-router"
-import { AuthHeader } from "./components/auth-header"
 
 export default function AuthLayout() {
 	return (
@@ -12,7 +11,6 @@ export default function AuthLayout() {
 				className="relative z-10 w-full max-w-md p-6 sm:p-8"
 				data-slot="auth-layout-container"
 			>
-				<AuthHeader />
 				<Outlet />
 			</div>
 		</div>

@@ -1,12 +1,7 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
 
-type NavebarProps = {
-	signUp: () => void
-	signIn: () => void
-}
-
-export function Navbar({ signIn, signUp }: NavebarProps) {
+export function Navbar() {
 	return (
 		<nav className="fixed top-0 z-50 w-full border-white/5 border-b bg-black/50 backdrop-blur-xl">
 			<div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
@@ -48,23 +43,21 @@ export function Navbar({ signIn, signUp }: NavebarProps) {
 					</a>
 				</div>
 				<div className="flex items-center gap-3">
-					<button
+					<Link
+						aria-label="Navegar para entrar"
 						className="cursor-pointer font-medium text-slate-400 text-xs transition-colors hover:text-white"
-						name="Entrar"
-						onClick={signIn}
-						type="button"
+						to="/auth/login"
 					>
 						Entrar
-					</button>
-					<button
+					</Link>
+					<Link
+						aria-label="Navegar para criar conta"
 						className="group relative cursor-pointer overflow-hidden rounded-full bg-white/10 px-3 py-1.5 font-medium text-white text-xs transition-all hover:bg-white/15"
-						name="Criar Conta"
-						onClick={signUp}
-						type="button"
+						to="/auth/register"
 					>
 						<span className="relative z-10">Criar Conta</span>
 						<div className="border-beam opacity-0 transition-opacity group-hover:opacity-100" />
-					</button>
+					</Link>
 				</div>
 			</div>
 		</nav>

@@ -8,7 +8,7 @@ import { Field } from "@/components/form"
 import { authClient } from "@/lib/client"
 import { ForgotFormSchema } from "@/utils/user-validation"
 
-type ForgotForm = {
+interface ForgotForm {
 	email: string
 	redirectTo?: string
 }
@@ -49,6 +49,7 @@ export default function Forgot() {
 				}
 			)
 		} catch (error) {
+			console.log(error)
 		} finally {
 			setLoading(false)
 		}

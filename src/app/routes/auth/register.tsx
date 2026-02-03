@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/client"
 import { SignUpFormSchema } from "@/utils/user-validation"
 
-type SignUpForm = {
+interface SignUpForm {
 	email: string
 	password: string
 	firstName: string

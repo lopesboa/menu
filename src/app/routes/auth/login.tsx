@@ -10,7 +10,7 @@ import { usePostHogEvent } from "@/hooks"
 import { authClient } from "@/lib/client"
 import { SignInFormSchema } from "@/utils/user-validation"
 
-type LogInForm = {
+interface LogInForm {
 	email: string
 	password: string
 	redirectTo?: string

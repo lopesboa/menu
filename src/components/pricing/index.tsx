@@ -1,17 +1,8 @@
 import { Icon } from "@iconify-icon/react"
+import { Link } from "react-router"
 import { Button } from "../ui/button"
 
-export function PricingSection({
-	onSignUp,
-	onShowDemo,
-}: {
-	onSignUp: () => void
-	onShowDemo: () => void
-}) {
-	const handleOnSignUp = () => {
-		onSignUp()
-	}
-
+export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 	const handleOnTalkWithSales = () => {
 		onShowDemo()
 	}
@@ -29,7 +20,7 @@ export function PricingSection({
 				</div>
 
 				<div className="flashlight-container-group grid gap-8 md:grid-cols-3">
-					<div className="flashlight-card scroll-reveal flex flex-col rounded-2xl bg-[#050505] p-8 delay-100">
+					<div className="flashlight-card scroll-reveal flex flex-col rounded-2xl bg-background p-8 delay-100">
 						<div className="mb-4">
 							<span className="font-medium text-slate-400 text-sm">
 								Inicial
@@ -63,12 +54,14 @@ export function PricingSection({
 							</li>
 						</ul>
 
-						<Button onClick={handleOnSignUp} variant="secondary">
-							Começar Grátis
+						<Button variant="secondary">
+							<Link aria-label="Navegar para criar conta" to="/auth/register">
+								Começar Grátis
+							</Link>
 						</Button>
 					</div>
 
-					<div className="flashlight-card scroll-reveal relative flex flex-col rounded-2xl bg-[#050505] p-8 delay-200">
+					<div className="flashlight-card scroll-reveal relative flex flex-col rounded-2xl bg-background p-8 delay-200">
 						<div className="absolute top-0 right-0 p-3">
 							<div className="rounded border border-indigo-500/20 bg-indigo-500/10 px-2 py-1 font-medium text-[10px] text-indigo-400 uppercase tracking-wider">
 								Popular
@@ -80,7 +73,7 @@ export function PricingSection({
 							</span>
 						</div>
 						<div className="mb-6">
-							<span className="font-medium text-4xl text-white">R$ 149</span>
+							<span className="font-medium text-4xl text-white">R$ 49,90</span>
 							<span className="text-slate-500">/mês</span>
 						</div>
 						<ul className="mb-8 space-y-4 text-slate-300 text-sm">
@@ -114,10 +107,14 @@ export function PricingSection({
 							</li>
 						</ul>
 
-						<Button onClick={handleOnSignUp}>Assinar Pro</Button>
+						<Button>
+							<Link aria-label="Navegar para criar conta" to="/auth/register">
+								Assinar Pro
+							</Link>
+						</Button>
 					</div>
 
-					<div className="flashlight-card scroll-reveal flex flex-col rounded-2xl bg-[#050505] p-8 delay-300">
+					<div className="flashlight-card scroll-reveal flex flex-col rounded-2xl bg-background p-8 delay-300">
 						<div className="mb-4">
 							<span className="font-medium text-slate-400 text-sm">
 								Empresarial
