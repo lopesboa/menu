@@ -2,83 +2,83 @@ import { Icon } from "@iconify-icon/react"
 
 export function Location() {
 	return (
-		<div id="step-3" className="step-pane inactive-right">
+		<div className="step-pane inactive-right" id="step-3">
 			<div className="animate-reveal">
-				<h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
+				<h1 className="mb-2 font-semibold text-2xl text-slate-900 tracking-tight sm:text-3xl">
 					Onde os clientes te acham?
 				</h1>
-				<p className="text-base text-slate-500 mb-8 leading-relaxed">
+				<p className="mb-8 text-base text-slate-500 leading-relaxed">
 					Preencha o endereço principal da sua operação.
 				</p>
 			</div>
 
 			<div className="space-y-4">
 				<div className="input-group group">
-					<div className="flex justify-between items-baseline mb-1.5 ml-1">
-						<label className="block text-xs font-medium text-slate-500 uppercase tracking-wider">
+					<div className="mb-1.5 ml-1 flex items-baseline justify-between">
+						<label className="block font-medium text-slate-500 text-xs uppercase tracking-wider">
 							CEP
 						</label>
-						<span className="text-[10px] text-emerald-600 font-medium cursor-pointer hover:underline">
+						<span className="cursor-pointer font-medium text-[10px] text-emerald-600 hover:underline">
 							Buscar automaticamente
 						</span>
 					</div>
 					<div className="relative flex gap-2">
 						<div className="relative w-full">
 							<Icon
+								className="absolute top-3.5 left-4 text-slate-400"
 								icon="solar:magnifer-linear"
-								className="absolute left-4 top-3.5 text-slate-400"
 								width="20"
 							/>
 							<input
-								type="text"
+								className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 								placeholder="00000-000"
-								className="w-full bg-white rounded-xl border border-slate-200 pl-12 pr-4 py-3.5 text-sm text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+								type="text"
 							/>
 						</div>
 					</div>
 				</div>
 
 				<div className="input-group group">
-					<label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
+					<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
 						Endereço
 					</label>
 					<input
-						type="text"
+						className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 						placeholder="Rua, Avenida..."
-						className="w-full bg-white rounded-xl border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+						type="text"
 					/>
 				</div>
 
 				<div className="grid grid-cols-[100px_1fr] gap-4">
 					<div className="input-group group">
-						<label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
+						<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
 							Número
 						</label>
 						<input
-							type="text"
+							className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 							placeholder="123"
-							className="w-full bg-white rounded-xl border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+							type="text"
 						/>
 					</div>
 					<div className="input-group group">
-						<label className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1">
+						<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
 							Bairro
 						</label>
 						<input
-							type="text"
+							className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 							placeholder="Centro"
-							className="w-full bg-white rounded-xl border border-slate-200 px-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+							type="text"
 						/>
 					</div>
 				</div>
 
-				<div className="pt-4 flex items-center gap-3">
-					<label className="flex items-center gap-3 cursor-pointer group">
+				<div className="flex items-center gap-3 pt-4">
+					<label className="group flex cursor-pointer items-center gap-3">
 						<input
+							className="h-5 w-5 cursor-pointer rounded border-slate-300 text-slate-900 accent-slate-900 transition-colors focus:ring-slate-900"
 							type="checkbox"
-							className="w-5 h-5 rounded border-slate-300 text-slate-900 focus:ring-slate-900 transition-colors cursor-pointer accent-slate-900"
 						/>
-						<span className="text-sm text-slate-500 group-hover:text-slate-700 transition-colors">
+						<span className="text-slate-500 text-sm transition-colors group-hover:text-slate-700">
 							Esta é uma Dark Kitchen (Sem fachada)
 						</span>
 					</label>

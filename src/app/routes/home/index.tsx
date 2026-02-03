@@ -102,7 +102,7 @@ export default function Home() {
 			const target = e.currentTarget as HTMLElement
 			const targetId = target.dataset.target?.split("-")[1]
 			if (targetId) {
-				showCard(parseInt(targetId, 10))
+				showCard(Number.parseInt(targetId, 10))
 				resetRotation()
 			}
 		}
@@ -143,7 +143,7 @@ export default function Home() {
 
 	return (
 		<main>
-			<HeroSection signUp={handleOnSignUp} onShowDemo={handleOnShowDemo} />
+			<HeroSection onShowDemo={handleOnShowDemo} signUp={handleOnSignUp} />
 			<LogoSection />
 			<SignIn />
 			<SignUp />

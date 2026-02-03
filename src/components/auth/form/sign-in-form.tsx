@@ -45,7 +45,7 @@ export function SignInForm({ onNavigate }: { onNavigate?: () => void }) {
 					onSuccess: () => {
 						onNavigate?.()
 					},
-				},
+				}
 			)
 		} catch (error) {
 		} finally {
@@ -56,7 +56,6 @@ export function SignInForm({ onNavigate }: { onNavigate?: () => void }) {
 		<form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
 			<Field
 				className="space-y-2"
-				label="Email"
 				errors={[errors.email?.message]}
 				inputProps={{
 					type: "email",
@@ -65,22 +64,23 @@ export function SignInForm({ onNavigate }: { onNavigate?: () => void }) {
 
 					...register("email"),
 				}}
+				label="Email"
 			/>
 			<div className="space-y-2">
 				<div className="flex justify-between">
-					<span className="text-xs font-medium text-slate-300">Senha</span>
+					<span className="font-medium text-slate-300 text-xs">Senha</span>
 					<a
-						href="/forget-password"
 						aria-label="Não lembra sua senha? Redefina clicando aqui"
-						className="text-xs text-indigo-400 hover:text-indigo-300"
+						className="text-indigo-400 text-xs hover:text-indigo-300"
+						href="/forget-password"
 					>
 						Esqueceu?
 					</a>
 				</div>
 				<Input
-					type="password"
-					placeholder="••••••••"
 					iconName="solar:lock-password-bold-duotone"
+					placeholder="••••••••"
+					type="password"
 					{...register("password")}
 				/>
 			</div>

@@ -14,8 +14,8 @@ export function StepperRoot({
 }: StepperRootProps) {
 	return (
 		<div
-			data-slot="stepper-root"
 			className={cn("w-full space-y-8", className)}
+			data-slot="stepper-root"
 			{...props}
 		/>
 	)

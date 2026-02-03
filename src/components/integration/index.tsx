@@ -3,78 +3,78 @@ import { Icon } from "@iconify-icon/react"
 export function IntegrationSection() {
 	return (
 		<section
+			className="relative overflow-hidden border-white/5 border-b bg-[#050505] py-24"
 			id="integrations"
-			className="py-24 relative border-b border-white/5 bg-[#050505] overflow-hidden"
 		>
-			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-indigo-900/10 via-[#030712] to-[#030712]"></div>
+			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-indigo-900/10 via-[#030712] to-[#030712]" />
 
-			<div className="max-w-7xl mx-auto px-6 relative z-10">
-				<div className="text-center mb-16 scroll-reveal">
-					<h2 className="text-3xl md:text-4xl font-medium text-white tracking-tight mb-4">
+			<div className="relative z-10 mx-auto max-w-7xl px-6">
+				<div className="scroll-reveal mb-16 text-center">
+					<h2 className="mb-4 font-medium text-3xl text-white tracking-tight md:text-4xl">
 						Adeus, tablets espalhados
 					</h2>
-					<p className="text-slate-400 max-w-xl mx-auto">
+					<p className="mx-auto max-w-xl text-slate-400">
 						Centralize iFood, Rappi, cardápio digital e impressoras em uma única
 						tela. O caos da cozinha acabou.
 					</p>
 				</div>
 
-				<div className="relative h-100 max-w-3xl mx-auto flex items-center justify-center">
-					<div className="relative w-24 h-24 rounded-2xl bg-linear-to-tr from-indigo-600 to-purple-600 p-px z-20 shadow-[0_0_50px_rgba(79,70,229,0.3)]">
-						<div className="w-full h-full rounded-2xl bg-[#0a0a0a] flex items-center justify-center flex-col gap-1">
+				<div className="relative mx-auto flex h-100 max-w-3xl items-center justify-center">
+					<div className="relative z-20 h-24 w-24 rounded-2xl bg-linear-to-tr from-indigo-600 to-purple-600 p-px shadow-[0_0_50px_rgba(79,70,229,0.3)]">
+						<div className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-2xl bg-[#0a0a0a]">
 							<Icon
+								className="text-white"
 								icon="solar:hamburger-menu-bold-duotone"
 								width="32"
-								className="text-white"
 							/>
-							<span className="text-[10px] font-bold text-white tracking-wide">
+							<span className="font-bold text-[10px] text-white tracking-wide">
 								BÃO
 							</span>
 						</div>
-						<div className="hub-pulse w-32 h-32"></div>
-						<div className="hub-pulse w-48 h-48 delay-300"></div>
+						<div className="hub-pulse h-32 w-32" />
+						<div className="hub-pulse h-48 w-48 delay-300" />
 					</div>
 
-					<div className="absolute top-10 left-10 md:left-20 flex flex-col items-center gap-2 scroll-reveal delay-100">
-						<div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-red-400">
+					<div className="scroll-reveal absolute top-10 left-10 flex flex-col items-center gap-2 delay-100 md:left-20">
+						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-red-400">
 							<Icon icon="solar:scooter-bold-duotone" width="24" />
 						</div>
-						<span className="text-xs text-slate-500 font-medium">Delivery</span>
-						<div className="absolute top-1/2 left-full w-25 md:w-45 h-px bg-linear-to-r from-white/10 to-transparent -rotate-12 origin-left -z-10"></div>
+						<span className="font-medium text-slate-500 text-xs">Delivery</span>
+						<div className="absolute top-1/2 left-full -z-10 h-px w-25 origin-left -rotate-12 bg-linear-to-r from-white/10 to-transparent md:w-45" />
 					</div>
 
-					<div className="absolute top-10 right-10 md:right-20 flex flex-col items-center gap-2 scroll-reveal delay-200">
-						<div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-green-400">
+					<div className="scroll-reveal absolute top-10 right-10 flex flex-col items-center gap-2 delay-200 md:right-20">
+						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-green-400">
 							<Icon icon="solar:card-bold-duotone" width="24" />
 						</div>
-						<span className="text-xs text-slate-500 font-medium">
+						<span className="font-medium text-slate-500 text-xs">
 							Pagamentos
 						</span>
-						<div className="absolute top-1/2 right-full w-25 md:w-45 h-px bg-linear-to-l from-white/10 to-transparent rotate-12 origin-right -z-10"></div>
+						<div className="absolute top-1/2 right-full -z-10 h-px w-25 origin-right rotate-12 bg-linear-to-l from-white/10 to-transparent md:w-45" />
 					</div>
 
-					<div className="absolute bottom-10 left-10 md:left-20 flex flex-col items-center gap-2 scroll-reveal delay-300">
-						<div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-orange-400">
+					<div className="scroll-reveal absolute bottom-10 left-10 flex flex-col items-center gap-2 delay-300 md:left-20">
+						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-orange-400">
 							<Icon icon="solar:printer-bold-duotone" width="24" />
 						</div>
-						<span className="text-xs text-slate-500 font-medium">Cozinha</span>
-						<div className="absolute bottom-1/2 left-full w-25 md:w-45 h-px bg-linear-to-r from-white/10 to-transparent rotate-12 origin-left -z-10"></div>
+						<span className="font-medium text-slate-500 text-xs">Cozinha</span>
+						<div className="absolute bottom-1/2 left-full -z-10 h-px w-25 origin-left rotate-12 bg-linear-to-r from-white/10 to-transparent md:w-45" />
 					</div>
 
-					<div className="absolute bottom-10 right-10 md:right-20 flex flex-col items-center gap-2 scroll-reveal delay-500">
-						<div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-blue-400">
+					<div className="scroll-reveal absolute right-10 bottom-10 flex flex-col items-center gap-2 delay-500 md:right-20">
+						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-blue-400">
 							<Icon icon="solar:users-group-rounded-bold-duotone" width="24" />
 						</div>
-						<span className="text-xs text-slate-500 font-medium">Clientes</span>
-						<div className="absolute bottom-1/2 right-full w-25 md:w-45 h-px bg-linear-to-l from-white/10 to-transparent -rotate-12 origin-right -z-10"></div>
+						<span className="font-medium text-slate-500 text-xs">Clientes</span>
+						<div className="absolute right-full bottom-1/2 -z-10 h-px w-25 origin-right -rotate-12 bg-linear-to-l from-white/10 to-transparent md:w-45" />
 					</div>
 				</div>
 
-				<div className="flex justify-center mt-8">
+				<div className="mt-8 flex justify-center">
 					<a
-						href="#pricing"
 						aria-label="Saiba mais vendo todas integrações"
-						className="text-sm font-medium text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-colors"
+						className="flex items-center gap-1 font-medium text-indigo-400 text-sm transition-colors hover:text-indigo-300"
+						href="#pricing"
 					>
 						Ver todas integrações <Icon icon="solar:arrow-right-linear" />
 					</a>

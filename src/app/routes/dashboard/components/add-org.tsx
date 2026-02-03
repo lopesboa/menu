@@ -89,65 +89,64 @@ export function AddOrgForm() {
 	return (
 		<Dialog id={"add-org"}>
 			<div
-				data-slot="add-org"
 				className="relative w-full max-w-2xl px-4 md:px-0"
+				data-slot="add-org"
 			>
 				<div
-					data-slot="add-org-content"
 					className={cn(
-						"bg-[#0f1115]/90 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl overflow-hidden animate-enter delay-200 ring-1 ring-white/5 transform transition-all duration-300",
+						"transform animate-enter overflow-hidden rounded-2xl border border-white/5 bg-[#0f1115]/90 shadow-2xl ring-1 ring-white/5 backdrop-blur-xl transition-all delay-200 duration-300"
 					)}
+					data-slot="add-org-content"
 				>
 					<button
-						type="button"
+						className="absolute top-4 right-4 text-slate-500 transition-colors hover:text-white"
 						name="Fechar"
 						onClick={() => closeDialog("add-org")}
-						className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors"
+						type="button"
 					>
 						<Icon icon="solar:close-circle-bold-duotone" width="24" />
 					</button>
-					<div className="px-8 pt-8 pb-6 border-b border-white/5 flex flex-col gap-6">
+					<div className="flex flex-col gap-6 border-white/5 border-b px-8 pt-8 pb-6">
 						<div>
 							<h3
-								className="text-xl text-white font-medium tracking-tight mb-1"
+								className="mb-1 font-medium text-white text-xl tracking-tight"
 								id="animated-title"
 							>
 								Criar Estabelecimento
 							</h3>
-							<p className="text-xs text-slate-500 animate-enter delay-500">
+							<p className="animate-enter text-slate-500 text-xs delay-500">
 								Set up your workspace in minutes.
 							</p>
 						</div>
 						<Stepper
-							steps={steps}
 							currentStep={currentStep}
 							onStepClick={handleonStepClick}
+							steps={steps}
 						/>
 					</div>
 
 					<form
+						className="tp-8 animate-enter overflow-hidden px-8 pb-6 delay-600"
 						id="org-form"
-						className="px-8 tp-8 pb-6 overflow-hidden animate-enter delay-600"
 						onSubmit={handleSubmit(onSubmit)}
 					>
 						<div className="flex flex-row gap-4">
 							<Field
 								errors={[errors?.organizationName?.message]}
-								label="Primeiro nome"
 								inputProps={{
 									type: "text",
 									placeholder: "José",
 									iconName: "solar:user-bold-duotone",
 									...register("organizationName"),
 								}}
+								label="Primeiro nome"
 							/>
 						</div>
 
 						<div>
 							<Field
-								errors={[errors?.organizationName?.message]}
 								className="space-y-2"
-								label="Nome do Restaurante"
+								errors={[errors?.organizationName?.message]}
 								inputProps={{
 									id: "restaurant-name",
 									type: "text",
@@ -155,37 +154,38 @@ export function AddOrgForm() {
 									iconName: "solar:shop-bold-duotone",
 									...register("organizationName"),
 								}}
+								label="Nome do Restaurante"
 							/>
 						</div>
 					</form>
-					<div className="px-8 py-6 bg-[#0f1115] border-t border-white/5 flex justify-between items-center z-20 relative">
+					<div className="relative z-20 flex items-center justify-between border-white/5 border-t bg-[#0f1115] px-8 py-6">
 						<Button
-							id="btn-next"
-							variant="ghost"
-							type="button"
-							fullWidth={false}
 							className={cn(
-								"text-xs font-medium text-slate-400 hover:text-white transition-colors items-center gap-1.5 pl-1 pr-3 py-2 rounded-lg hover:bg-white/5",
-								isFirstStep ? "hidden" : "flex",
+								"items-center gap-1.5 rounded-lg py-2 pr-3 pl-1 font-medium text-slate-400 text-xs transition-colors hover:bg-white/5 hover:text-white",
+								isFirstStep ? "hidden" : "flex"
 							)}
+							fullWidth={false}
+							id="btn-next"
 							onClick={handleBack}
+							type="button"
+							variant="ghost"
 						>
 							<Icon icon="solar:arrow-left-linear" width="16" />
 							<span>Back</span>
 						</Button>
 
 						<Button
-							id="btn-next"
-							type="button"
+							className="group ml-auto flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-semibold text-white text-xs shadow-[0_0_15px_rgba(79,70,229,0.3)] transition-all hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(79,70,229,0.5)] active:bg-indigo-700"
 							fullWidth={false}
-							className="ml-auto text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 transition-all px-5 py-2.5 rounded-lg shadow-[0_0_15px_rgba(79,70,229,0.3)] hover:shadow-[0_0_20px_rgba(79,70,229,0.5)] flex items-center gap-2 group"
+							id="btn-next"
 							onClick={handleNext}
+							type="button"
 						>
 							<span>Continue</span>
 							<Icon
+								className="transition-transform group-hover:translate-x-0.5"
 								icon="solar:arrow-right-linear"
 								width="16"
-								className="group-hover:translate-x-0.5 transition-transform"
 							/>
 						</Button>
 					</div>

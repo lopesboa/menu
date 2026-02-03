@@ -12,8 +12,8 @@ export function StepContent({ step, className, ...props }: StepContentProps) {
 
 	return (
 		<div
+			className={cn("fade-in animate-in duration-300")}
 			data-slot="stepper-content"
-			className={cn("animate-in fade-in duration-300")}
 			{...props}
 		/>
 	)

@@ -6,11 +6,11 @@ export function EmptyDescription({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="empty-description"
 			className={cn(
-				"text-muted-foreground [&>a:hover]:text-white text-sm/relaxed [&>a]:underline [&>a]:underline-offset-4",
-				className,
+				"text-muted-foreground text-sm/relaxed [&>a:hover]:text-white [&>a]:underline [&>a]:underline-offset-4",
+				className
 			)}
+			data-slot="empty-description"
 			{...props}
 		/>
 	)

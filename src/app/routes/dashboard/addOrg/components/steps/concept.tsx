@@ -2,44 +2,44 @@ import { Icon } from "@iconify-icon/react"
 
 export function Concept() {
 	return (
-		<div id="step-1" className="step-pane active">
-			<div className="animate-reveal stagger-2">
-				<h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900 mb-2">
+		<div className="step-pane active" id="step-1">
+			<div className="stagger-2 animate-reveal">
+				<h1 className="mb-2 font-semibold text-2xl text-slate-900 tracking-tight sm:text-3xl">
 					Vamos criar seu espaço.
 				</h1>
-				<p className="text-base text-slate-500 mb-8 leading-relaxed">
+				<p className="mb-8 text-base text-slate-500 leading-relaxed">
 					Comece definindo a identidade do seu negócio. Isso aparecerá no
 					cardápio digital.
 				</p>
 			</div>
 
-			<div className="space-y-5 animate-reveal stagger-3">
+			<div className="stagger-3 animate-reveal space-y-5">
 				<div className="input-group group">
-					<span className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1 transition-colors">
+					<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
 						Nome do Restaurante
 					</span>
-					<div className="relative transition-all transform focus-within:-translate-y-0.5">
+					<div className="relative transform transition-all focus-within:-translate-y-0.5">
 						<Icon
+							className="absolute top-3.5 left-4 text-slate-400 transition-colors"
 							icon="solar:shop-2-linear"
-							className="absolute left-4 top-3.5 text-slate-400 transition-colors"
 							width="20"
 						/>
 						<input
-							type="text"
+							className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 							placeholder="Ex: Trattoria da Nonna"
-							className="w-full bg-white rounded-xl border border-slate-200 pl-12 pr-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+							type="text"
 						/>
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div className="input-group group">
-						<span className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1 transition-colors">
+						<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
 							Categoria
 						</span>
 						<div className="relative">
-							<select className="w-full appearance-none bg-white rounded-xl border border-slate-200 pl-4 pr-10 py-3.5 text-sm text-slate-900 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm cursor-pointer">
-								<option value="" disabled selected>
+							<select className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-3.5 pr-10 pl-4 text-slate-900 text-sm shadow-sm transition-all focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+								<option disabled selected value="">
 									Selecione...
 								</option>
 								<option>Brasileira</option>
@@ -49,40 +49,40 @@ export function Concept() {
 								<option>Cafeteria</option>
 							</select>
 							<Icon
+								className="pointer-events-none absolute top-4 right-4 text-slate-400"
 								icon="solar:alt-arrow-down-linear"
-								className="absolute right-4 top-4 text-slate-400 pointer-events-none"
 								width="16"
 							/>
 						</div>
 					</div>
 					<div className="input-group group">
-						<span className="block text-xs font-medium text-slate-500 mb-1.5 uppercase tracking-wider ml-1 transition-colors">
+						<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
 							Responsável
 						</span>
 						<div className="relative">
 							<Icon
+								className="absolute top-3.5 left-4 text-slate-400 transition-colors"
 								icon="solar:user-id-linear"
-								className="absolute left-4 top-3.5 text-slate-400 transition-colors"
 								width="20"
 							/>
 							<input
-								type="text"
+								className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
 								placeholder="Seu nome"
-								className="w-full bg-white rounded-xl border border-slate-200 pl-12 pr-4 py-3.5 text-sm text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
+								type="text"
 							/>
 						</div>
 					</div>
 				</div>
 
 				<div className="input-group group pt-2">
-					<div className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
-						<div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm text-slate-400">
+					<div className="flex items-center gap-3 rounded-xl border border-slate-100 bg-slate-50 p-4">
+						<div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm">
 							<Icon icon="solar:link-linear" width="16" />
 						</div>
 						<div className="flex-1">
-							<p className="text-xs text-slate-400 mb-0.5">Seu link será:</p>
-							<p className="text-sm font-medium text-slate-600">
-								<span className="text-slate-900 border-b border-dashed border-slate-300">
+							<p className="mb-0.5 text-slate-400 text-xs">Seu link será:</p>
+							<p className="font-medium text-slate-600 text-sm">
+								<span className="border-slate-300 border-b border-dashed text-slate-900">
 									seurestaurante
 								</span>
 								.grupoboa.com.br

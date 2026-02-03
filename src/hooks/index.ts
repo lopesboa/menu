@@ -7,7 +7,7 @@ export function usePostHogEvent() {
 	const capture = (
 		event_name: EventName,
 		properties?: Properties | null,
-		options?: CaptureOptions,
+		options?: CaptureOptions
 	) => {
 		posthog.capture(event_name, properties, options)
 	}

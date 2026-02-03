@@ -19,7 +19,7 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 	}
 
 	return (
-		<div className="flex items-center w-full select-none">
+		<div className="flex w-full select-none items-center">
 			{steps.map((step, index) => {
 				const stepNumber = index + 1
 				const isCompleted = stepNumber < currentStep
@@ -29,25 +29,25 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 
 				return (
 					<div
+						className="flex flex-1 items-center last:flex-initial"
 						key={step.label}
-						className="flex items-center flex-1 last:flex-initial"
 					>
 						<button
-							type="button"
-							className="flex items-center gap-3 relative z-10 group cursor-pointer"
+							className="group relative z-10 flex cursor-pointer items-center gap-3"
 							onClick={() => handleStepClick(stepNumber)}
+							type="button"
 						>
 							<div
 								className={cn(
-									"w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold border-2 transition-all duration-300",
-									isCompleted && "bg-indigo-500 border-indigo-500 text-white",
+									"flex h-7 w-7 items-center justify-center rounded-full border-2 font-semibold text-[11px] transition-all duration-300",
+									isCompleted && "border-indigo-500 bg-indigo-500 text-white",
 									isActive &&
-										"bg-indigo-500/10 border-indigo-500 text-indigo-400",
-									isUpcoming && "border-slate-700 text-slate-500 bg-[#0f1115]",
+										"border-indigo-500 bg-indigo-500/10 text-indigo-400",
+									isUpcoming && "border-slate-700 bg-[#0f1115] text-slate-500"
 								)}
 							>
 								{isCompleted ? (
-									<Icon icon="lucide:check" className="text-white" width="14" />
+									<Icon className="text-white" icon="lucide:check" width="14" />
 								) : (
 									<span>{stepNumber}</span>
 								)}
@@ -55,9 +55,9 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 
 							<span
 								className={cn(
-									"text-xs font-medium transition-colors duration-300",
+									"font-medium text-xs transition-colors duration-300",
 									(isCompleted || isActive) && "text-indigo-400",
-									isUpcoming && "text-slate-500",
+									isUpcoming && "text-slate-500"
 								)}
 							>
 								{step.label}
@@ -65,11 +65,11 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 						</button>
 
 						{!isLast && (
-							<div className="flex-1 h-px bg-slate-800/80 mx-4 relative rounded-full overflow-hidden">
+							<div className="relative mx-4 h-px flex-1 overflow-hidden rounded-full bg-slate-800/80">
 								<div
 									className={cn(
-										"absolute left-0 top-0 h-full bg-indigo-500 transition-all duration-300",
-										stepNumber < currentStep ? "w-full" : "w-0",
+										"absolute top-0 left-0 h-full bg-indigo-500 transition-all duration-300",
+										stepNumber < currentStep ? "w-full" : "w-0"
 									)}
 								/>
 							</div>

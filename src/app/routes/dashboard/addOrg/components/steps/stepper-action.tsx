@@ -6,11 +6,11 @@ export function StepperActions({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="stepper-action"
 			className={cn(
-				"max-w-150 mx-auto p-4 sm:p-0 flex justify-between items-center",
-				className,
+				"mx-auto flex max-w-150 items-center justify-between p-4 sm:p-0",
+				className
 			)}
+			data-slot="stepper-action"
 			{...props}
 		/>
 	)

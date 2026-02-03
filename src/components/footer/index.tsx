@@ -2,13 +2,13 @@ import { Icon } from "@iconify-icon/react"
 
 export function Footer() {
 	return (
-		<footer className="py-12 border-t border-white/5 bg-black">
-			<div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+		<footer className="border-white/5 border-t bg-black py-12">
+			<div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
 				<div className="flex items-center gap-2">
-					<div className="w-5 h-5 rounded bg-linear-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white">
+					<div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-tr from-indigo-500 to-purple-500 text-white">
 						<Icon icon="solar:hamburger-menu-bold-duotone" width="12" />
 					</div>
-					<span className="font-medium tracking-tight text-sm text-slate-200">
+					<span className="font-medium text-slate-200 text-sm tracking-tight">
 						Menu Bão
 					</span>
 				</div>
@@ -17,23 +17,23 @@ export function Footer() {
 				</div>
 				<div className="flex gap-4">
 					<a
-						href="/"
 						aria-label="Siga nossa página no twitter"
-						className="text-slate-500 hover:text-white transition-colors"
+						className="text-slate-500 transition-colors hover:text-white"
+						href="/"
 					>
 						<Icon icon="brandico:twitter-bird" />
 					</a>
 					<a
-						href="/"
 						aria-label="Siga nossa página no Instagram"
-						className="text-slate-500 hover:text-white transition-colors"
+						className="text-slate-500 transition-colors hover:text-white"
+						href="/"
 					>
 						<Icon icon="brandico:instagram" />
 					</a>
 					<a
-						href="/"
 						aria-label="Siga nossa página no Github"
-						className="text-slate-500 hover:text-white transition-colors"
+						className="text-slate-500 transition-colors hover:text-white"
+						href="/"
 					>
 						<Icon icon="brandico:github" />
 					</a>

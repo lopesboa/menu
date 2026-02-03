@@ -57,58 +57,58 @@ export function SignUpForm() {
 			<div className="flex flex-row gap-4">
 				<Field
 					errors={[errors?.firstName?.message]}
-					label="Primeiro nome"
 					inputProps={{
 						type: "text",
 						placeholder: "José",
 						iconName: "solar:user-bold-duotone",
 						...register("firstName"),
 					}}
+					label="Primeiro nome"
 				/>
 				<Field
 					errors={[errors?.lastName?.message]}
-					label="Sobrenome"
 					inputProps={{
 						type: "text",
 						placeholder: "Felipe",
 						iconName: "solar:user-bold-duotone",
 						...register("lastName"),
 					}}
+					label="Sobrenome"
 				/>
 			</div>
 
 			<Field
-				errors={[errors?.email?.message]}
 				className="space-y-2"
-				label="Email"
+				errors={[errors?.email?.message]}
 				inputProps={{
 					type: "email",
 					placeholder: "voce@exemplo.com",
 					iconName: "solar:letter-bold-duotone",
 					...register("email"),
 				}}
+				label="Email"
 			/>
 			<Field
-				errors={[errors.password?.message]}
 				className="space-y-2"
-				label="Senha"
+				errors={[errors.password?.message]}
 				inputProps={{
 					type: "password",
 					placeholder: "Mínimo 8 caracteres",
 					iconName: "solar:lock-password-bold-duotone",
 					...register("password"),
 				}}
+				label="Senha"
 			/>
 			<Field
-				errors={[errors.confirmPassword?.message]}
 				className="space-y-2"
-				label="Confirmar senha"
+				errors={[errors.confirmPassword?.message]}
 				inputProps={{
 					type: "password",
 					placeholder: "Mínimo 8 caracteres",
 					iconName: "solar:lock-password-bold-duotone",
 					...register("confirmPassword"),
 				}}
+				label="Confirmar senha"
 			/>
 
 			<Button loading={loading} type="submit">

@@ -20,33 +20,33 @@ export function SignIn() {
 
 	return (
 		<BaseComponent
-			onClick={handleCloseDialog}
-			isOpen={isOpen(SIGN_IN_MODAL_ID)}
 			id={SIGN_IN_MODAL_ID}
+			isOpen={isOpen(SIGN_IN_MODAL_ID)}
+			onClick={handleCloseDialog}
 		>
 			<div className="space-y-6">
-				<div className="text-center space-y-2">
-					<div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-4 text-white">
+				<div className="space-y-2 text-center">
+					<div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white">
 						<Icon icon="solar:user-bold-duotone" width="24" />
 					</div>
-					<h3 className="text-2xl font-semibold text-white tracking-tight">
+					<h3 className="font-semibold text-2xl text-white tracking-tight">
 						Bem-vindo de volta
 					</h3>
-					<p className="text-sm text-slate-400">
+					<p className="text-slate-400 text-sm">
 						Entre na sua conta para continuar
 					</p>
 				</div>
 				<button
-					type="button"
+					className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 py-2 text-slate-300 text-sm transition-colors hover:bg-white/10"
 					name="Entrar Com Google"
-					className="flex w-full items-center justify-center gap-2 py-2 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition-colors text-sm text-slate-300 cursor-pointer"
+					type="button"
 				>
 					<Icon icon="devicon:google" width="16" /> Continuar com o Google
 				</button>
 
 				<div className="relative">
 					<div className="absolute inset-0 flex items-center">
-						<div className="w-full border-t border-white/10"></div>
+						<div className="w-full border-white/10 border-t" />
 					</div>
 					<div className="relative flex justify-center text-xs uppercase">
 						<span className="bg-[#0f111a] px-2 text-slate-500">
@@ -57,9 +57,9 @@ export function SignIn() {
 
 				<SignInForm onNavigate={handleCloseDialog} />
 
-				<div className="text-center text-sm text-slate-500">
+				<div className="text-center text-slate-500 text-sm">
 					Não tem uma conta?{" "}
-					<Button onClick={handleOnSignUp} fullWidth={false} variant="ghost">
+					<Button fullWidth={false} onClick={handleOnSignUp} variant="ghost">
 						Criar conta
 					</Button>
 				</div>

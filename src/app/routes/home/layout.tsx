@@ -28,11 +28,11 @@ export default function HomeLayout() {
 			<Navbar signIn={handleOnSignIn} signUp={handleOnSignUp} />
 			<Outlet />
 
-			<section className="py-32 relative overflow-hidden flex items-center justify-center">
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-indigo-500/10 via-[#030712] to-[#030712]"></div>
+			<section className="relative flex items-center justify-center overflow-hidden py-32">
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-indigo-500/10 via-[#030712] to-[#030712]" />
 
-				<div className="relative z-10 max-w-2xl mx-auto px-6 text-center space-y-8 scroll-reveal">
-					<h2 className="text-4xl md:text-5xl font-medium tracking-tight text-white leading-tight">
+				<div className="scroll-reveal relative z-10 mx-auto max-w-2xl space-y-8 px-6 text-center">
+					<h2 className="font-medium text-4xl text-white leading-tight tracking-tight md:text-5xl">
 						Pronto Para Otimizar
 						<br />
 						Suas Operações?
@@ -41,22 +41,22 @@ export default function HomeLayout() {
 						Junte-se a mais de 500 restaurantes que escalaram com o Menu Bão.
 						Cancele quando quiser.
 					</p>
-					<div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+					<div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
 						<Button
+							className="rounded-full px-8 py-4 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-slate-200 sm:w-auto"
 							onClick={handleOnSignUp}
-							className="sm:w-auto px-8 py-4 rounded-full hover:bg-slate-200 shadow-[0_0_20px_rgba(255,255,255,0.3)]"
 						>
 							Começar Teste Grátis
 						</Button>
 						<Button
+							className="rounded-full px-8 py-4 sm:w-auto"
 							onClick={handleOnShowDemo}
-							className="sm:w-auto px-8 py-4 rounded-full"
 							variant="secondary"
 						>
 							Começar Teste Grátis
 						</Button>
 					</div>
-					<p className="text-xs text-slate-500 mt-6">
+					<p className="mt-6 text-slate-500 text-xs">
 						Não é necessário cartão de crédito para começar.
 					</p>
 				</div>

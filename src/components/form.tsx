@@ -15,11 +15,11 @@ export function ErrorList({
 	if (!errorsToRender?.length) return null
 
 	return (
-		<ul id={id} className="flex flex-col gap-1">
+		<ul className="flex flex-col gap-1" id={id}>
 			{errorsToRender.map((error) => (
 				<li
-					key={error}
 					className="text-[10px] text-foreground-destructive text-red-700"
+					key={error}
 				>
 					{error}
 				</li>
@@ -46,19 +46,19 @@ export function Field({
 
 	return (
 		<div className={cn("space-y-2", className)}>
-			<span className="text-sm font-medium text-slate-300">{label}</span>
+			<span className="font-medium text-slate-300 text-sm">{label}</span>
 			<Input
-				id={id}
-				aria-invalid={errorId ? true : undefined}
 				aria-describedby={errorId}
+				aria-invalid={errorId ? true : undefined}
 				className={cn(
-					"w-full mt-1 bg-black/50 border border-white/10 rounded-lg px-10 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all",
-					errorId ? "border-red-400" : undefined,
+					"mt-1 w-full rounded-lg border border-white/10 bg-black/50 px-10 py-2.5 text-sm text-white transition-all placeholder:text-slate-600 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/50",
+					errorId ? "border-red-400" : undefined
 				)}
+				id={id}
 				{...inputProps}
 			/>
 
-			{errorId ? <ErrorList id={errorId} errors={errors} /> : null}
+			{errorId ? <ErrorList errors={errors} id={errorId} /> : null}
 		</div>
 	)
 }

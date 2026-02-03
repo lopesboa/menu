@@ -6,11 +6,11 @@ export function EmptyMedia({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="empty-media"
 			className={cn(
-				"bg-muted text-foreground flex size-10 shrink-0 items-center justify-center rounded-lg [&_svg:not([class*='size-'])]:size-6",
-				className,
+				"flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground [&_svg:not([class*='size-'])]:size-6",
+				className
 			)}
+			data-slot="empty-media"
 			{...props}
 		/>
 	)

@@ -20,27 +20,27 @@ export function DemoSales() {
 		<Dialog id={DEMO_SALES_ID}>
 			<div
 				className={cn(
-					"relative w-full max-w-lg bg-[#0f111a] border border-white/10 rounded-2xl p-8 shadow-2xl transform transition-all duration-300 ",
-					shouldScale ? "scale-95" : "",
+					"relative w-full max-w-lg transform rounded-2xl border border-white/10 bg-[#0f111a] p-8 shadow-2xl transition-all duration-300",
+					shouldScale ? "scale-95" : ""
 				)}
 			>
 				<button
-					type="button"
+					className="absolute top-4 right-4 text-slate-500 transition-colors hover:text-white"
 					name="Fechar Demo"
 					onClick={handleToggleDemoSales}
-					className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors"
+					type="button"
 				>
 					<Icon icon="solar:close-circle-bold-duotone" width="24" />
 				</button>
 
-				<div className="text-center space-y-2 mb-8">
-					<div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4 text-indigo-400">
+				<div className="mb-8 space-y-2 text-center">
+					<div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-indigo-500/20 bg-indigo-500/10 text-indigo-400">
 						<Icon icon="solar:chat-round-dots-bold-duotone" width="24" />
 					</div>
-					<h3 className="text-2xl font-semibold text-white tracking-tight">
+					<h3 className="font-semibold text-2xl text-white tracking-tight">
 						Fale com nossos especialistas
 					</h3>
-					<p className="text-sm text-slate-400">
+					<p className="text-slate-400 text-sm">
 						Descubra como o Menu Bão pode transformar seu restaurante.
 					</p>
 				</div>
@@ -48,74 +48,74 @@ export function DemoSales() {
 				<form className="space-y-4">
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<span className="text-xs font-medium text-slate-300">Nome</span>
+							<span className="font-medium text-slate-300 text-xs">Nome</span>
 							<Input
-								type="text"
-								placeholder="Seu nome"
 								iconName="solar:user-bold-duotone"
+								placeholder="Seu nome"
+								type="text"
 							/>
 						</div>
 						<div className="space-y-2">
-							<span className="text-xs font-medium text-slate-300">
+							<span className="font-medium text-slate-300 text-xs">
 								Sobrenome
 							</span>
 							<Input
-								type="text"
-								placeholder="Seu sobrenome"
 								iconName="solar:user-bold-duotone"
+								placeholder="Seu sobrenome"
+								type="text"
 							/>
 						</div>
 					</div>
 
 					<div className="space-y-2">
-						<span className="text-xs font-medium text-slate-300">
+						<span className="font-medium text-slate-300 text-xs">
 							Email Corporativo
 						</span>
 
 						<Input
-							type="email"
-							placeholder="voce@empresa.com"
 							iconName="solar:letter-bold-duotone"
+							placeholder="voce@empresa.com"
+							type="email"
 						/>
 					</div>
 
 					<div className="space-y-2">
-						<span className="text-xs font-medium text-slate-300">
+						<span className="font-medium text-slate-300 text-xs">
 							Nome do Restaurante
 						</span>
 						<Input
-							type="text"
-							placeholder="Empresa Ltda."
 							iconName="solar:shop-bold-duotone"
+							placeholder="Empresa Ltda."
+							type="text"
 						/>
 					</div>
 
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<span className="text-xs font-medium text-slate-300">
+							<span className="font-medium text-slate-300 text-xs">
 								Telefone
 							</span>
 							<Input
-								type="tel"
-								placeholder="(11) 99999-9999"
 								iconName="solar:phone-bold-duotone"
+								placeholder="(11) 99999-9999"
+								type="tel"
 							/>
 						</div>
 						<div className="space-y-2">
-							<span className="text-xs font-medium text-slate-300">
+							<span className="font-medium text-slate-300 text-xs">
 								Nº de Unidades
 							</span>
-							<select className="w-full bg-black/50 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/50 transition-all appearance-none cursor-pointer">
+							<select className="w-full cursor-pointer appearance-none rounded-lg border border-white/10 bg-black/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-slate-600 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/50">
 								<option>1-2 Unidades</option>
 								<option>3-10 Unidades</option>
 								<option>10+ Unidades</option>
 							</select>
 						</div>
 					</div>
-					<Button className="py-3 gap-2 mt-9 shadow-lg">
+					<Button className="mt-9 gap-2 py-3 shadow-lg">
 						Solicitar Demonstração
 					</Button>
-					<p className="text-[10px] text-center text-slate-600 mt-4">
+					<p className="mt-4 text-center text-[10px] text-slate-600">
 						Nossa equipe entrará em contato em até 24 horas.
 					</p>
 				</form>

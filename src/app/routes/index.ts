@@ -14,6 +14,7 @@ const ChangePassword = lazy(() => import("./auth/change-password"))
 const Dashboard = lazy(() => import("./dashboard"))
 const DashboardHome = lazy(() => import("./dashboard/dashboard-home"))
 const DashboardEmpty = lazy(() => import("./dashboard/empty"))
+const DashboardAddOrganization = lazy(() => import("./dashboard/addOrg"))
 
 export const router = createBrowserRouter([
 	{
@@ -44,5 +45,6 @@ export const router = createBrowserRouter([
 		middleware: [authMiddleware, orgMiddleware],
 		children: [{ index: true, Component: DashboardHome }],
 	},
+	{ path: "/dashboard/add-org", Component: DashboardAddOrganization },
 	{ path: "dashboard/create", Component: DashboardEmpty },
 ])

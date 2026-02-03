@@ -39,20 +39,20 @@ export function Button({
 
 	return (
 		<button
-			type={type}
-			name={children as string}
-			disabled={disabled || loading}
 			className={cn(
 				baseStyle,
 				widthStyle,
 				variantStyles[variant],
 				disabledStyle,
-				className,
+				className
 			)}
+			disabled={disabled || loading}
+			name={children as string}
+			type={type}
 			{...props}
 		>
 			{loading ? (
-				<Icon icon="svg-spinners:bars-scale-fade" width="24" height="24" />
+				<Icon height="24" icon="svg-spinners:bars-scale-fade" width="24" />
 			) : variant === "secondary" ? (
 				<span className="relative z-10">{children}</span>
 			) : (

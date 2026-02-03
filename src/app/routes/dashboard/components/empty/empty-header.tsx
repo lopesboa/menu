@@ -6,11 +6,11 @@ export function EmptyHeader({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="empty-header"
 			className={cn(
 				"flex max-w-sm flex-col items-center gap-2 text-center",
-				className,
+				className
 			)}
+			data-slot="empty-header"
 			{...props}
 		/>
 	)

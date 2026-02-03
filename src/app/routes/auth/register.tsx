@@ -55,7 +55,7 @@ export default function Register() {
 							state: { email: data.email, redirectTo: data.redirectTo },
 						})
 					},
-				},
+				}
 			)
 		} catch (error) {
 		} finally {
@@ -64,95 +64,95 @@ export default function Register() {
 	}
 
 	return (
-		<div data-slot="auth-register" className="flex flex-col gap-5">
-			<div className="text-center mb-2 animate-slide-up-fade">
-				<h2 className="text-lg font-medium text-white tracking-tight">
+		<div className="flex flex-col gap-5" data-slot="auth-register">
+			<div className="mb-2 animate-slide-up-fade text-center">
+				<h2 className="font-medium text-lg text-white tracking-tight">
 					Crie sua conta
 				</h2>
-				<p className="text-xs text-secondary mt-1">
+				<p className="mt-1 text-secondary text-xs">
 					Comece seu teste de 14 dias grátis
 				</p>
 			</div>
 
 			<button
+				className="group flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 transition-colors duration-200 hover:bg-neutral-900"
 				type="button"
-				className="w-full flex items-center justify-center gap-2 bg-surface hover:bg-neutral-900 border border-border rounded-lg py-2.5 px-4 transition-colors duration-200 group"
 			>
 				<Icon
+					className="text-sm opacity-80 transition-opacity group-hover:opacity-100"
 					icon="logos:google-icon"
-					className="text-sm opacity-80 group-hover:opacity-100 transition-opacity"
 				/>
-				<span className="text-xs font-medium text-secondary group-hover:text-white">
+				<span className="font-medium text-secondary text-xs group-hover:text-white">
 					Continuar com Google
 				</span>
 			</button>
-			<div className="relative flex items-center py-2  animate-slide-up-fade delay-100">
-				<div className="grow border-t border-neutral-800"></div>
-				<span className="shrink-0 mx-4 text-[10px] uppercase tracking-widest text-neutral-600 font-medium">
+			<div className="relative flex animate-slide-up-fade items-center py-2 delay-100">
+				<div className="grow border-neutral-800 border-t" />
+				<span className="mx-4 shrink-0 font-medium text-[10px] text-neutral-600 uppercase tracking-widest">
 					Ou criar conta com email
 				</span>
-				<div className="grow border-t border-neutral-800"></div>
+				<div className="grow border-neutral-800 border-t" />
 			</div>
 
 			<form
-				className="flex flex-col gap-4 animate-slide-up-fade delay-200 mb-6"
+				className="mb-6 flex animate-slide-up-fade flex-col gap-4 delay-200"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex flex-row gap-4">
 					<Field
 						errors={[errors?.firstName?.message]}
-						label="Primeiro nome"
 						inputProps={{
 							type: "text",
 							placeholder: "José",
 							iconName: "solar:user-bold-duotone",
 							...register("firstName"),
 						}}
+						label="Primeiro nome"
 					/>
 					<Field
 						errors={[errors?.lastName?.message]}
-						label="Sobrenome"
 						inputProps={{
 							type: "text",
 							placeholder: "Felipe",
 							iconName: "solar:user-bold-duotone",
 							...register("lastName"),
 						}}
+						label="Sobrenome"
 					/>
 				</div>
 
 				<Field
-					errors={[errors?.email?.message]}
 					className="space-y-2"
-					label="Email"
+					errors={[errors?.email?.message]}
 					inputProps={{
 						type: "email",
 						placeholder: "voce@exemplo.com",
 						iconName: "solar:letter-bold-duotone",
 						...register("email"),
 					}}
+					label="Email"
 				/>
 				<Field
-					errors={[errors.password?.message]}
 					className="space-y-2"
-					label="Senha"
+					errors={[errors.password?.message]}
 					inputProps={{
 						type: "password",
 						placeholder: "Mínimo 8 caracteres",
 						iconName: "solar:lock-password-bold-duotone",
 						...register("password"),
 					}}
+					label="Senha"
 				/>
 				<Field
-					errors={[errors.confirmPassword?.message]}
 					className="space-y-2"
-					label="Confirmar senha"
+					errors={[errors.confirmPassword?.message]}
 					inputProps={{
 						type: "password",
 						placeholder: "Mínimo 8 caracteres",
 						iconName: "solar:lock-password-bold-duotone",
 						...register("confirmPassword"),
 					}}
+					label="Confirmar senha"
 				/>
 
 				<Button loading={loading} type="submit">
@@ -160,11 +160,11 @@ export default function Register() {
 				</Button>
 			</form>
 
-			<p className="text-center text-xs text-secondary animate-slide-up-fade delay-300">
+			<p className="animate-slide-up-fade text-center text-secondary text-xs delay-300">
 				Já tem uma conta?{" "}
 				<Link
+					className="text-white underline-offset-2 hover:underline"
 					to="/auth/login"
-					className="text-white hover:underline underline-offset-2"
 				>
 					Entrar
 				</Link>

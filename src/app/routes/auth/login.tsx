@@ -58,47 +58,46 @@ export default function Login() {
 
 	return (
 		<div
+			className="flex animate-slide-up-fade flex-col gap-5 delay-300"
 			data-slot="auth-login"
 			id="view-login"
-			className="flex flex-col gap-5 animate-slide-up-fade delay-300"
 		>
-			<div className="text-center mb-2">
-				<h2 className="text-lg font-medium text-white tracking-tight">
+			<div className="mb-2 text-center">
+				<h2 className="font-medium text-lg text-white tracking-tight">
 					Bem-vindo de volta
 				</h2>
-				<p className="text-xs text-secondary mt-1">
+				<p className="mt-1 text-secondary text-xs">
 					Entre na sua conta para continuar
 				</p>
 			</div>
 
 			<button
+				className="group flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-surface px-4 py-2.5 transition-colors duration-200 hover:bg-neutral-900"
 				type="button"
-				className="flex w-full items-center justify-center gap-2 bg-surface hover:bg-neutral-900 border border-border rounded-lg py-2.5 px-4 transition-colors duration-200 group cursor-pointer"
 			>
 				<Icon
+					className="text-sm opacity-80 transition-opacity group-hover:opacity-100"
 					icon="logos:google-icon"
-					className="text-sm opacity-80 group-hover:opacity-100 transition-opacity"
 				/>
-				<span className="text-xs font-medium text-secondary group-hover:text-white">
+				<span className="font-medium text-secondary text-xs group-hover:text-white">
 					Continuar com Google
 				</span>
 			</button>
 
 			<div className="relative flex items-center py-2">
-				<div className="grow border-t border-neutral-800"></div>
-				<span className="shrink-0 mx-4 text-[10px] uppercase tracking-widest text-neutral-600 font-medium">
+				<div className="grow border-neutral-800 border-t" />
+				<span className="mx-4 shrink-0 font-medium text-[10px] text-neutral-600 uppercase tracking-widest">
 					Ou continuar com
 				</span>
-				<div className="grow border-t border-neutral-800"></div>
+				<div className="grow border-neutral-800 border-t" />
 			</div>
 
 			<form
-				className="flex flex-col gap-4 mb-6"
+				className="mb-6 flex flex-col gap-4"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<Field
 					className="space-y-2"
-					label="Email"
 					errors={[errors.email?.message]}
 					inputProps={{
 						type: "email",
@@ -106,60 +105,61 @@ export default function Login() {
 						iconName: "solar:letter-bold-duotone",
 						...register("email"),
 					}}
+					label="Email"
 				/>
 
 				<div className="group relative">
-					<div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+					<div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
 						<Icon
+							className="text-neutral-500 transition-colors group-focus-within:text-white"
 							icon="solar:lock-password-bold-duotone"
-							className="text-neutral-500 group-focus-within:text-white transition-colors"
 						/>
 					</div>
 					<Input
-						type="password"
-						placeholder="••••••••"
 						iconName="solar:lock-password-bold-duotone"
+						placeholder="••••••••"
+						type="password"
 						{...register("password")}
 					/>
 				</div>
 
 				<div className="flex items-center justify-between">
-					<label className="flex items-center gap-2 cursor-pointer group">
+					<label className="group flex cursor-pointer items-center gap-2">
 						<input
-							type="checkbox"
-							className="mt-0.5 h-4 w-4 rounded border-slate-600 bg-[#16181d] text-indigo-500 focus:ring-indigo-500/50 focus:ring-offset-0 focus:ring-offset-transparent cursor-pointer"
+							className="mt-0.5 h-4 w-4 cursor-pointer rounded border-slate-600 bg-[#16181d] text-indigo-500 focus:ring-indigo-500/50 focus:ring-offset-0 focus:ring-offset-transparent"
 							onClick={handleOnRemember}
+							type="checkbox"
 						/>
 
-						<span className="text-xs text-secondary group-hover:text-white transition-colors">
+						<span className="text-secondary text-xs transition-colors group-hover:text-white">
 							Me Lembrar
 						</span>
 					</label>
 					<Link
+						className="cursor-pointer text-secondary text-xs transition-colors hover:text-white"
 						to="/auth/forgot"
-						className="text-xs text-secondary hover:text-white transition-colors cursor-pointer"
 					>
 						Esqueceu sua senha?
 					</Link>
 				</div>
 
 				<Button
+					loading={loading}
 					onClick={() => {
 						capture("button_clicked", { button_name: "login" })
 					}}
-					loading={loading}
 					type="submit"
 				>
 					Entrar na plataforma
 				</Button>
 			</form>
 
-			<p className="text-center text-xs text-secondary">
+			<p className="text-center text-secondary text-xs">
 				Não tem uma conta?{" "}
 				<Link
-					to="/auth/register"
-					className="text-white hover:underline underline-offset-2 cursor-pointer"
+					className="cursor-pointer text-white underline-offset-2 hover:underline"
 					onClick={() => capture("link_clicked", { link_name: "register" })}
+					to="/auth/register"
 				>
 					Criar conta
 				</Link>

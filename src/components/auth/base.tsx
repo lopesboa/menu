@@ -19,15 +19,15 @@ export function BaseComponent({
 		<Dialog id={id}>
 			<div
 				className={cn(
-					"relative w-full max-w-md bg-[#0f111a] border border-white/10 rounded-2xl p-8 shadow-2xl transform transition-all duration-300",
-					!isOpen ? "scale-95" : "",
+					"relative w-full max-w-md transform rounded-2xl border border-white/10 bg-[#0f111a] p-8 shadow-2xl transition-all duration-300",
+					isOpen ? "" : "scale-95"
 				)}
 			>
 				<button
-					type="button"
+					className="absolute top-4 right-4 text-slate-500 transition-colors hover:text-white"
 					name="Fechar"
 					onClick={onClick}
-					className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors"
+					type="button"
 				>
 					<Icon icon="solar:close-circle-bold-duotone" width="24" />
 				</button>

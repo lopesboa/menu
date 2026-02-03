@@ -87,26 +87,26 @@ export default function AddOrganization() {
 
 	return (
 		<div
+			className="flex min-h-screen flex-col items-center justify-center overflow-hidden p-4 sm:p-6"
 			data-slot="add-organization"
-			className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 overflow-hidden"
 		>
 			<div
+				className="relative z-10 mt-16 w-full max-w-150 sm:mt-0"
 				data-slot="add-org-content"
-				className="w-full max-w-150 mt-16 sm:mt-0 relative z-10"
 			>
 				<StepperRoot
 					defaultStep={1}
 					onStepChange={(step) => console.log({ step })}
 				>
-					<div className="px-8 pt-8 pb-6 border-b border-white/5 flex flex-col gap-6">
+					<div className="flex flex-col gap-6 border-white/5 border-b px-8 pt-8 pb-6">
 						<div>
 							<h3
-								className="text-xl text-white font-medium tracking-tight mb-1"
+								className="mb-1 font-medium text-white text-xl tracking-tight"
 								id="animated-title"
 							>
 								Criar Estabelecimento
 							</h3>
-							<p className="text-xs text-slate-500 animate-enter delay-500">
+							<p className="animate-enter text-slate-500 text-xs delay-500">
 								Set up your workspace in minutes.
 							</p>
 						</div>
@@ -114,8 +114,8 @@ export default function AddOrganization() {
 					<StepperHeader steps={steps} />
 
 					<form
-						id="org-form"
 						className="elative min-h-115"
+						id="org-form"
 						// className="px-8 tp-8 pb-6 overflow-hidden animate-enter delay-600"
 						onSubmit={handleSubmit(onSubmit)}
 					>
@@ -136,33 +136,33 @@ export default function AddOrganization() {
 				</StepperRoot>
 			</div>
 
-			<div className="fixed bottom-0 left-0 w-full bg-white/90 backdrop-blur-xl border-t border-slate-200 sm:static sm:bg-transparent sm:border-0 mt-8 animate-reveal stagger-3 z-50">
-				<div className="max-w-150 mx-auto p-4 sm:p-0 flex justify-between items-center">
+			<div className="stagger-3 fixed bottom-0 left-0 z-50 mt-8 w-full animate-reveal border-slate-200 border-t bg-white/90 backdrop-blur-xl sm:static sm:border-0 sm:bg-transparent">
+				<div className="mx-auto flex max-w-150 items-center justify-between p-4 sm:p-0">
 					<Button
-						fullWidth={false}
-						variant="ghost"
-						type="button"
 						className={cn(
-							"flex px-4 py-2 rounded-lg text-sm font-medium text-slate-500  transition-all items-center gap-2 cursor-pointer",
-							isFirstStep ? "opacity-0" : "",
+							"flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 font-medium text-slate-500 text-sm transition-all",
+							isFirstStep ? "opacity-0" : ""
 						)}
+						fullWidth={false}
 						onClick={handleBack}
+						type="button"
+						variant="ghost"
 					>
 						<Icon icon="solar:arrow-left-linear" width="18" />
 						<span>Voltar</span>
 					</Button>
 
 					<Button
+						className="group flex transform cursor-pointer items-center gap-3 rounded-xl bg-slate-900 py-3.5 pr-6 pl-8 font-medium text-sm text-white shadow-slate-900/20 shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30"
 						fullWidth={false}
-						type="button"
-						className="group bg-slate-900 text-white pl-8 pr-6 py-3.5 rounded-xl text-sm font-medium shadow-xl shadow-slate-900/20 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3 cursor-pointer"
 						onClick={handleNext}
+						type="button"
 					>
 						<span>Continuar</span>
 						<Icon
+							className="transition-transform group-hover:translate-x-1"
 							icon="solar:arrow-right-linear"
 							width="18"
-							className="group-hover:translate-x-1 transition-transform"
 						/>
 					</Button>
 				</div>

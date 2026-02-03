@@ -51,7 +51,7 @@ export default function Verify() {
 					onSuccess() {
 						navigate(redirectTo || "/dashboard", { replace: true })
 					},
-				},
+				}
 			)
 		} catch (error) {
 		} finally {
@@ -62,44 +62,44 @@ export default function Verify() {
 	return (
 		<div className="flex flex-col gap-6">
 			<Link
+				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
 				to="/auth/login"
-				className="absolute top-0 left-0 text-secondary hover:text-white transition-colors flex items-center gap-1 text-xs"
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>
 
-			<div className="text-center mt-6 mb-2 animate-slide-up-fade">
-				<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-neutral-900 border border-border mb-4">
+			<div className="mt-6 mb-2 animate-slide-up-fade text-center">
+				<div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-neutral-900">
 					<Icon
+						className="text-green-500 text-lg"
 						icon="solar:shield-check-bold-duotone"
-						className="text-lg text-green-500"
 					/>
 				</div>
-				<h2 className="text-lg font-medium text-white tracking-tight">
+				<h2 className="font-medium text-lg text-white tracking-tight">
 					Check your email
 				</h2>
-				<p className="text-xs text-secondary mt-1 max-w-65 mx-auto">
+				<p className="mx-auto mt-1 max-w-65 text-secondary text-xs">
 					We sent a verification code to{" "}
-					<span id="display-email" className="text-white">
+					<span className="text-white" id="display-email">
 						{email}
 					</span>
 				</p>
 			</div>
 
 			<form
-				className="flex flex-col justify-center gap-4 animate-slide-up-fade delay-100"
+				className="flex animate-slide-up-fade flex-col justify-center gap-4 delay-100"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex justify-center">
 					<Controller
-						name="otp"
 						control={control}
+						name="otp"
 						render={({ field }) => (
 							<InputOTP
-								maxLength={6}
-								value={field.value}
-								onChange={field.onChange}
 								className={cn(errors.otp?.message ? "border-red-400" : "")}
+								maxLength={6}
+								onChange={field.onChange}
+								value={field.value}
 							>
 								<InputOTPGroup>
 									<InputOTPSlot index={0} />
@@ -127,11 +127,11 @@ export default function Verify() {
 				</Button>
 			</form>
 
-			<p className="text-center text-xs text-secondary animate-slide-up-fade delay-200">
+			<p className="animate-slide-up-fade text-center text-secondary text-xs delay-200">
 				Não recebeu o e-mail?{" "}
 				<button
+					className="text-white underline-offset-2 hover:underline"
 					type="button"
-					className="text-white hover:underline underline-offset-2"
 				>
 					Click para reenviar
 				</button>

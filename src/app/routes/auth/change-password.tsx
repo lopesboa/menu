@@ -5,43 +5,43 @@ import { Field } from "@/components/form"
 export default function ChangePassword() {
 	return (
 		<div className="flex flex-col gap-6">
-			<div className="text-center mt-6 mb-2 animate-slide-up-fade">
-				<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-neutral-900 border border-border mb-4">
+			<div className="mt-6 mb-2 animate-slide-up-fade text-center">
+				<div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-neutral-900">
 					<Icon
-						icon="solar:key-square-bold-duotone"
 						className="text-lg text-white"
+						icon="solar:key-square-bold-duotone"
 					/>
 				</div>
-				<h2 className="text-lg font-medium text-white tracking-tight">
+				<h2 className="font-medium text-lg text-white tracking-tight">
 					Set new password
 				</h2>
-				<p className="text-xs text-secondary mt-1">
+				<p className="mt-1 text-secondary text-xs">
 					Your new password must be different to previously used passwords.
 				</p>
 			</div>
 
-			<form className="flex flex-col gap-4 animate-slide-up-fade delay-100">
+			<form className="flex animate-slide-up-fade flex-col gap-4 delay-100">
 				<Field
 					className="space-y-2"
-					label="Nova senha"
-					// errors={[errors.email?.message]}
 					inputProps={{
 						type: "password",
 						placeholder: "Nova senha",
 						iconName: "solar:lock-password-bold-duotone",
 						// ...register("email"),
 					}}
+					// errors={[errors.email?.message]}
+					label="Nova senha"
 				/>
 				<Field
 					className="space-y-2"
-					label="Confirmar senha"
-					// errors={[errors.email?.message]}
 					inputProps={{
 						type: "password",
 						placeholder: "Confirmar senha",
 						iconName: "solar:lock-password-bold-duotone",
 						// ...register("email"),
 					}}
+					// errors={[errors.email?.message]}
+					label="Confirmar senha"
 				/>
 
 				<Button type="submit">Alterar Senha</Button>

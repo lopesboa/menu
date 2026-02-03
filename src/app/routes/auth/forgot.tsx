@@ -46,7 +46,7 @@ export default function Forgot() {
 							state: { redirectTo: "/auth/change-password" },
 						})
 					},
-				},
+				}
 			)
 		} catch (error) {
 		} finally {
@@ -55,36 +55,35 @@ export default function Forgot() {
 	}
 
 	return (
-		<div data-slot="auth-forgot" className="flex flex-col gap-6">
+		<div className="flex flex-col gap-6" data-slot="auth-forgot">
 			<Link
+				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
 				to="/auth/login"
-				className="absolute top-0 left-0 text-secondary hover:text-white transition-colors flex items-center gap-1 text-xs"
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>
-			<div className="text-center  mb-2 animate-slide-up-fade">
-				<div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-neutral-900 border border-border mb-4">
+			<div className="mb-2 animate-slide-up-fade text-center">
+				<div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-neutral-900">
 					<Icon
-						icon="solar:lock-password-unlocked-bold-duotone"
 						className="text-lg text-secondary"
+						icon="solar:lock-password-unlocked-bold-duotone"
 					/>
 				</div>
-				<h2 className="text-lg font-medium text-white tracking-tight">
+				<h2 className="font-medium text-lg text-white tracking-tight">
 					Recuperar senha
 				</h2>
-				<p className="text-xs text-secondary mt-1 max-w-65 mx-auto">
+				<p className="mx-auto mt-1 max-w-65 text-secondary text-xs">
 					Informe seu e-mail cadastrado e enviaremos as instruções para
 					redefinir sua senha.
 				</p>
 			</div>
 
 			<form
-				className="flex flex-col gap-4 animate-slide-up-fade delay-100"
+				className="flex animate-slide-up-fade flex-col gap-4 delay-100"
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<Field
 					className="space-y-2"
-					label="Email"
 					errors={[errors.email?.message]}
 					inputProps={{
 						type: "email",
@@ -92,6 +91,7 @@ export default function Forgot() {
 						iconName: "solar:letter-bold-duotone",
 						...register("email"),
 					}}
+					label="Email"
 				/>
 
 				<Button loading={loading} type="submit">

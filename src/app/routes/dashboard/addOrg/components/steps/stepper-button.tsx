@@ -14,16 +14,16 @@ export function StepperNextButton({
 
 	return (
 		<Button
+			className="group flex transform cursor-pointer items-center gap-3 rounded-xl bg-slate-900 py-3.5 pr-6 pl-8 font-medium text-sm text-white shadow-slate-900/20 shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30"
 			fullWidth={false}
-			type="button"
-			className="group bg-slate-900 text-white pl-8 pr-6 py-3.5 rounded-xl text-sm font-medium shadow-xl shadow-slate-900/20 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30 transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3 cursor-pointer"
 			onClick={handleClick}
+			type="button"
 		>
 			<span>{children}</span>
 			<Icon
+				className="transition-transform group-hover:translate-x-1"
 				icon="solar:arrow-right-linear"
 				width="18"
-				className="group-hover:translate-x-1 transition-transform"
 			/>
 		</Button>
 	)
@@ -40,13 +40,13 @@ export function StepperPreviousButton({
 
 	return (
 		<Button
-			fullWidth={false}
-			variant="ghost"
-			type="button"
 			className={cn(
-				"flex px-4 py-2 rounded-lg text-sm font-medium text-slate-500  transition-all items-center gap-2 cursor-pointer",
+				"flex cursor-pointer items-center gap-2 rounded-lg px-4 py-2 font-medium text-slate-500 text-sm transition-all"
 			)}
+			fullWidth={false}
 			onClick={handleClick}
+			type="button"
+			variant="ghost"
 		>
 			<Icon icon="solar:arrow-left-linear" width="18" />
 			<span>{children}</span>
