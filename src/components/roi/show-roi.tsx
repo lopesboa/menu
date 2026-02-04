@@ -1,5 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import { Dialog } from "../ui/dialog"
+import { Link } from "react-router"
 
 export function ShowROI({
 	onCloseDemo,
@@ -183,7 +184,9 @@ export function ShowROI({
 								onClick={onStartNow}
 								type="button"
 							>
-								Começar agora
+								<Link aria-label="Começar agora" to="/auth/register">
+									Começar agora
+								</Link>
 							</button>
 							<p className="mt-3 text-center text-[10px] text-slate-600">
 								Estimativas baseadas em dados médios de clientes.
