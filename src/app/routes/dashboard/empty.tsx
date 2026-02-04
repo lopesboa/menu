@@ -10,7 +10,7 @@ import { EmptyHeader } from "./components/empty/empty-header"
 import { EmptyMedia } from "./components/empty/empty-media"
 import { EmptyTitle } from "./components/empty/empty-title"
 
-export default function DashboardEmpty() {
+export function DashboardEmpty() {
 	return (
 		<Empty>
 			<EmptyHeader>
@@ -27,7 +27,7 @@ export default function DashboardEmpty() {
 				<Button type="button">
 					<Link
 						aria-label="Navegar para adicoinar estabelicimento "
-						to="/dashboard/add-org"
+						to="add-org"
 					>
 						Adicionar Estabelecimento
 					</Link>

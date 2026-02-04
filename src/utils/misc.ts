@@ -1,8 +1,8 @@
-import * as clsx from "clsx"
+import clsx, { type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: clsx.ClassValue[]) {
-	return twMerge(clsx.clsx(inputs))
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs))
 }
 
 export function createOrgSlug(name: string): string {

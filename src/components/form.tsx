@@ -12,7 +12,9 @@ export function ErrorList({
 }) {
 	const errorsToRender = errors?.filter(Boolean)
 
-	if (!errorsToRender?.length) return null
+	if (!errorsToRender?.length) {
+		return null
+	}
 
 	return (
 		<ul className="flex flex-col gap-1" id={id}>

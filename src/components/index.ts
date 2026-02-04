@@ -1,5 +1,3 @@
-export { SignIn } from "./auth/sign-in"
-export { SignUp } from "./auth/sign-up"
 export { FeaturesSection } from "./features"
 export { Footer } from "./footer"
 export { HeroSection } from "./hero"
