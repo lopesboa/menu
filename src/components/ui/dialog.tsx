@@ -13,25 +13,25 @@ export function Dialog({ children, className, id }: DialogProps) {
 
 	return (
 		<div
-			id="auth-modal"
+			aria-labelledby={id}
+			aria-modal="true"
 			className={cn(
 				"fixed inset-0 z-100",
 				className,
-				!openDialog ? " hidden" : "",
+				openDialog ? "" : "hidden"
 			)}
-			aria-labelledby={id}
+			id="auth-modal"
 			role="dialog"
-			aria-modal="true"
 		>
 			<div
 				className={cn(
 					"absolute inset-0 bg-black/95 transition-opacity duration-300",
-					!openDialog ? "opacity-0" : "",
+					openDialog ? "" : "opacity-0"
 				)}
 				id="auth-modal-backdrop"
-			></div>
+			/>
 
-			<div className="relative min-h-screen flex items-center justify-center p-4">
+			<div className="relative flex min-h-screen items-center justify-center p-4">
 				{children}
 			</div>
 		</div>

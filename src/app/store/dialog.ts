@@ -1,10 +1,10 @@
 import { create } from "zustand"
 
-type DialogState = {
+interface DialogState {
 	[key: string]: boolean
 }
 
-type DialogStore = {
+interface DialogStore {
 	dialogs: DialogState
 	isOpen: (id: string) => boolean
 	openDialog: (id: string) => void
@@ -14,7 +14,7 @@ type DialogStore = {
 
 const useDialogStore = create<DialogStore>((set, get) => ({
 	dialogs: {},
-	isOpen: (id: string) => get().dialogs[id] || false,
+	isOpen: (id: string) => get().dialogs[id],
 
 	openDialog: (id: string) =>
 		set((state) => ({

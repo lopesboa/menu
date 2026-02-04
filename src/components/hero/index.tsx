@@ -1,12 +1,12 @@
 import { Icon } from "@iconify-icon/react"
 import { useEffect, useRef } from "react"
+import { Link } from "react-router"
 
 type HeroSectionProps = {
-	signUp: () => void
 	onShowDemo: () => void
 }
 
-export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
+export function HeroSection({ onShowDemo }: HeroSectionProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 
 	useEffect(() => {
@@ -30,7 +30,7 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 		const section = sectionRef.current
 		if (section) {
 			const elements = section.querySelectorAll(
-				".scroll-reveal, .reveal-trigger",
+				".scroll-reveal, .reveal-trigger"
 			)
 			elements.forEach((el) => observer.observe(el))
 		}
@@ -54,93 +54,96 @@ export function HeroSection({ signUp, onShowDemo }: HeroSectionProps) {
 
 	return (
 		<section
+			className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-20"
 			ref={sectionRef}
-			className="relative min-h-screen flex flex-col justify-center items-center overflow-hidden pt-20"
 		>
-			<div className="absolute inset-0 grid grid-cols-6 md:grid-cols-12 gap-0 pointer-events-none opacity-40 z-0 px-6 max-w-7xl mx-auto border-x border-white/5">
-				<div className="bg-grid-col animate-clip delay-100"></div>
-				<div className="bg-grid-col animate-clip delay-200"></div>
-				<div className="bg-grid-col animate-clip delay-300"></div>
-				<div className="bg-grid-col animate-clip delay-500 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-100 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-200 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-300 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-100 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-500 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-200 hidden md:block"></div>
-				<div className="bg-grid-col animate-clip delay-300"></div>
-				<div className="bg-grid-col animate-clip delay-100"></div>
+			<div className="pointer-events-none absolute inset-0 z-0 mx-auto grid max-w-7xl grid-cols-6 gap-0 border-white/5 border-x px-6 opacity-40 md:grid-cols-12">
+				<div className="animate-clip bg-grid-col delay-100" />
+				<div className="animate-clip bg-grid-col delay-200" />
+				<div className="animate-clip bg-grid-col delay-300" />
+				<div className="hidden animate-clip bg-grid-col delay-500 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-100 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-200 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-300 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-100 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-500 md:block" />
+				<div className="hidden animate-clip bg-grid-col delay-200 md:block" />
+				<div className="animate-clip bg-grid-col delay-300" />
+				<div className="animate-clip bg-grid-col delay-100" />
 			</div>
 
-			<div className="relative z-10 max-w-4xl mx-auto px-6 text-center mt-10">
-				<div className="mb-6 inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-medium animate-reveal delay-100">
+			<div className="relative z-10 mx-auto mt-10 max-w-4xl px-6 text-center">
+				<div className="mb-6 inline-flex animate-reveal items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 font-medium text-indigo-300 text-xs delay-100">
 					<span className="relative flex h-2 w-2">
-						<span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-						<span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+						<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
+						<span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
 					</span>
 					v2.0 já está disponível
 				</div>
 
-				<h1 className="text-5xl md:text-7xl font-medium tracking-tight text-transparent bg-clip-text bg-linear-to-b from-white to-white/60 mb-6 leading-[1.1]">
-					<div className="overflow-hidden text-clip-reveal reveal-trigger">
+				<h1 className="mb-6 bg-linear-to-b from-white to-white/60 bg-clip-text font-medium text-5xl text-transparent leading-[1.1] tracking-tight md:text-7xl">
+					<div className="reveal-trigger overflow-hidden text-clip-reveal">
 						<span className="pb-2">O sistema operacional</span>
 					</div>
-					<div className="overflow-hidden text-clip-reveal reveal-trigger delay-100">
+					<div className="reveal-trigger overflow-hidden text-clip-reveal delay-100">
 						<span className="pb-2">para restaurantes modernos</span>
 					</div>
 				</h1>
 
-				<p className="text-base md:text-lg text-slate-400 max-w-xl mx-auto mb-10 leading-relaxed animate-reveal delay-300">
+				<p className="mx-auto mb-10 max-w-xl animate-reveal text-base text-slate-400 leading-relaxed delay-300 md:text-lg">
 					Agilize pedidos, gerencie estoque e encante clientes com uma interface
 					mágica. Rápido, bonito e totalmente personalizável.
 				</p>
 
-				<div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-reveal delay-500">
+				<div className="flex animate-reveal flex-col items-center justify-center gap-4 delay-500 md:flex-row">
 					<button
-						type="button"
-						onClick={signUp}
-						className="relative group cursor-pointer"
+						className="group relative cursor-pointer"
 						name="Começar Agora"
+						type="button"
 					>
-						<div className="absolute -inset-0.5 bg-linear-to-r from-indigo-500 to-purple-600 rounded-full blur opacity-50 group-hover:opacity-100 transition duration-200"></div>
-						<div className="relative px-8 py-3 bg-black rounded-full leading-none flex items-center divide-x divide-slate-600">
-							<span className="flex items-center gap-2 text-slate-100 pr-4 group-hover:text-white transition-colors text-sm font-medium">
+						<div className="absolute -inset-0.5 rounded-full bg-linear-to-r from-indigo-500 to-purple-600 opacity-50 blur transition duration-200 group-hover:opacity-100" />
+						<div className="relative flex items-center divide-x divide-slate-600 rounded-full bg-black px-8 py-3 leading-none">
+							<Link
+								aria-label="Navegar para criar conta"
+								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
+								to="/auth/register"
+							>
 								Começar Agora
-							</span>
-							<span className="pl-4 text-slate-400 group-hover:text-slate-200 transition-colors text-sm">
+							</Link>
+							<span className="pl-4 text-slate-400 text-sm transition-colors group-hover:text-slate-200">
 								<Icon icon="solar:arrow-right-bold-duotone" />
 							</span>
 						</div>
 					</button>
 					<button
-						type="button"
+						className="rounded-full border border-white/10 bg-white/5 px-8 py-3 font-medium text-slate-300 text-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
 						name="Ver Demo"
-						className="px-8 py-3 rounded-full text-sm font-medium text-slate-300 hover:text-white transition-colors border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10"
 						onClick={onShowDemo}
+						type="button"
 					>
 						Ver Demo
 					</button>
 				</div>
 			</div>
 
-			<div className="mt-20 relative w-full max-w-5xl px-4 animate-reveal delay-700">
-				<div className="absolute inset-0 bg-linear-to-t from-[#030712] via-transparent to-transparent z-10 h-full w-full"></div>
-				<div className="relative rounded-t-xl border border-white/10 bg-[#0f111a] shadow-2xl overflow-hidden aspect-video md:aspect-21/9">
-					<div className="h-10 border-b border-white/5 flex items-center px-4 gap-2">
+			<div className="relative mt-20 w-full max-w-5xl animate-reveal px-4 delay-700">
+				<div className="absolute inset-0 z-10 h-full w-full bg-linear-to-t from-[#030712] via-transparent to-transparent" />
+				<div className="relative aspect-video overflow-hidden rounded-t-xl border border-white/10 bg-[#0f111a] shadow-2xl md:aspect-21/9">
+					<div className="flex h-10 items-center gap-2 border-white/5 border-b px-4">
 						<div className="flex gap-1.5">
-							<div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
-							<div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-							<div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50"></div>
+							<div className="h-2.5 w-2.5 rounded-full border border-red-500/50 bg-red-500/20" />
+							<div className="h-2.5 w-2.5 rounded-full border border-yellow-500/50 bg-yellow-500/20" />
+							<div className="h-2.5 w-2.5 rounded-full border border-green-500/50 bg-green-500/20" />
 						</div>
-						<div className="mx-auto text-[10px] text-slate-500 font-mono">
+						<div className="mx-auto font-mono text-[10px] text-slate-500">
 							dashboard.menubao.com.br
 						</div>
 					</div>
-					<div className="p-6 grid grid-cols-4 gap-4 opacity-50">
-						<div className="col-span-1 h-32 rounded bg-white/5"></div>
-						<div className="col-span-1 h-32 rounded bg-white/5"></div>
-						<div className="col-span-2 h-32 rounded bg-white/5"></div>
-						<div className="col-span-4 h-48 rounded bg-white/5"></div>
+					<div className="grid grid-cols-4 gap-4 p-6 opacity-50">
+						<div className="col-span-1 h-32 rounded bg-white/5" />
+						<div className="col-span-1 h-32 rounded bg-white/5" />
+						<div className="col-span-2 h-32 rounded bg-white/5" />
+						<div className="col-span-4 h-48 rounded bg-white/5" />
 					</div>
 				</div>
 			</div>

@@ -1,70 +1,63 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
 
-type NavebarProps = {
-	signUp: () => void
-	signIn: () => void
-}
-
-export function Navbar({ signIn, signUp }: NavebarProps) {
+export function Navbar() {
 	return (
-		<nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-black/50 backdrop-blur-xl">
-			<div className="max-w-7xl mx-auto px-6 h-14 flex items-center justify-between">
+		<nav className="fixed top-0 z-50 w-full border-white/5 border-b bg-black/50 backdrop-blur-xl">
+			<div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
 				<header>
 					<Link
-						to="/"
 						aria-label="Navegar para o inicio"
-						className="flex items-center gap-2 group"
+						className="group flex items-center gap-2"
+						to="/"
 					>
-						<div className="w-6 h-6 rounded bg-linear-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white">
+						<div className="flex h-6 w-6 items-center justify-center rounded bg-linear-to-tr from-indigo-500 to-purple-500 text-white">
 							<Icon icon="solar:hamburger-menu-bold-duotone" width="14" />
 						</div>
-						<span className="font-medium tracking-tight text-sm text-slate-200 group-hover:text-white transition-colors">
+						<span className="font-medium text-slate-200 text-sm tracking-tight transition-colors group-hover:text-white">
 							Menu Bão
 						</span>
 					</Link>
 				</header>
-				<div className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-400">
+				<div className="hidden items-center gap-6 font-medium text-slate-400 text-xs md:flex">
 					<a
-						href="#features"
 						aria-label="Navegar para Funcionalidades"
-						className="hover:text-white transition-colors"
+						className="transition-colors hover:text-white"
+						href="#features"
 					>
 						Funcionalidades
 					</a>
 					<a
-						href="#integrations"
 						aria-label="Navegar para Integrações"
-						className="hover:text-white transition-colors"
+						className="transition-colors hover:text-white"
+						href="#integrations"
 					>
 						Integrações
 					</a>
 					<a
-						href="#pricing"
 						aria-label="Navegar para Preços"
-						className="hover:text-white transition-colors"
+						className="transition-colors hover:text-white"
+						href="#pricing"
 					>
 						Preços
 					</a>
 				</div>
 				<div className="flex items-center gap-3">
-					<button
-						type="button"
-						name="Entrar"
-						onClick={signIn}
-						className="text-xs font-medium text-slate-400 hover:text-white transition-colors cursor-pointer"
+					<Link
+						aria-label="Navegar para entrar"
+						className="cursor-pointer font-medium text-slate-400 text-xs transition-colors hover:text-white"
+						to="/auth/login"
 					>
 						Entrar
-					</button>
-					<button
-						type="button"
-						name="Criar Conta"
-						onClick={signUp}
-						className="cursor-pointer relative px-3 py-1.5 rounded-full bg-white/10 text-xs font-medium text-white hover:bg-white/15 transition-all overflow-hidden group"
+					</Link>
+					<Link
+						aria-label="Navegar para criar conta"
+						className="group relative cursor-pointer overflow-hidden rounded-full bg-white/10 px-3 py-1.5 font-medium text-white text-xs transition-all hover:bg-white/15"
+						to="/auth/register"
 					>
 						<span className="relative z-10">Criar Conta</span>
-						<div className="border-beam opacity-0 group-hover:opacity-100 transition-opacity"></div>
-					</button>
+						<div className="border-beam opacity-0 transition-opacity group-hover:opacity-100" />
+					</Link>
 				</div>
 			</div>
 		</nav>

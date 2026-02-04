@@ -9,17 +9,17 @@ body {
 }
 
 @theme {
-  --font-sans: 'Inter', sans-serif;
-  
-  --color-background: #050505;
-  --color-surface: #0A0A0A;
-  --color-border: #1F1F1F;
-  --color-primary: #E5E5E5;
-  --color-secondary: #A1A1AA;
-  
-  --animate-slide-up-fade: slide-up-fade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-bg-reveal: bg-reveal 1.2s cubic-bezier(0.85, 0, 0.15, 1) both;
-  --animate-text-reveal: text-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+	--font-sans: "Inter", sans-serif;
+
+	--color-background: #050505;
+	--color-surface: #0a0a0a;
+	--color-border: #1f1f1f;
+	--color-primary: #e5e5e5;
+	--color-secondary: #a1a1aa;
+
+	--animate-slide-up-fade: slide-up-fade 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+	--animate-bg-reveal: bg-reveal 1.2s cubic-bezier(0.85, 0, 0.15, 1) both;
+	--animate-text-reveal: text-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 /* --- Animations --- */

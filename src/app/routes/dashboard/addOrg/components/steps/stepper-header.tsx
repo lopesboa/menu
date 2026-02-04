@@ -1,25 +1,39 @@
 import { Icon } from "@iconify-icon/react"
+import { useEffect } from "react"
+import { useStepper, useStepperAction } from "@/app/store/stepper-store"
 import { cn } from "@/utils/misc"
 
 type Step = {
 	label: string
 }
 
-type StepperProps = {
+type StepperHeaderProps = {
 	steps: Step[]
-	currentStep: number
-	onStepClick?: (index: number) => void
+	allowClickNavigation?: boolean
 }
 
-export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
+export function StepperHeader({
+	steps,
+	allowClickNavigation = true,
+}: StepperHeaderProps) {
+	const { setCurrentStep, setTotalSteps } = useStepperAction()
+	const { currentStep } = useStepper()
+
+	useEffect(() => {
+		setTotalSteps(steps.length)
+	}, [steps.length, setTotalSteps])
+
 	const handleStepClick = (index: number) => {
-		if (onStepClick) {
-			onStepClick(index)
+		if (allowClickNavigation) {
+			setCurrentStep(index)
 		}
 	}
 
 	return (
-		<div className="flex w-full select-none items-center">
+		<div
+			className="flex w-full select-none items-center"
+			data-slot="stepper-header"
+		>
 			{steps.map((step, index) => {
 				const stepNumber = index + 1
 				const isCompleted = stepNumber < currentStep
@@ -33,7 +47,11 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 						key={step.label}
 					>
 						<button
-							className="group relative z-10 flex cursor-pointer items-center gap-3"
+							className={cn(
+								"group relative z-10 flex items-center gap-3",
+								allowClickNavigation ? "cursor-pointer" : "cursor-default"
+							)}
+							disabled={!allowClickNavigation}
 							onClick={() => handleStepClick(stepNumber)}
 							type="button"
 						>
@@ -52,7 +70,6 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 									<span>{stepNumber}</span>
 								)}
 							</div>
-
 							<span
 								className={cn(
 									"font-medium text-xs transition-colors duration-300",
@@ -63,7 +80,6 @@ export function Stepper({ steps, currentStep, onStepClick }: StepperProps) {
 								{step.label}
 							</span>
 						</button>
-
 						{!isLast && (
 							<div className="relative mx-4 h-px flex-1 overflow-hidden rounded-full bg-slate-800/80">
 								<div

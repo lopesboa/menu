@@ -1,16 +1,16 @@
 import { cn } from "@/utils/misc"
 
-export function EmptyHeader({
+export function StepperActions({
 	className,
 	...props
 }: React.ComponentProps<"div">) {
 	return (
 		<div
 			className={cn(
-				"flex max-w-sm flex-col items-center gap-2 text-center",
+				"mx-auto flex max-w-150 items-center justify-between p-4 sm:p-0",
 				className
 			)}
-			data-slot="empty-header"
+			data-slot="stepper-action"
 			{...props}
 		/>
 	)

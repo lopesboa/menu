@@ -37,27 +37,35 @@ export function Button({
 	const disabledStyle =
 		disabled || loading ? "opacity-50 cursor-not-allowed hover:bg-white" : ""
 
+	const isSecondary = variant === "secondary"
+	const showLoader = loading
+	const showSecondarySpan = isSecondary && !loading
+
+	const renderContent = () => {
+		if (showLoader) {
+			return <Icon height="24" icon="svg-spinners:bars-scale-fade" width="24" />
+		}
+		if (showSecondarySpan) {
+			return <span className="relative z-10">{children}</span>
+		}
+		return children
+	}
+
 	return (
 		<button
-			type={type}
-			name={children as string}
-			disabled={disabled || loading}
 			className={cn(
 				baseStyle,
 				widthStyle,
 				variantStyles[variant],
 				disabledStyle,
-				className,
+				className
 			)}
+			disabled={disabled || loading}
+			name={children as string}
+			type={type}
 			{...props}
 		>
-			{loading ? (
-				<Icon icon="svg-spinners:bars-scale-fade" width="24" height="24" />
-			) : variant === "secondary" ? (
-				<span className="relative z-10">{children}</span>
-			) : (
-				children
-			)}
+			{renderContent()}
 		</button>
 	)
 }

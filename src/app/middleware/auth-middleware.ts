@@ -6,6 +6,6 @@ export async function authMiddleware() {
 	const userId = data?.user.id
 
 	if (!userId) {
-		throw redirect("/")
+		throw redirect("/auth/login")
 	}
 }

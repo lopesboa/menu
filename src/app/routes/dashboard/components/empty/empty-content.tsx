@@ -6,11 +6,11 @@ export function EmptyContent({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="empty-content"
 			className={cn(
-				"flex w-full max-w-sm min-w-0 flex-col items-center gap-4 text-sm text-balance",
-				className,
+				"flex w-full min-w-0 max-w-sm flex-col items-center gap-4 text-balance text-sm",
+				className
 			)}
+			data-slot="empty-content"
 			{...props}
 		/>
 	)

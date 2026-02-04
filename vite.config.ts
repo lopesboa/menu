@@ -5,8 +5,6 @@ import { defineConfig } from "vite"
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-	// const env = loadEnv(mode, process.cwd(), "")
-
 	return {
 		plugins: [
 			react({
@@ -20,8 +18,6 @@ export default defineConfig(({ mode }) => {
 			alias: {
 				"@": fileURLToPath(new URL("./src", import.meta.url)),
 				"~": fileURLToPath(new URL("./", import.meta.url)),
-				// "@": path.resolve(__dirname, "./src"),
-				// "~": path.resolve(__dirname, "./"),
 			},
 		},
 		server: {

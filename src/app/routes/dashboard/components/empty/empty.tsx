@@ -3,11 +3,11 @@ import { cn } from "@/utils/misc"
 export function Empty({ className, ...props }: React.ComponentProps<"div">) {
 	return (
 		<div
-			data-slot="empty"
 			className={cn(
-				"flex min-w-0 min-h-screen flex-col items-center justify-center gap-6 rounded-lg border-dashed p-6 text-center text-balance md:p-12",
-				className,
+				"flex min-h-screen min-w-0 flex-col items-center justify-center gap-6 text-balance rounded-lg border-dashed p-6 text-center md:p-12",
+				className
 			)}
+			data-slot="empty"
 			{...props}
 		/>
 	)

@@ -1,0 +1,12 @@
+.radio-card:checked ~ div .check-dot {
+	opacity: 1;
+}
+
+.radio-card:checked + div {
+	border-color: #0f172a;
+	background-color: #f8fafc;
+	box-shadow: 0 0 0 1px #0f172a;
+}
+.radio-card:checked + div iconify-icon {
+	color: #0f172a;
+}

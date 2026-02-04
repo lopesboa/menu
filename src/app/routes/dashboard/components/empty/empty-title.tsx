@@ -6,8 +6,8 @@ export function EmptyTitle({
 }: React.ComponentProps<"div">) {
 	return (
 		<div
+			className={cn("font-medium text-lg tracking-tight", className)}
 			data-slot="empty-title"
-			className={cn("text-lg font-medium tracking-tight", className)}
 			{...props}
 		/>
 	)
