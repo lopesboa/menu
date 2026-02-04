@@ -11,8 +11,6 @@ import {
 	LogoSection,
 	PricingSection,
 	ROISection,
-	SignIn,
-	SignUp,
 	TestimonialsSection,
 } from "@/components"
 
@@ -144,8 +142,6 @@ export default function Home() {
 		<main>
 			<HeroSection onShowDemo={handleOnShowDemo} />
 			<LogoSection />
-			<SignIn />
-			<SignUp />
 			<IntegrationSection />
 			<FeaturesSection />
 			<ROISection />

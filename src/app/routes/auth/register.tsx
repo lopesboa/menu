@@ -6,16 +6,8 @@ import { Link, useNavigate } from "react-router"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/client"
+import type { SignUpForm } from "@/types/auth"
 import { SignUpFormSchema } from "@/utils/user-validation"
-
-interface SignUpForm {
-	email: string
-	password: string
-	firstName: string
-	lastName: string
-	confirmPassword: string
-	redirectTo?: string
-}
 
 export default function Register() {
 	const navigate = useNavigate()
@@ -48,7 +40,7 @@ export default function Register() {
 					name: `${data.firstName} ${data.lastName}`,
 					firstName: data.firstName,
 					lastName: data.lastName,
-				} as any,
+				} as never,
 				{
 					onSuccess() {
 						navigate(data.redirectTo || "/auth/verify", {
@@ -58,6 +50,7 @@ export default function Register() {
 				}
 			)
 		} catch (error) {
+			console.error("Registration failed:", error)
 		} finally {
 			setLoading(false)
 		}

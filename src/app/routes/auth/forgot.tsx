@@ -6,12 +6,8 @@ import { Link, useNavigate } from "react-router"
 import { Button } from "@/components"
 import { Field } from "@/components/form"
 import { authClient } from "@/lib/client"
+import type { ForgotForm } from "@/types/auth"
 import { ForgotFormSchema } from "@/utils/user-validation"
-
-interface ForgotForm {
-	email: string
-	redirectTo?: string
-}
 
 export default function Forgot() {
 	const navigate = useNavigate()
@@ -20,7 +16,6 @@ export default function Forgot() {
 	const {
 		handleSubmit,
 		register,
-
 		formState: { errors },
 	} = useForm<ForgotForm>({
 		resolver: zodResolver(ForgotFormSchema),
@@ -41,7 +36,7 @@ export default function Forgot() {
 				},
 				{
 					onSuccess() {
-						navigate(data?.redirectTo || "/auth/verify", {
+						navigate(data.redirectTo || "/auth/verify", {
 							replace: true,
 							state: { redirectTo: "/auth/change-password" },
 						})
@@ -49,7 +44,7 @@ export default function Forgot() {
 				}
 			)
 		} catch (error) {
-			console.log(error)
+			console.error("Forgot password request failed:", error)
 		} finally {
 			setLoading(false)
 		}

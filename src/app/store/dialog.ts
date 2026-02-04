@@ -1,10 +1,10 @@
 import { create } from "zustand"
 
-type DialogState = {
+interface DialogState {
 	[key: string]: boolean
 }
 
-type DialogStore = {
+interface DialogStore {
 	dialogs: DialogState
 	isOpen: (id: string) => boolean
 	openDialog: (id: string) => void

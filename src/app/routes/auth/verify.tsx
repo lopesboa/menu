@@ -11,13 +11,10 @@ import {
 	InputOTPSlot,
 } from "@/components/ui/input-otp"
 import { authClient } from "@/lib/client"
+import type { VerifyForm } from "@/types/auth"
 import { cn } from "@/utils/misc"
 import { VerifyFormSchema } from "@/utils/user-validation"
 
-type VerifyForm = {
-	otp: string
-	redirectTo?: string
-}
 export default function Verify() {
 	const location = useLocation()
 	const navigate = useNavigate()
@@ -54,6 +51,7 @@ export default function Verify() {
 				}
 			)
 		} catch (error) {
+			console.error("Email verification failed:", error)
 		} finally {
 			setLoading(false)
 		}

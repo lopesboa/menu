@@ -1,8 +1,5 @@
 import { Icon } from "@iconify-icon/react"
 
-// <style>
-//
-// </style>
 export function Operation() {
 	return (
 		<div className="step-pane inactive-right" id="step-2">
@@ -20,6 +17,7 @@ export function Operation() {
 					<input
 						checked
 						className="radio-card sr-only"
+						id="operation-salon"
 						name="operation_type"
 						type="radio"
 					/>
@@ -45,6 +43,7 @@ export function Operation() {
 				<label className="group block cursor-pointer">
 					<input
 						className="radio-card sr-only"
+						id="operation-delivery"
 						name="operation_type"
 						type="radio"
 					/>
@@ -69,6 +68,7 @@ export function Operation() {
 				<label className="group block cursor-pointer">
 					<input
 						className="radio-card sr-only"
+						id="operation-counter"
 						name="operation_type"
 						type="radio"
 					/>

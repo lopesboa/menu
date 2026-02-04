@@ -1,6 +1,6 @@
 import { create } from "zustand"
 
-type StepperActions = {
+interface StepperActions {
 	setCurrentStep: (step: number) => void
 	setTotalSteps: (total: number) => void
 	goToNext: () => void
@@ -10,7 +10,7 @@ type StepperActions = {
 	isLast: () => boolean
 }
 
-type StepperStore = {
+interface StepperStore {
 	currentStep: number
 	totalSteps: number
 	actions: StepperActions
@@ -25,7 +25,6 @@ export const useStepperStore = create<StepperStore>((set, get) => ({
 		goToNext: () => {
 			const { currentStep, totalSteps } = get()
 			if (currentStep < totalSteps) {
-				console.log("currentStep", currentStep, totalSteps)
 				set({ currentStep: currentStep + 1 })
 			}
 		},

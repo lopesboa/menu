@@ -15,12 +15,18 @@ export function Location() {
 			<div className="space-y-4">
 				<div className="input-group group">
 					<div className="mb-1.5 ml-1 flex items-baseline justify-between">
-						<label className="block font-medium text-slate-500 text-xs uppercase tracking-wider">
+						<label
+							className="block font-medium text-slate-500 text-xs uppercase tracking-wider"
+							htmlFor="cep"
+						>
 							CEP
 						</label>
-						<span className="cursor-pointer font-medium text-[10px] text-emerald-600 hover:underline">
+						<button
+							className="cursor-pointer font-medium text-[10px] text-emerald-600 hover:underline"
+							type="button"
+						>
 							Buscar automaticamente
-						</span>
+						</button>
 					</div>
 					<div className="relative flex gap-2">
 						<div className="relative w-full">
@@ -31,6 +37,7 @@ export function Location() {
 							/>
 							<input
 								className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+								id="cep"
 								placeholder="00000-000"
 								type="text"
 							/>
@@ -39,11 +46,15 @@ export function Location() {
 				</div>
 
 				<div className="input-group group">
-					<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
+					<label
+						className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider"
+						htmlFor="address"
+					>
 						Endereço
 					</label>
 					<input
 						className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+						id="address"
 						placeholder="Rua, Avenida..."
 						type="text"
 					/>
@@ -51,21 +62,29 @@ export function Location() {
 
 				<div className="grid grid-cols-[100px_1fr] gap-4">
 					<div className="input-group group">
-						<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
+						<label
+							className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider"
+							htmlFor="number"
+						>
 							Número
 						</label>
 						<input
 							className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+							id="number"
 							placeholder="123"
 							type="text"
 						/>
 					</div>
 					<div className="input-group group">
-						<label className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider">
+						<label
+							className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider"
+							htmlFor="neighborhood"
+						>
 							Bairro
 						</label>
 						<input
 							className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+							id="neighborhood"
 							placeholder="Centro"
 							type="text"
 						/>
@@ -76,6 +95,7 @@ export function Location() {
 					<label className="group flex cursor-pointer items-center gap-3">
 						<input
 							className="h-5 w-5 cursor-pointer rounded border-slate-300 text-slate-900 accent-slate-900 transition-colors focus:ring-slate-900"
+							id="dark-kitchen"
 							type="checkbox"
 						/>
 						<span className="text-slate-500 text-sm transition-colors group-hover:text-slate-700">

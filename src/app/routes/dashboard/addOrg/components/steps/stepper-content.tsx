@@ -8,7 +8,9 @@ type StepContentProps = React.ComponentProps<"div"> & {
 export function StepContent({ step, className, ...props }: StepContentProps) {
 	const { currentStep } = useStepper()
 
-	if (currentStep !== step) return null
+	if (currentStep !== step) {
+		return null
+	}
 
 	return (
 		<div

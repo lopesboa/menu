@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
+import { useStepper, useStepperAction } from "@/app/store/stepper-store"
 import { Button } from "@/components"
 import { authClient } from "@/lib/client"
 import { cn, createOrgSlug } from "@/utils/misc"
@@ -19,7 +20,7 @@ import { StepContent } from "./components/steps/stepper-content"
 import { StepperHeader } from "./components/steps/stepper-header"
 import { StepperRoot } from "./components/steps/stepper-root"
 
-type OrganizationForm = {
+interface OrganizationForm {
 	slug: string
 	logo?: string
 	organizationName: string
@@ -31,8 +32,9 @@ type OrganizationForm = {
 const steps = [{ label: "Conceito" }, { label: "Operação" }, { label: "Local" }]
 
 export default function AddOrganization() {
-	const [_loading, setLoading] = useState(false)
-	const [currentStep, setCurrentStep] = useState(1)
+	const [loading, setLoading] = useState(false)
+	const { currentStep } = useStepper()
+	const { goToNext, goToPrevious, setTotalSteps } = useStepperAction()
 
 	const { handleSubmit } = useForm<OrganizationForm>({
 		resolver: zodResolver(OrganizationFormSchema),
@@ -59,27 +61,23 @@ export default function AddOrganization() {
 				metadata,
 			})
 		} catch (error) {
+			console.error("Organization creation failed:", error)
 		} finally {
 			setLoading(false)
 		}
 	}
 
-	// const handleonStepClick = (step: number) => {
-	// 	setCurrentStep(step)
-	// }
-
 	const handleNext = () => {
 		if (currentStep < steps.length) {
-			setCurrentStep((prev) => prev + 1)
+			goToNext()
 		} else {
-			// Último step - submeter o form
 			handleSubmit(onSubmit)()
 		}
 	}
 
 	const handleBack = () => {
 		if (currentStep > 1) {
-			setCurrentStep((prev) => prev - 1)
+			goToPrevious()
 		}
 	}
 
@@ -96,7 +94,9 @@ export default function AddOrganization() {
 			>
 				<StepperRoot
 					defaultStep={1}
-					onStepChange={(step) => console.log({ step })}
+					onStepChange={() => {
+						setTotalSteps(steps.length)
+					}}
 				>
 					<div className="flex flex-col gap-6 border-white/5 border-b px-8 pt-8 pb-6">
 						<div>
@@ -116,7 +116,6 @@ export default function AddOrganization() {
 					<form
 						className="elative min-h-115"
 						id="org-form"
-						// className="px-8 tp-8 pb-6 overflow-hidden animate-enter delay-600"
 						onSubmit={handleSubmit(onSubmit)}
 					>
 						<StepContent step={1}>
@@ -155,6 +154,7 @@ export default function AddOrganization() {
 					<Button
 						className="group flex transform cursor-pointer items-center gap-3 rounded-xl bg-slate-900 py-3.5 pr-6 pl-8 font-medium text-sm text-white shadow-slate-900/20 shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30"
 						fullWidth={false}
+						loading={loading}
 						onClick={handleNext}
 						type="button"
 					>

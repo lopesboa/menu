@@ -15,9 +15,12 @@ export function Concept() {
 
 			<div className="stagger-3 animate-reveal space-y-5">
 				<div className="input-group group">
-					<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
+					<label
+						className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors"
+						htmlFor="restaurant-name"
+					>
 						Nome do Restaurante
-					</span>
+					</label>
 					<div className="relative transform transition-all focus-within:-translate-y-0.5">
 						<Icon
 							className="absolute top-3.5 left-4 text-slate-400 transition-colors"
@@ -26,6 +29,7 @@ export function Concept() {
 						/>
 						<input
 							className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+							id="restaurant-name"
 							placeholder="Ex: Trattoria da Nonna"
 							type="text"
 						/>
@@ -34,11 +38,17 @@ export function Concept() {
 
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div className="input-group group">
-						<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
+						<label
+							className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors"
+							htmlFor="category"
+						>
 							Categoria
-						</span>
+						</label>
 						<div className="relative">
-							<select className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-3.5 pr-10 pl-4 text-slate-900 text-sm shadow-sm transition-all focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100">
+							<select
+								className="w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white py-3.5 pr-10 pl-4 text-slate-900 text-sm shadow-sm transition-all focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+								id="category"
+							>
 								<option disabled selected value="">
 									Selecione...
 								</option>
@@ -56,9 +66,12 @@ export function Concept() {
 						</div>
 					</div>
 					<div className="input-group group">
-						<span className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors">
+						<label
+							className="mb-1.5 ml-1 block font-medium text-slate-500 text-xs uppercase tracking-wider transition-colors"
+							htmlFor="owner-name"
+						>
 							Responsável
-						</span>
+						</label>
 						<div className="relative">
 							<Icon
 								className="absolute top-3.5 left-4 text-slate-400 transition-colors"
@@ -67,6 +80,7 @@ export function Concept() {
 							/>
 							<input
 								className="w-full rounded-xl border border-slate-200 bg-white py-3.5 pr-4 pl-12 text-slate-900 text-sm shadow-sm transition-all placeholder:text-slate-300 focus:border-slate-400 focus:outline-none focus:ring-4 focus:ring-slate-100"
+								id="owner-name"
 								placeholder="Seu nome"
 								type="text"
 							/>

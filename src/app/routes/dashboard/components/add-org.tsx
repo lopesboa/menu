@@ -9,7 +9,7 @@ import { authClient } from "@/lib/client"
 import { cn, createOrgSlug } from "@/utils/misc"
 import { OrganizationFormSchema } from "@/utils/user-validation"
 
-type OrganizationForm = {
+interface OrganizationForm {
 	slug: string
 	logo?: string
 	organizationName: string
@@ -25,10 +25,9 @@ const steps = [
 ]
 
 export function AddOrgForm() {
-	const [_loading, setLoading] = useState(false)
+	const [loading, setLoading] = useState(false)
 	const [currentStep, setCurrentStep] = useState(1)
 	const { closeDialog } = useDialogActions()
-	// const { isOpen } = useDialog()
 
 	const {
 		register,
@@ -59,6 +58,7 @@ export function AddOrgForm() {
 				metadata,
 			})
 		} catch (error) {
+			console.error("Organization creation failed:", error)
 		} finally {
 			setLoading(false)
 		}
@@ -72,7 +72,6 @@ export function AddOrgForm() {
 		if (currentStep < steps.length) {
 			setCurrentStep((prev) => prev + 1)
 		} else {
-			// Último step - submeter o form
 			handleSubmit(onSubmit)()
 		}
 	}
@@ -84,7 +83,6 @@ export function AddOrgForm() {
 	}
 
 	const isFirstStep = currentStep === 1
-	// const isLastStep = currentStep === steps.length
 
 	return (
 		<Dialog id={"add-org"}>
@@ -178,6 +176,7 @@ export function AddOrgForm() {
 							className="group ml-auto flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 font-semibold text-white text-xs shadow-[0_0_15px_rgba(79,70,229,0.3)] transition-all hover:bg-indigo-500 hover:shadow-[0_0_20px_rgba(79,70,229,0.5)] active:bg-indigo-700"
 							fullWidth={false}
 							id="btn-next"
+							loading={loading}
 							onClick={handleNext}
 							type="button"
 						>

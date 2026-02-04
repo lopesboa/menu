@@ -8,14 +8,8 @@ import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
 import { usePostHogEvent } from "@/hooks"
 import { authClient } from "@/lib/client"
+import type { LogInForm } from "@/types/auth"
 import { SignInFormSchema } from "@/utils/user-validation"
-
-interface LogInForm {
-	email: string
-	password: string
-	redirectTo?: string
-	remember?: boolean
-}
 
 export default function Login() {
 	const [loading, setLoading] = useState(false)
@@ -47,13 +41,14 @@ export default function Login() {
 				rememberMe,
 			})
 		} catch (error) {
+			console.error("Login failed:", error)
 		} finally {
 			setLoading(false)
 		}
 	}
 
-	const handleOnRemember = (event: any) => {
-		setRememberMe(event.target.checked)
+	const handleOnRemember = (event: React.MouseEvent<HTMLInputElement>) => {
+		setRememberMe((event.target as HTMLInputElement).checked)
 	}
 
 	return (
