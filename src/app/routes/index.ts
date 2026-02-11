@@ -1,7 +1,7 @@
 import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
-import { authMiddleware } from "../middleware/auth-middleware"
 import { authClient } from "@/lib/client"
+import { authMiddleware } from "../middleware/auth-middleware"
 
 const HomeLayout = lazy(() => import("./home/layout"))
 const HomeContent = lazy(() => import("./home"))
@@ -11,9 +11,11 @@ const Forgot = lazy(() => import("./auth/forgot"))
 const Register = lazy(() => import("./auth/register"))
 const Verify = lazy(() => import("./auth/verify"))
 const ChangePassword = lazy(() => import("./auth/change-password"))
+
 const Dashboard = lazy(() => import("./dashboard"))
-const DashboardHome = lazy(() => import("./dashboard/dashboard-home"))
 const DashboardAddOrganization = lazy(() => import("./dashboard/addOrg"))
+const DashboardHome = lazy(() => import("./dashboard/pages/dashboard-home"))
+const Account = lazy(() => import("./dashboard/pages/account"))
 
 export const router = createBrowserRouter([
 	{
@@ -25,7 +27,6 @@ export const router = createBrowserRouter([
 				Component: HomeContent,
 			},
 			{
-				path: "auth",
 				Component: AuthLayout,
 				children: [
 					{ path: "login", Component: Login },
@@ -44,8 +45,9 @@ export const router = createBrowserRouter([
 		middleware: [authMiddleware],
 		loader: organizationLoader,
 		children: [
-			{ index: true, Component: DashboardHome },
 			{ path: "add-org", Component: DashboardAddOrganization },
+			{ index: true, Component: DashboardHome },
+			{ path: "account", Component: Account },
 		],
 	},
 ])
