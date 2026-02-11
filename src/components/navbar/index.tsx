@@ -46,14 +46,14 @@ export function Navbar() {
 					<Link
 						aria-label="Navegar para entrar"
 						className="cursor-pointer font-medium text-slate-400 text-xs transition-colors hover:text-white"
-						to="/auth/login"
+						to="/login"
 					>
 						Entrar
 					</Link>
 					<Link
 						aria-label="Navegar para criar conta"
 						className="group relative cursor-pointer overflow-hidden rounded-full bg-white/10 px-3 py-1.5 font-medium text-white text-xs transition-all hover:bg-white/15"
-						to="/auth/register"
+						to="/register"
 					>
 						<span className="relative z-10">Criar Conta</span>
 						<div className="border-beam opacity-0 transition-opacity group-hover:opacity-100" />
