@@ -55,7 +55,7 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 						</ul>
 
 						<Button variant="secondary">
-							<Link aria-label="Navegar para criar conta" to="/auth/register">
+							<Link aria-label="Navegar para criar conta" to="/register">
 								Começar Grátis
 							</Link>
 						</Button>
@@ -108,7 +108,7 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 						</ul>
 
 						<Button>
-							<Link aria-label="Navegar para criar conta" to="/auth/register">
+							<Link aria-label="Navegar para criar conta" to="/register">
 								Assinar Pro
 							</Link>
 						</Button>

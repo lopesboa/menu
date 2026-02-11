@@ -1,12 +1,11 @@
 import { Outlet } from "react-router"
-import "./styles.css"
 import { cn } from "@/utils/misc"
-import { BottomNav } from "./components/layout/bottom-nav"
-import { Sidebar } from "./components/layout/sidebar"
-import { TopBar } from "./components/layout/top-bar"
-import { ToastContainer } from "./components/ui/toast"
+import { ToastContainer } from "../ui/toast"
+import { BottomNav } from "./bottom-nav"
+import { Sidebar } from "./sidebar"
+import { TopBar } from "./top-bar"
 
-export default function Dashboard() {
+export function Layout() {
 	return (
 		<div className="flex min-h-screen bg-surface-50">
 			<Sidebar />

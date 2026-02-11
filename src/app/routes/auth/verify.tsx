@@ -61,7 +61,7 @@ export default function Verify() {
 		<div className="flex flex-col gap-6">
 			<Link
 				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
-				to="/auth/login"
+				to="/login"
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>

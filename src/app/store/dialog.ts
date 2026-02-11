@@ -1,11 +1,11 @@
 import { create } from "zustand"
 
 interface DialogState {
-	[key: string]: boolean
+	dialogs: Record<string, boolean>
 }
 
 interface DialogStore {
-	dialogs: DialogState
+	dialogs: DialogState["dialogs"]
 	isOpen: (id: string) => boolean
 	openDialog: (id: string) => void
 	closeDialog: (id: string) => void

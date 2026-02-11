@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
-import { Dialog } from "../ui/dialog"
 import { Link } from "react-router"
+import { Dialog } from "../ui/dialog"
 
 export function ShowROI({
 	onCloseDemo,
@@ -184,7 +184,7 @@ export function ShowROI({
 								onClick={onStartNow}
 								type="button"
 							>
-								<Link aria-label="Começar agora" to="/auth/register">
+								<Link aria-label="Começar agora" to="/register">
 									Começar agora
 								</Link>
 							</button>

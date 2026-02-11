@@ -37,7 +37,7 @@ export default function Home() {
 		const showCard = (index: number) => {
 			document
 				.querySelectorAll(".feature-card")
-				// biome-ignore lint/suspicious/useIterableCallbackReturn: <explanation>
+				// biome-ignore lint/suspicious/useIterableCallbackReturn: forEach intentionally returns void for class manipulation
 				.forEach((c) => c.classList.remove("active"))
 
 			const targetCard = document.getElementById(`card-${index}`)
@@ -162,7 +162,7 @@ export default function Home() {
 					</p>
 					<div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
 						<Button className="rounded-full px-8 py-4 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-slate-200 sm:w-auto">
-							<Link aria-label="Navegar para criar conta" to="/auth/register">
+							<Link aria-label="Navegar para criar conta" to="/register">
 								Começar Teste Grátis
 							</Link>
 						</Button>

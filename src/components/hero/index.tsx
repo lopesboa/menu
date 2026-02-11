@@ -106,7 +106,7 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 							<Link
 								aria-label="Navegar para criar conta"
 								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
-								to="/auth/register"
+								to="/register"
 							>
 								Começar Agora
 							</Link>
