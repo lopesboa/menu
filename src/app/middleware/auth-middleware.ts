@@ -3,9 +3,9 @@ import { authClient } from "@/lib/client"
 
 export async function authMiddleware() {
 	const { data } = await authClient.getSession()
-	const userId = data?.user.id
+	const userId = data?.user?.id
 
 	if (!userId) {
-		throw redirect("/auth/login")
+		throw redirect("/login")
 	}
 }
