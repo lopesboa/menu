@@ -3,11 +3,11 @@ import { useEffect } from "react"
 import { useStepper, useStepperAction } from "@/app/store/stepper-store"
 import { cn } from "@/utils/misc"
 
-type Step = {
+interface Step {
 	label: string
 }
 
-type StepperHeaderProps = {
+interface StepperHeaderProps {
 	steps: Step[]
 	allowClickNavigation?: boolean
 }
