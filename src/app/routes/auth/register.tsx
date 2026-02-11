@@ -43,7 +43,7 @@ export default function Register() {
 				} as never,
 				{
 					onSuccess() {
-						navigate(data.redirectTo || "/auth/verify", {
+						navigate(data.redirectTo || "/verify", {
 							state: { email: data.email, redirectTo: data.redirectTo },
 						})
 					},
@@ -157,7 +157,7 @@ export default function Register() {
 				Já tem uma conta?{" "}
 				<Link
 					className="text-white underline-offset-2 hover:underline"
-					to="/auth/login"
+					to="/login"
 				>
 					Entrar
 				</Link>

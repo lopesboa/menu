@@ -132,7 +132,7 @@ export default function Login() {
 					</label>
 					<Link
 						className="cursor-pointer text-secondary text-xs transition-colors hover:text-white"
-						to="/auth/forgot"
+						to="/forgot"
 					>
 						Esqueceu sua senha?
 					</Link>
@@ -154,7 +154,7 @@ export default function Login() {
 				<Link
 					className="cursor-pointer text-white underline-offset-2 hover:underline"
 					onClick={() => capture("link_clicked", { link_name: "register" })}
-					to="/auth/register"
+					to="/register"
 				>
 					Criar conta
 				</Link>

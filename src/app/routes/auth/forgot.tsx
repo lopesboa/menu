@@ -36,9 +36,9 @@ export default function Forgot() {
 				},
 				{
 					onSuccess() {
-						navigate(data.redirectTo || "/auth/verify", {
+						navigate(data.redirectTo || "/verify", {
 							replace: true,
-							state: { redirectTo: "/auth/change-password" },
+							state: { redirectTo: "/change-password" },
 						})
 					},
 				}
@@ -54,7 +54,7 @@ export default function Forgot() {
 		<div className="flex flex-col gap-6" data-slot="auth-forgot">
 			<Link
 				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
-				to="/auth/login"
+				to="/login"
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>
