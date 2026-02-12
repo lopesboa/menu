@@ -52,8 +52,8 @@ export default function Verify() {
 				}
 			)
 		} catch {
-			toast.error("Verification failed", {
-				description: "Invalid or expired code.",
+			toast.error("Falha na verificação", {
+				description: "Código inválido ou expirado.",
 			})
 		} finally {
 			setLoading(false)
@@ -77,10 +77,10 @@ export default function Verify() {
 					/>
 				</div>
 				<h2 className="font-medium text-lg text-white tracking-tight">
-					Check your email
+					Verifique seu e-mail
 				</h2>
 				<p className="mx-auto mt-1 max-w-65 text-secondary text-xs">
-					We sent a verification code to{" "}
+					Enviamos um código de verificação para{" "}
 					<span className="text-white" id="display-email">
 						{email}
 					</span>

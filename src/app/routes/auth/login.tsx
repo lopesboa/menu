@@ -42,8 +42,8 @@ export default function Login() {
 				rememberMe,
 			})
 		} catch {
-			toast.error("Login failed", {
-				description: "Please check your credentials and try again.",
+			toast.error("Falha no login", {
+				description: "Verifique suas credenciais e tente novamente.",
 			})
 		} finally {
 			setLoading(false)

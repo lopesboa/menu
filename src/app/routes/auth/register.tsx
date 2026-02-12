@@ -51,8 +51,8 @@ export default function Register() {
 				}
 			)
 		} catch {
-			toast.error("Registration failed", {
-				description: "Please try again later.",
+			toast.error("Falha no cadastro", {
+				description: "Por favor, tente novamente mais tarde.",
 			})
 		} finally {
 			setLoading(false)

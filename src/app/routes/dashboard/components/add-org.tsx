@@ -20,9 +20,9 @@ interface OrganizationForm {
 }
 
 const steps = [
-	{ label: "Identity" },
-	{ label: "Contact" },
-	{ label: "Details" },
+	{ label: "Identidade" },
+	{ label: "Contato" },
+	{ label: "Detalhes" },
 ]
 
 export function AddOrgForm() {
@@ -59,8 +59,8 @@ export function AddOrgForm() {
 				metadata,
 			})
 		} catch {
-			toast.error("Creation failed", {
-				description: "Could not create organization.",
+			toast.error("Falha na criação", {
+				description: "Não foi possível criar a organização.",
 			})
 		} finally {
 			setLoading(false)
@@ -116,7 +116,7 @@ export function AddOrgForm() {
 								Criar Estabelecimento
 							</h3>
 							<p className="animate-enter text-slate-500 text-xs delay-500">
-								Set up your workspace in minutes.
+								Configure seu estabelecimento em minutos.
 							</p>
 						</div>
 						<Stepper
@@ -172,7 +172,7 @@ export function AddOrgForm() {
 							variant="ghost"
 						>
 							<Icon icon="solar:arrow-left-linear" width="16" />
-							<span>Back</span>
+							<span>Voltar</span>
 						</Button>
 
 						<Button
@@ -183,7 +183,7 @@ export function AddOrgForm() {
 							onClick={handleNext}
 							type="button"
 						>
-							<span>Continue</span>
+							<span>Continuar</span>
 							<Icon
 								className="transition-transform group-hover:translate-x-0.5"
 								icon="solar:arrow-right-linear"

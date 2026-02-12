@@ -45,8 +45,8 @@ export default function Forgot() {
 				}
 			)
 		} catch {
-			toast.error("Request failed", {
-				description: "Could not send verification email.",
+			toast.error("Falha na solicitação", {
+				description: "Não foi possível enviar o e-mail de verificação.",
 			})
 		} finally {
 			setLoading(false)
