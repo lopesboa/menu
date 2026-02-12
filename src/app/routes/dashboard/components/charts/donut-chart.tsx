@@ -7,12 +7,13 @@ import {
 	ResponsiveContainer,
 	Tooltip,
 } from "recharts"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 interface PaymentMethodChartProps {
 	data: Array<{ name: string; value: number; color: string }>
 }
 
-export function PaymentMethodChart({ data }: PaymentMethodChartProps) {
+function PaymentMethodChartContent({ data }: PaymentMethodChartProps) {
 	return (
 		<motion.div
 			animate={{ opacity: 1, scale: 1 }}
@@ -65,12 +66,20 @@ export function PaymentMethodChart({ data }: PaymentMethodChartProps) {
 	)
 }
 
+export function PaymentMethodChart(props: PaymentMethodChartProps) {
+	return (
+		<ErrorBoundary>
+			<PaymentMethodChartContent {...props} />
+		</ErrorBoundary>
+	)
+}
+
 interface DonutChartProps {
 	data: Array<{ name: string; value: number; color: string }>
 	title?: string
 }
 
-export function DonutChart({ data, title }: DonutChartProps) {
+function DonutChartContent({ data, title }: DonutChartProps) {
 	const total = data.reduce((sum, item) => sum + item.value, 0)
 
 	return (
@@ -124,5 +133,13 @@ export function DonutChart({ data, title }: DonutChartProps) {
 				</div>
 			</div>
 		</div>
+	)
+}
+
+export function DonutChart(props: DonutChartProps) {
+	return (
+		<ErrorBoundary>
+			<DonutChartContent {...props} />
+		</ErrorBoundary>
 	)
 }

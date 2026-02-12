@@ -9,13 +9,14 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 interface RevenueChartProps {
 	data: Array<{ date: string; revenue: number; orders: number }>
 	showOrders?: boolean
 }
 
-export function RevenueChart({ data, showOrders = false }: RevenueChartProps) {
+function RevenueChartContent({ data, showOrders = false }: RevenueChartProps) {
 	const formatDate = (dateStr: string) => {
 		const date = new Date(dateStr)
 		return date.toLocaleDateString("pt-BR", {
@@ -110,5 +111,13 @@ export function RevenueChart({ data, showOrders = false }: RevenueChartProps) {
 				</LineChart>
 			</ResponsiveContainer>
 		</motion.div>
+	)
+}
+
+export function RevenueChart(props: RevenueChartProps) {
+	return (
+		<ErrorBoundary>
+			<RevenueChartContent {...props} />
+		</ErrorBoundary>
 	)
 }
