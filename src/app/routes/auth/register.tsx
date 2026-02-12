@@ -3,6 +3,7 @@ import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
+import { toast } from "sonner"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/client"
@@ -49,8 +50,10 @@ export default function Register() {
 					},
 				}
 			)
-		} catch (error) {
-			console.error("Registration failed:", error)
+		} catch {
+			toast.error("Registration failed", {
+				description: "Please try again later.",
+			})
 		} finally {
 			setLoading(false)
 		}

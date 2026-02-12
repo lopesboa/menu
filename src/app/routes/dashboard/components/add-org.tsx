@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { useDialogActions } from "@/app/store/dialog"
 import { Button, Dialog, Stepper } from "@/components"
 import { Field } from "@/components/form"
@@ -57,8 +58,10 @@ export function AddOrgForm() {
 				logo: "",
 				metadata,
 			})
-		} catch (error) {
-			console.error("Organization creation failed:", error)
+		} catch {
+			toast.error("Creation failed", {
+				description: "Could not create organization.",
+			})
 		} finally {
 			setLoading(false)
 		}

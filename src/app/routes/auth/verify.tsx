@@ -3,6 +3,7 @@ import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useLocation, useNavigate } from "react-router"
+import { toast } from "sonner"
 import { Button } from "@/components"
 import {
 	InputOTP,
@@ -50,8 +51,10 @@ export default function Verify() {
 					},
 				}
 			)
-		} catch (error) {
-			console.error("Email verification failed:", error)
+		} catch {
+			toast.error("Verification failed", {
+				description: "Invalid or expired code.",
+			})
 		} finally {
 			setLoading(false)
 		}

@@ -3,6 +3,7 @@ import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router"
+import { toast } from "sonner"
 import { Input } from "@/components"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
@@ -40,8 +41,10 @@ export default function Login() {
 				callbackURL: "/dashboard",
 				rememberMe,
 			})
-		} catch (error) {
-			console.error("Login failed:", error)
+		} catch {
+			toast.error("Login failed", {
+				description: "Please check your credentials and try again.",
+			})
 		} finally {
 			setLoading(false)
 		}
