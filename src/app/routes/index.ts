@@ -2,6 +2,7 @@ import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
 import { authClient } from "@/lib/client"
 import { authMiddleware } from "../middleware/auth-middleware"
+import { RouteErrorBoundary } from "./error-boundary"
 
 const HomeLayout = lazy(() => import("./home/layout"))
 const HomeContent = lazy(() => import("./home"))
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
 	{
 		path: "/",
 		Component: HomeLayout,
+		ErrorBoundary: RouteErrorBoundary,
 		children: [
 			{
 				index: true,
@@ -44,6 +46,7 @@ export const router = createBrowserRouter([
 		Component: Dashboard,
 		middleware: [authMiddleware],
 		loader: organizationLoader,
+		ErrorBoundary: RouteErrorBoundary,
 		children: [
 			{ path: "add-org", Component: DashboardAddOrganization },
 			{ index: true, Component: DashboardHome },

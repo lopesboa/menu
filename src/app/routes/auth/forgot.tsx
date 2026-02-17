@@ -3,6 +3,7 @@ import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
+import { toast } from "sonner"
 import { Button } from "@/components"
 import { Field } from "@/components/form"
 import { authClient } from "@/lib/client"
@@ -43,8 +44,10 @@ export default function Forgot() {
 					},
 				}
 			)
-		} catch (error) {
-			console.error("Forgot password request failed:", error)
+		} catch {
+			toast.error("Falha na solicitação", {
+				description: "Não foi possível enviar o e-mail de verificação.",
+			})
 		} finally {
 			setLoading(false)
 		}

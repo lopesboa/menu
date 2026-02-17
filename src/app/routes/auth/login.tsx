@@ -3,18 +3,21 @@ import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link } from "react-router"
+import { toast } from "sonner"
+import { useAuth, useAuthAction } from "@/app/store/auth-store"
 import { Input } from "@/components"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
 import { usePostHogEvent } from "@/hooks"
-import { authClient } from "@/lib/client"
+import { sentryCaptureException } from "@/lib/sentry"
 import type { LogInForm } from "@/types/auth"
 import { SignInFormSchema } from "@/utils/user-validation"
 
 export default function Login() {
-	const [loading, setLoading] = useState(false)
 	const [rememberMe, setRememberMe] = useState(false)
 	const { capture } = usePostHogEvent()
+	const { login } = useAuthAction()
+	const { isLoading } = useAuth()
 
 	const {
 		register,
@@ -33,17 +36,12 @@ export default function Login() {
 
 	const onSubmit: SubmitHandler<LogInForm> = async (data) => {
 		try {
-			setLoading(true)
-			await authClient.signIn.email({
-				email: data.email,
-				password: data.password,
-				callbackURL: "/dashboard",
-				rememberMe,
-			})
+			await login(data.email, data.password, rememberMe)
 		} catch (error) {
-			console.error("Login failed:", error)
-		} finally {
-			setLoading(false)
+			sentryCaptureException(error)
+			toast.error("Falha no login", {
+				description: "Verifique suas credenciais e tente novamente.",
+			})
 		}
 	}
 
@@ -139,7 +137,7 @@ export default function Login() {
 				</div>
 
 				<Button
-					loading={loading}
+					loading={isLoading}
 					onClick={() => {
 						capture("button_clicked", { button_name: "login" })
 					}}

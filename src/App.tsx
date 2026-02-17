@@ -1,26 +1,22 @@
-import type { PostHogConfig } from "posthog-js"
-import { PostHogProvider } from "posthog-js/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { RouterProvider } from "react-router"
 import { router } from "./app/routes"
+import { ToastProvider } from "./components/ui/toast-provider"
+import { PostHogClientProvider } from "./providers/posthog"
 
-const options: Partial<PostHogConfig> = {
-	api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-	defaults: "2025-11-30",
-} as const
+const queryClient = new QueryClient()
 
 function App() {
-	if (import.meta.env.PROD) {
-		return (
-			<PostHogProvider
-				apiKey={import.meta.env.VITE_PUBLIC_POSTHOG_KEY}
-				options={options}
-			>
+	return (
+		<PostHogClientProvider>
+			<QueryClientProvider client={queryClient}>
 				<RouterProvider router={router} />
-			</PostHogProvider>
-		)
-	}
-
-	return <RouterProvider router={router} />
+				<ReactQueryDevtools initialIsOpen={false} />
+				<ToastProvider />
+			</QueryClientProvider>
+		</PostHogClientProvider>
+	)
 }
 
 export default App

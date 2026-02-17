@@ -1,3 +1,4 @@
+import { toast } from "sonner"
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { authClient } from "@/lib/client"
@@ -6,74 +7,62 @@ import type { User } from "@/types/dashboard"
 interface AuthState {
 	user: User | null
 	isAuthenticated: boolean
-	actions: {
-		login: (email: string, password: string) => Promise<void>
-		logout: () => void
-		updateUser: (updates: Partial<User>) => void
-	}
+	isLoading: boolean
+	login: (
+		email: string,
+		password: string,
+		rememberMe?: boolean,
+		redirectTo?: string
+	) => Promise<void>
+	logout: () => void
 }
 
 const useAuthStore = create<AuthState>()(
 	persist(
 		(set) => ({
-			user: {
-				id: "user-1",
-				email: "admin@menubao.com",
-				name: "Carlos Manager",
-				avatar: "https://i.pravatar.cc/150?u=s1",
-				role: "owner",
-				restaurants: [
-					{
-						organizationId: "rest-1",
-						restaurantName: "MenuBao Restaurant",
-						role: "owner",
-						isOwner: true,
-					},
-					{
-						organizationId: "rest-2",
-						restaurantName: "Sabor do Brasil",
-						role: "manager",
-						isOwner: false,
-					},
-				],
-				createdAt: new Date("2024-01-01"),
-			},
+			user: null,
+			isLoading: false,
 			isAuthenticated: true,
-			actions: {
-				login: async (email: string, _password: string) => {
-					await new Promise((resolve) => setTimeout(resolve, 500))
-					set({
-						user: {
-							id: "user-1",
-							email,
-							name: "Demo User",
-							role: "owner",
-							restaurants: [
-								{
-									organizationId: "rest-1",
-									restaurantName: "MenuBao Restaurant",
-									role: "owner",
-									isOwner: true,
-								},
-							],
-							createdAt: new Date(),
+			login: async (
+				email: string,
+				password: string,
+				rememberMe,
+				redirectTo
+			) => {
+				set({ isLoading: true })
+				await authClient.signIn.email(
+					{
+						email,
+						password,
+						callbackURL: redirectTo || "/dashboard",
+						rememberMe,
+					},
+					{
+						onSuccess(data) {
+							set({
+								user: data.data.user,
+								isAuthenticated: true,
+							})
 						},
-						isAuthenticated: true,
-					})
-				},
-				logout: () => {
-					authClient.signOut({
-						fetchOptions: {
-							onSuccess: () => {
-								set({ user: null, isAuthenticated: false })
-							},
+						onError(err) {
+							if (err.error.status === 401) {
+								toast.error("Falha no login", {
+									description: "E-mail ou senha invalida",
+								})
+							}
 						},
-					})
-				},
-				updateUser: (updates) =>
-					set((state) => ({
-						user: state.user ? { ...state.user, ...updates } : null,
-					})),
+					}
+				)
+				set({ isLoading: false })
+			},
+			logout: () => {
+				authClient.signOut({
+					fetchOptions: {
+						onSuccess: () => {
+							set({ user: null, isAuthenticated: false })
+						},
+					},
+				})
 			},
 		}),
 		{
@@ -85,15 +74,21 @@ const useAuthStore = create<AuthState>()(
 export const useAuth = () => {
 	const user = useAuthStore((state) => state.user)
 	const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+	const isLoading = useAuthStore((state) => state.isLoading)
 
 	return {
 		user,
+		isLoading,
 		isAuthenticated,
 	}
 }
 
 export const useAuthAction = () => {
-	const actions = useAuthStore((state) => state.actions)
+	const login = useAuthStore((state) => state.login)
+	const logout = useAuthStore((state) => state.logout)
 
-	return actions
+	return {
+		login,
+		logout,
+	}
 }

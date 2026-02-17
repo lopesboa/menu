@@ -8,6 +8,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 interface ProgressBarChartProps {
 	data: Array<{ name: string; value: number; color?: string }>
@@ -15,7 +16,7 @@ interface ProgressBarChartProps {
 	showValue?: boolean
 }
 
-export function ProgressBarChart({
+function ProgressBarChartContent({
 	data,
 	maxValue,
 	showValue = true,
@@ -59,13 +60,21 @@ export function ProgressBarChart({
 	)
 }
 
+export function ProgressBarChart(props: ProgressBarChartProps) {
+	return (
+		<ErrorBoundary>
+			<ProgressBarChartContent {...props} />
+		</ErrorBoundary>
+	)
+}
+
 interface BarChartComponentProps {
 	data: Array<{ name: string; value: number; value2?: number }>
 	colors?: { primary?: string; secondary?: string }
 	stacked?: boolean
 }
 
-export function BarChartComponent({
+function BarChartComponentContent({
 	data,
 	colors = { primary: "#22c55e", secondary: "#f59e0b" },
 	stacked = false,
@@ -126,11 +135,19 @@ export function BarChartComponent({
 	)
 }
 
+export function BarChartComponent(props: BarChartComponentProps) {
+	return (
+		<ErrorBoundary>
+			<BarChartComponentContent {...props} />
+		</ErrorBoundary>
+	)
+}
+
 interface CashFlowChartProps {
 	data: Array<{ name: string; income: number; expense: number }>
 }
 
-export function CashFlowChart({ data }: CashFlowChartProps) {
+function CashFlowChartContent({ data }: CashFlowChartProps) {
 	return (
 		<motion.div
 			animate={{ opacity: 1 }}
@@ -188,5 +205,13 @@ export function CashFlowChart({ data }: CashFlowChartProps) {
 				</BarChart>
 			</ResponsiveContainer>
 		</motion.div>
+	)
+}
+
+export function CashFlowChart(props: CashFlowChartProps) {
+	return (
+		<ErrorBoundary>
+			<CashFlowChartContent {...props} />
+		</ErrorBoundary>
 	)
 }
