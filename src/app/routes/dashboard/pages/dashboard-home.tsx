@@ -16,8 +16,8 @@ import {
 } from "@/hooks/useDashboard"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
-import { RevenueChart } from "../components/charts/revenue-chart"
 import { MetricCard } from "../components/ui/metric-card"
+import { RevenueChart } from "../components/charts/revenue-chart"
 
 export default function DashboardHome() {
 	const { data: dashboardSummary } = useDashboardSummary(10)
