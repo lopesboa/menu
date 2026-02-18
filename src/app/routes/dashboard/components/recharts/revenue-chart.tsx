@@ -17,10 +17,7 @@ interface RevenueChartProps {
 	showOrders?: boolean
 }
 
-export function RevenueChartContent({
-	data,
-	showOrders = false,
-}: RevenueChartProps) {
+function RevenueChartContent({ data, showOrders = false }: RevenueChartProps) {
 	const formatDate = (dateStr: string) => {
 		const date = new Date(dateStr)
 		return date.toLocaleDateString("pt-BR", {
