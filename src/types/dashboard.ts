@@ -128,7 +128,7 @@ export interface Order {
 	tableId?: string
 	customerId?: string
 	staffId?: string
-	items: OrderItem[]
+	orderItems: OrderItem[]
 	status: OrderStatus
 	approvalStatus?: "pending" | "approved" | "rejected"
 	approvedBy?: string
@@ -145,6 +145,8 @@ export interface Order {
 	updatedAt: Date
 	customerName?: string
 	notes?: string
+	orderNumber: number
+	itemsCount?: number
 }
 
 export interface SplitBill {
@@ -251,4 +253,101 @@ export interface Cart {
 	type: OrderType
 	notes?: string
 	splitCount?: number
+}
+
+export interface DashboardRevenue {
+	data: Daum[]
+	summary: RevenueSummary
+}
+
+export interface DashboardSummary {
+	stats: Stats
+	recentOrders: RecentOrders
+	tablesStatus: TablesStatus
+	topProducts: TopProduct[]
+	period: Period
+}
+
+export interface SalesRanking {
+	products: ProductRanking[]
+	pagination: Pagination
+}
+
+interface ProductRanking {
+	rank: number
+	id: string
+	name: string
+	category: string
+	price: number
+	quantitySold: number
+	revenue: number
+}
+
+interface Pagination {
+	page: number
+	limit: number
+	total: number
+	totalPages: number
+}
+
+export interface Daum {
+	date: string
+	revenue: number
+	orders: number
+}
+
+interface RevenueSummary {
+	totalRevenue: number
+	percentageChange: number
+}
+
+interface StatsRoot {
+	current: number
+	previous: number
+	percentageChange: number
+}
+
+interface Tables {
+	occupied: number
+	total: number
+	percentageChange: number
+}
+
+interface Stats {
+	revenue: StatsRoot
+	orders: StatsRoot
+	tables: Tables
+}
+
+interface RecentOrders {
+	total: number
+	orders: Order[]
+}
+
+interface TablesStatus {
+	summary: Summary
+	tables: Table[]
+}
+
+interface Summary {
+	available: number
+	occupied: number
+	reserved: number
+	cleaning: number
+	total: number
+}
+
+interface TopProduct {
+	rank: number
+	id: string
+	name: string
+	category: string
+	price: number
+	quantitySold: number
+}
+
+interface Period {
+	days: number
+	startDate: string
+	endDate: string
 }

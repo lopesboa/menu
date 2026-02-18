@@ -4,47 +4,37 @@ import {
 	DollarSign,
 	ShoppingCart,
 	TableIcon,
+	TrendingDown,
 	TrendingUp,
 	Users,
 } from "lucide-react"
 import { StatusBadge } from "@/components/ui/status-badge"
+import {
+	useDashboardSummary,
+	useRevenueChart,
+	useSalesRanking,
+} from "@/hooks/useDashboard"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { RevenueChart } from "../components/charts/revenue-chart"
 import { MetricCard } from "../components/ui/metric-card"
-import {
-	customers,
-	menuItems,
-	orders,
-	salesData,
-	tables,
-} from "../data/mockData"
 
 export default function DashboardHome() {
-	const todayOrders = orders.slice(0, 5)
-	const topSelling = menuItems
-		.filter((item) => item.available)
-		.sort((a, b) => b.price - a.price)
-		.slice(0, 5)
-
-	const todayRevenue = orders
-		.filter((order) => {
-			const orderDate = new Date(order.createdAt)
-			const today = new Date()
-			return orderDate.toDateString() === today.toDateString()
-		})
-		.reduce((sum, order) => sum + order.total, 0)
-
-	const activeOrders = orders.filter(
-		(o) => o.status !== "delivered" && o.status !== "cancelled"
-	).length
-	const occupiedTables = tables.filter((t) => t.status === "occupied").length
+	const { data: dashboardSummary } = useDashboardSummary(10)
+	const { data: revenueChart } = useRevenueChart(30)
+	const { data: salesRanking } = useSalesRanking(30, 1, 5)
+	const isRevenueNegative =
+		revenueChart?.summary.percentageChange &&
+		revenueChart?.summary.percentageChange < 0
+	const isRevenuePositive =
+		revenueChart?.summary.percentageChange &&
+		revenueChart?.summary.percentageChange > 0
 
 	const stats = [
 		{
 			title: "Faturamento Hoje",
-			value: formatCurrency(todayRevenue),
-			change: 12.5,
+			value: formatCurrency(dashboardSummary?.stats.revenue.current),
+			change: dashboardSummary?.stats.revenue.percentageChange || 0,
 			icon: DollarSign,
 			iconColor: "text-green-600",
 			iconBgColor: "bg-green-50",
@@ -52,8 +42,8 @@ export default function DashboardHome() {
 		},
 		{
 			title: "Pedidos Hoje",
-			value: activeOrders,
-			change: 8.2,
+			value: dashboardSummary?.stats.orders.current || 0,
+			change: dashboardSummary?.stats.orders.percentageChange || 0,
 			icon: ShoppingCart,
 			iconColor: "text-blue-600",
 			iconBgColor: "bg-blue-50",
@@ -61,7 +51,7 @@ export default function DashboardHome() {
 		},
 		{
 			title: "Clientes Ativos",
-			value: customers.length,
+			value: 22,
 			change: 5.3,
 			icon: Users,
 			iconColor: "text-purple-600",
@@ -70,8 +60,8 @@ export default function DashboardHome() {
 		},
 		{
 			title: "Mesas Ocupadas",
-			value: `${occupiedTables}/${tables.length}`,
-			change: -2.1,
+			value: `${dashboardSummary?.stats.tables.occupied}/${dashboardSummary?.stats.tables.total}`,
+			change: dashboardSummary?.stats.tables.percentageChange || 0,
 			icon: TableIcon,
 			iconColor: "text-orange-600",
 			iconBgColor: "bg-orange-50",
@@ -110,12 +100,27 @@ export default function DashboardHome() {
 							</h2>
 							<p className="text-sm text-surface-500">Últimos 30 dias</p>
 						</div>
-						<div className="flex items-center gap-2 text-green-600">
-							<TrendingUp className="h-4 w-4" />
-							<span className="font-medium text-sm">+12.5%</span>
+						<div
+							className={cn(
+								"flex items-center gap-2",
+								isRevenueNegative ? "text-green-600" : "text-red-700"
+							)}
+						>
+							{isRevenueNegative ? (
+								<TrendingUp className="h-4 w-4" />
+							) : (
+								<TrendingDown className="h-4 w-4" />
+							)}
+							<span className="font-medium text-sm">
+								{isRevenuePositive ? "+" : ""}
+								{revenueChart?.summary.percentageChange
+									? revenueChart?.summary.percentageChange
+									: "0"}{" "}
+								%
+							</span>
 						</div>
 					</div>
-					<RevenueChart data={salesData} />
+					<RevenueChart data={revenueChart?.data || []} showOrders />
 				</motion.div>
 
 				<motion.div
@@ -128,13 +133,13 @@ export default function DashboardHome() {
 						Mais Vendidos
 					</h2>
 					<div className="space-y-4">
-						{topSelling.map((item, index) => (
+						{salesRanking?.products.map((item) => (
 							<div
 								className="flex cursor-pointer items-center gap-4 rounded-xl p-3 transition-colors hover:bg-surface-50"
 								key={item.id}
 							>
 								<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-100 font-bold text-surface-600">
-									{index + 1}
+									{item.rank}
 								</div>
 								<div className="min-w-0 flex-1">
 									<p className="truncate font-medium text-surface-900">
@@ -144,7 +149,7 @@ export default function DashboardHome() {
 								</div>
 								<div className="text-right">
 									<p className="font-semibold text-surface-900">
-										{formatCurrency(item.price)}
+										{formatCurrency(item.revenue)}
 									</p>
 								</div>
 							</div>
@@ -171,11 +176,11 @@ export default function DashboardHome() {
 							Pedidos Recentes
 						</h2>
 						<span className="text-sm text-surface-500">
-							{orders.length} total
+							{dashboardSummary?.recentOrders.total} total
 						</span>
 					</div>
 					<div className="space-y-3">
-						{todayOrders.map((order) => (
+						{dashboardSummary?.recentOrders.orders?.map((order) => (
 							<div
 								className="flex items-center justify-between rounded-xl bg-surface-50 p-4 transition-colors hover:bg-surface-100"
 								key={order.id}
@@ -183,7 +188,7 @@ export default function DashboardHome() {
 								<div className="flex items-center gap-4">
 									<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100">
 										<span className="font-semibold text-primary-700 text-sm">
-											#{order.id.replace("o", "")}
+											#{order.orderNumber}
 										</span>
 									</div>
 									<div>
@@ -191,8 +196,10 @@ export default function DashboardHome() {
 											{order.customerName || "Cliente"}
 										</p>
 										<p className="text-sm text-surface-500">
-											{order.items.length} itens •{" "}
-											{formatRelativeTime(order.createdAt)}
+											{order?.itemsCount && order.itemsCount > 1
+												? "itens "
+												: "1 item "}
+											• {formatRelativeTime(order.createdAt)}
 										</p>
 									</div>
 								</div>
@@ -217,7 +224,7 @@ export default function DashboardHome() {
 						Status das Mesas
 					</h2>
 					<div className="grid grid-cols-5 gap-3">
-						{tables.map((table) => (
+						{dashboardSummary?.tablesStatus.tables.map((table) => (
 							<div
 								className={cn(
 									"cursor-pointer rounded-xl p-3 text-center transition-all hover:scale-105",
@@ -251,19 +258,27 @@ export default function DashboardHome() {
 					<div className="mt-4 flex items-center justify-center gap-6 border-surface-100 border-t pt-4">
 						<div className="flex items-center gap-2">
 							<div className="h-3 w-3 rounded-full bg-green-500" />
-							<span className="text-sm text-surface-600">Disponível</span>
+							<span className="text-sm text-surface-600">
+								{dashboardSummary?.tablesStatus.summary.available} Disponível
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<div className="h-3 w-3 rounded-full bg-red-500" />
-							<span className="text-sm text-surface-600">Ocupada</span>
+							<span className="text-sm text-surface-600">
+								{dashboardSummary?.tablesStatus.summary.occupied} Ocupada
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<div className="h-3 w-3 rounded-full bg-blue-500" />
-							<span className="text-sm text-surface-600">Reservada</span>
+							<span className="text-sm text-surface-600">
+								{dashboardSummary?.tablesStatus.summary.reserved} Reservada
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<div className="h-3 w-3 rounded-full bg-yellow-500" />
-							<span className="text-sm text-surface-600">Limpeza</span>
+							<span className="text-sm text-surface-600">
+								{dashboardSummary?.tablesStatus.summary.cleaning} Limpeza
+							</span>
 						</div>
 					</div>
 				</motion.div>
