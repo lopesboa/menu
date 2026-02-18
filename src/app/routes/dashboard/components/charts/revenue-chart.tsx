@@ -10,9 +10,10 @@ import {
 	YAxis,
 } from "recharts"
 import { ErrorBoundary } from "@/components/error-boundary"
+import type { Daum } from "@/types/dashboard"
 
 interface RevenueChartProps {
-	data: Array<{ date: string; revenue: number; orders: number }>
+	data: Daum[]
 	showOrders?: boolean
 }
 
@@ -70,7 +71,7 @@ function RevenueChartContent({ data, showOrders = false }: RevenueChartProps) {
 						}}
 						formatter={(value) => [
 							`R$ ${(value as number).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`,
-							"Faturamento",
+							"Faturamento / Pedidos",
 						]}
 						labelFormatter={(label) => {
 							const date = new Date(label)
