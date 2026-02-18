@@ -1,5 +1,4 @@
 import { create } from "zustand"
-import { tables as initialTables } from "@/app/routes/dashboard/data/mockData"
 import type { Table, TableStatus } from "@/types/dashboard"
 
 interface TableStore {
@@ -17,7 +16,7 @@ interface TableStore {
 }
 
 export const useTableStore = create<TableStore>((set, get) => ({
-	tables: initialTables,
+	tables: [],
 	selectedSection: "Todas",
 	setSelectedSection: (section) => set({ selectedSection: section }),
 	updateTableStatus: (tableId, status, orderId) =>
