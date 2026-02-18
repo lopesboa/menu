@@ -141,18 +141,22 @@ export const useOrderStore = create<OrderStore>((set, get) => ({
 		return orders.filter((order) => {
 			if (filter.status !== "all") {
 				if (filter.status === "approval_pending") {
-					if (order.approvalStatus !== "pending") return false
+					if (order.approvalStatus !== "pending") {
+						return false
+					}
 				} else if (order.status !== filter.status) {
 					return false
 				}
 			}
-			if (filter.type !== "all" && order.type !== filter.type) return false
+			if (filter.type !== "all" && order.type !== filter.type) {
+				return false
+			}
 			if (filter.search) {
 				const searchLower = filter.search.toLowerCase()
 				return (
 					order.id.toLowerCase().includes(searchLower) ||
 					order.customerName?.toLowerCase().includes(searchLower) ||
-					order.items.some((item) =>
+					order.orderItems.some((item) =>
 						item.name.toLowerCase().includes(searchLower)
 					)
 				)
