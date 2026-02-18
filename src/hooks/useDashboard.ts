@@ -5,15 +5,20 @@ import {
 	getDashboardSummary,
 } from "@/services/dashboard-service"
 
-const dashboardQueryKeys = {
-	getDashboardSummary: (days?: number) => ["list-summary", { days }],
+export const dashboardQueryKeys = {
+	all: () => ["summary"],
+	getDashboardSummary: (days?: number) => [
+		...dashboardQueryKeys.all(),
+		"dashboard-summary",
+		{ days },
+	],
 	getDashboardRevenueChart: (days?: number) => [
-		...dashboardQueryKeys.getDashboardSummary(),
+		...dashboardQueryKeys.all(),
 		"revenue-chart",
 		{ days },
 	],
 	getDashboardSalesRanking: (days?: number, page?: number, count?: number) => [
-		...dashboardQueryKeys.getDashboardSummary(),
+		...dashboardQueryKeys.all(),
 		"sales-ranking",
 		{ days },
 		{ page },

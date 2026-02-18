@@ -56,7 +56,7 @@ export function updateOrderStatus(
 	return apiFetch(`/orders/${ORG_ID}/${orderId}/status`, {
 		signal,
 		method: "PATCH",
-		body: JSON.stringify(status),
+		body: JSON.stringify({ status }),
 	})
 }
 
