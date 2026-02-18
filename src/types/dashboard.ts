@@ -146,6 +146,7 @@ export interface Order {
 	customerName?: string
 	notes?: string
 	orderNumber: number
+	itemsCount?: number
 }
 
 export interface SplitBill {
@@ -289,9 +290,10 @@ interface Pagination {
 	totalPages: number
 }
 
-interface Daum {
+export interface Daum {
 	date: string
 	revenue: number
+	orders: number
 }
 
 interface RevenueSummary {
