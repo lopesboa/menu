@@ -1,6 +1,5 @@
 import { create } from "zustand"
 import type { MenuItem } from "@/types/dashboard"
-import { menuItems as initialMenuItems } from "../routes/dashboard/data/mockData"
 
 interface MenuStore {
 	menuItems: MenuItem[]
@@ -31,7 +30,7 @@ const allCategories = [
 ]
 
 export const useMenuStore = create<MenuStore>((set, get) => ({
-	menuItems: initialMenuItems,
+	menuItems: [],
 	selectedCategory: "Todas",
 	searchQuery: "",
 	viewMode: "grid",
