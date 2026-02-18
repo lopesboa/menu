@@ -17,6 +17,7 @@ const Dashboard = lazy(() => import("./dashboard"))
 const DashboardAddOrganization = lazy(() => import("./dashboard/addOrg"))
 const DashboardHome = lazy(() => import("./dashboard/pages/dashboard-home"))
 const Account = lazy(() => import("./dashboard/pages/account"))
+const Orders = lazy(() => import("./dashboard/pages/orders"))
 
 export const router = createBrowserRouter([
 	{
@@ -51,6 +52,7 @@ export const router = createBrowserRouter([
 			{ path: "add-org", Component: DashboardAddOrganization },
 			{ index: true, Component: DashboardHome },
 			{ path: "account", Component: Account },
+			{ path: "orders", Component: Orders },
 		],
 	},
 ])
