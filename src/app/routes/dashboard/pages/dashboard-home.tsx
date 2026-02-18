@@ -8,7 +8,6 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react"
-import { RevenueChart } from "@/app/routes/dashboard/components/charts/revenue-chart"
 import { StatusBadge } from "@/components/ui/status-badge"
 import {
 	useDashboardSummary,
@@ -18,6 +17,7 @@ import {
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { MetricCard } from "../components/ui/metric-card"
+import { RevenueChart } from "../components/recharts/revenue-chart"
 
 export default function DashboardHome() {
 	const { data: dashboardSummary } = useDashboardSummary(10)
