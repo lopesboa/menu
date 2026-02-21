@@ -9,6 +9,7 @@ on:
 permissions:
   contents: read
   packages: write
+  security-events: write
 
 jobs:
   build-and-push:
@@ -37,7 +38,38 @@ jobs:
           else
             echo "TAG=staging" >> $GITHUB_ENV
           fi
-      - name: Build and push image
+      - name: Build image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VITE_APP_SERVER_URL=${{ secrets.VITE_APP_SERVER_URL }}
+            VITE_PUBLIC_POSTHOG_KEY=${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
+            VITE_PUBLIC_POSTHOG_HOST=${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
+          tags: |
+            ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
+            ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
+
+      - name: Run Trivy image scanner
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: "image"
+          image-ref: "ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}"
+          format: "sarif"
+          output: "trivy-image-results.sarif"
+          severity: "CRITICAL,HIGH"
+          exit-code: "1"
+
+      - name: Upload image scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: "trivy-image-results.sarif"
+          category: "DockerImage"
+
+      - name: Push image
         uses: docker/build-push-action@v6
         with:
           context: .
