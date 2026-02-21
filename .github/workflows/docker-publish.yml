@@ -53,12 +53,13 @@ jobs:
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
+            local-trivy-scan:latest
 
       - name: Run Trivy image scanner
         uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: "image"
-          image-ref: "ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}"
+          image-ref: "local-trivy-scan:latest"
           format: "sarif"
           output: "trivy-image-results.sarif"
           severity: "CRITICAL,HIGH"
@@ -84,4 +85,3 @@ jobs:
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
-
