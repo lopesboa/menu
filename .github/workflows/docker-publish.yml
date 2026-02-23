@@ -51,4 +51,3 @@ jobs:
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
-

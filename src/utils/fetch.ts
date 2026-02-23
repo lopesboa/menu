@@ -8,6 +8,7 @@ export async function apiFetch<T>(
 ): Promise<T> {
 	const response = await fetch(`${API_BASE}${endpoint}`, {
 		...options,
+		credentials: "include",
 		headers: {
 			"x-api-key": API_KEY,
 			"Content-Type": "application/json",
