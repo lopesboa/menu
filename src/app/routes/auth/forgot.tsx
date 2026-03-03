@@ -4,11 +4,11 @@ import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
-import { Button } from "@/components"
 import { Field } from "@/components/form"
 import { authClient } from "@/lib/client"
 import type { ForgotForm } from "@/types/auth"
 import { ForgotFormSchema } from "@/utils/user-validation"
+import { Button } from "@/components/ui/button"
 
 export default function Forgot() {
 	const navigate = useNavigate()

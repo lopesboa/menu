@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useLocation, useNavigate } from "react-router"
 import { toast } from "sonner"
-import { Button } from "@/components"
 import {
 	InputOTP,
 	InputOTPGroup,
@@ -15,6 +14,7 @@ import { authClient } from "@/lib/client"
 import type { VerifyForm } from "@/types/auth"
 import { cn } from "@/utils/misc"
 import { VerifyFormSchema } from "@/utils/user-validation"
+import { Button } from "@/components/ui/button"
 
 export default function Verify() {
 	const location = useLocation()

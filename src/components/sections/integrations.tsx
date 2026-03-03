@@ -3,7 +3,7 @@ import { Icon } from "@iconify-icon/react"
 export function IntegrationSection() {
 	return (
 		<section
-			className="relative overflow-hidden border-white/5 border-b bg-[#050505] py-24"
+			className="relative overflow-hidden border-white/5 border-b bg-background py-24"
 			id="integrations"
 		>
 			<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-indigo-900/10 via-[#030712] to-[#030712]" />

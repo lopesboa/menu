@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
-import { Dialog } from "../ui/dialog"
+import { Dialog } from "@/components/ui/dialog"
 
 export function ShowROI({
 	onCloseDemo,
