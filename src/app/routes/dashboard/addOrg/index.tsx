@@ -2,66 +2,204 @@ import "./styles.css"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
-import { type SubmitHandler, useForm } from "react-hook-form"
+import {
+	FormProvider,
+	type SubmitHandler,
+	useForm,
+	useWatch,
+} from "react-hook-form"
+import { useNavigate } from "react-router"
 import { toast } from "sonner"
+import { z } from "zod"
 import { useStepper, useStepperAction } from "@/app/store/stepper-store"
-import { Button } from "@/components"
+import { useCities, useCreateAddress } from "@/hooks/useAddress"
 import { authClient } from "@/lib/client"
-import { cn, createOrgSlug } from "@/utils/misc"
-import { OrganizationFormSchema } from "@/utils/user-validation"
+import { sentryCaptureException } from "@/lib/sentry"
+import { cn } from "@/utils/misc"
 import { Concept } from "./components/steps/concept"
 import { Location } from "./components/steps/location"
 import { Operation } from "./components/steps/operation"
-import { StepperActions } from "./components/steps/stepper-action"
-import {
-	StepperNextButton,
-	StepperPreviousButton,
-} from "./components/steps/stepper-button"
 import { StepContent } from "./components/steps/stepper-content"
 import { StepperHeader } from "./components/steps/stepper-header"
 import { StepperRoot } from "./components/steps/stepper-root"
+import { Button } from "@/components/ui/button"
 
-interface OrganizationForm {
-	slug: string
-	logo?: string
-	organizationName: string
-	metadata?: Record<string, unknown>
-	redirectTo?: string
-	keepCurrentActiveOrganization?: boolean
-}
+const step1Schema = z.object({
+	ownerName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+	ownerDocType: z.string().min(1, "Selecione o tipo de documento"),
+	ownerDocNumber: z.string().min(1, "Número do documento é obrigatório"),
+})
 
-const steps = [{ label: "Conceito" }, { label: "Operação" }, { label: "Local" }]
+const step2Schema = z.object({
+	organizationName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
+	slug: z
+		.string()
+		.min(1, "Slug é obrigatório")
+		.regex(/^[a-z0-9-]+$/, "Apenas letras minúsculas, números e hífens"),
+	phone: z.string().min(1, "Telefone é obrigatório"),
+	docType: z.string().min(1, "Selecione o tipo de documento"),
+	docNumber: z.string().min(1, "Número do documento é obrigatório"),
+	categoryId: z.string().min(1, "Selecione uma categoria"),
+	// operationType: z.string().min(1, "Selecione o tipo de operação"),
+})
+
+const step3Schema = z.object({
+	zipCode: z.string().min(1, "CEP é obrigatório"),
+	state: z.string().min(1, "Selecione um estado"),
+	city: z.string().min(1, "Selecione uma cidade"),
+	street: z.string().min(1, "Endereço é obrigatório"),
+	number: z.string().min(1, "Número é obrigatório"),
+	complement: z.string().optional(),
+	neighborhood: z.string().min(1, "Bairro é obrigatório"),
+})
+
+const fullSchema = step1Schema.merge(step2Schema).merge(step3Schema)
+
+type OrganizationForm = z.infer<typeof fullSchema>
+
+const steps = [
+	{ label: "Dados Pessoais" },
+	{ label: "Empresa" },
+	{ label: "Endereço" },
+]
 
 export default function AddOrganization() {
 	const [loading, setLoading] = useState(false)
+	const navigate = useNavigate()
 	const { currentStep } = useStepper()
 	const { goToNext, goToPrevious, setTotalSteps } = useStepperAction()
+	const { mutateAsync, error } = useCreateAddress()
 
-	const { handleSubmit } = useForm<OrganizationForm>({
-		resolver: zodResolver(OrganizationFormSchema),
-		mode: "onBlur",
+	const methods = useForm<OrganizationForm>({
+		resolver: zodResolver(fullSchema),
+		mode: "onChange",
 		defaultValues: {
-			slug: "",
-			redirectTo: "",
-			keepCurrentActiveOrganization: false,
-			logo: "",
-			metadata: {},
+			ownerName: "",
+			ownerDocType: undefined,
+			ownerDocNumber: "",
 			organizationName: "",
+			slug: "",
+			phone: "",
+			docType: undefined,
+			docNumber: "",
+			categoryId: "",
+			// operationType: "",
+			zipCode: "",
+			state: "",
+			city: "",
+			street: "",
+			number: "",
+			complement: "",
+			neighborhood: "",
 		},
 	})
 
+	const { handleSubmit, trigger } = methods
+
+	const [state, city] = useWatch({
+		control: methods.control,
+		name: ["state", "city"],
+	})
+
+	const { data: cities = [] } = useCities(state)
+	const selectedCity = cities.find((c) => c.name === city)
+
+	const validateCurrentStep = async (): Promise<boolean> => {
+		let fieldsToValidate: (keyof OrganizationForm)[] = []
+
+		switch (currentStep) {
+			case 1:
+				fieldsToValidate = ["ownerName", "ownerDocType", "ownerDocNumber"]
+				break
+			case 2:
+				fieldsToValidate = [
+					"organizationName",
+					"slug",
+					"phone",
+					"docType",
+					"docNumber",
+					"categoryId",
+					// "operationType",
+				]
+				break
+			case 3:
+				fieldsToValidate = [
+					"zipCode",
+					"state",
+					"city",
+					"street",
+					"number",
+					"neighborhood",
+				]
+				break
+			default:
+				fieldsToValidate = []
+		}
+
+		const isValid = await trigger(fieldsToValidate)
+		return isValid
+	}
+
 	const onSubmit: SubmitHandler<OrganizationForm> = async (data) => {
-		const metadata = { plan: "free" }
 		try {
 			setLoading(true)
-			await authClient.organization.create({
-				name: data.organizationName,
-				slug: createOrgSlug(data.organizationName),
-				keepCurrentActiveOrganization: true,
-				logo: "",
-				metadata,
-			})
-		} catch {
+
+			const addressData = {
+				street: data.street,
+				number: data.number,
+				complement: data.complement,
+				neighborhood: data.neighborhood,
+				zipCode: data.zipCode,
+				cityId: selectedCity?.id || "",
+			}
+
+			const { id: addressId } = await mutateAsync(addressData)
+
+			const metadata = {
+				// operationType: data.operationType,
+				// ownerName: data.ownerName,
+				ownerDocType: data.ownerDocType,
+				ownerDocNumber: data.ownerDocNumber,
+				plan: "free",
+			}
+
+			console.log(data.categoryId, addressId, error)
+
+			await authClient.organization.create(
+				{
+					name: data.organizationName,
+					slug: data.slug,
+					logo: "",
+					metadata,
+					isActive: true,
+					// phone: data.phone,
+					docType: data.docType.toLowerCase(),
+					// planExpiresAt: new Date(),
+					docNumber: data.docNumber,
+					categoryId: data.categoryId,
+					addressId,
+					// isOpen: true,
+
+					keepCurrentActiveOrganization: true,
+				} as never,
+				{
+					onSuccess: () => {
+						toast.success("Organização criada!", {
+							description: "Seu estabelecimento foi criado com sucesso.",
+						})
+						navigate("/dashboard", { replace: true })
+						authClient.useActiveOrganization
+					},
+					onError: (err) => {
+						toast.error("Falha na criação", {
+							description: err.error.message,
+						})
+					},
+				}
+			)
+		} catch (err) {
+			sentryCaptureException(err)
+			console.log({ err })
 			toast.error("Falha na criação", {
 				description: "Não foi possível criar a organização.",
 			})
@@ -70,9 +208,12 @@ export default function AddOrganization() {
 		}
 	}
 
-	const handleNext = () => {
+	const handleNext = async () => {
 		if (currentStep < steps.length) {
-			goToNext()
+			const isValid = await validateCurrentStep()
+			if (isValid) {
+				goToNext()
+			}
 		} else {
 			handleSubmit(onSubmit)()
 		}
@@ -116,25 +257,23 @@ export default function AddOrganization() {
 					</div>
 					<StepperHeader steps={steps} />
 
-					<form
-						className="elative min-h-115"
-						id="org-form"
-						onSubmit={handleSubmit(onSubmit)}
-					>
-						<StepContent step={1}>
-							<Concept />
-						</StepContent>
-						<StepContent step={2}>
-							<Operation />
-						</StepContent>
-						<StepContent step={3}>
-							<Location />
-						</StepContent>
-					</form>
-					<StepperActions>
-						<StepperPreviousButton>Voltar</StepperPreviousButton>
-						<StepperNextButton>Próximo</StepperNextButton>
-					</StepperActions>
+					<FormProvider {...methods}>
+						<form
+							className="elative min-h-115"
+							id="org-form"
+							onSubmit={handleSubmit(onSubmit)}
+						>
+							<StepContent step={1}>
+								<Concept />
+							</StepContent>
+							<StepContent step={2}>
+								<Operation />
+							</StepContent>
+							<StepContent step={3}>
+								<Location />
+							</StepContent>
+						</form>
+					</FormProvider>
 				</StepperRoot>
 			</div>
 
@@ -161,7 +300,7 @@ export default function AddOrganization() {
 						onClick={handleNext}
 						type="button"
 					>
-						<span>Continuar</span>
+						<span>{currentStep === steps.length ? "Criar" : "Continuar"}</span>
 						<Icon
 							className="transition-transform group-hover:translate-x-1"
 							icon="solar:arrow-right-linear"
