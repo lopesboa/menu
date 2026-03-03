@@ -16,13 +16,18 @@ import {
 } from "@/hooks/useDashboard"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
-import { MetricCard } from "../components/ui/metric-card"
 import { RevenueChart } from "../components/recharts/revenue-chart"
+import { MetricCard } from "../components/ui/metric-card"
+import { useLoaderData } from "react-router"
 
 export default function DashboardHome() {
-	const { data: dashboardSummary } = useDashboardSummary(10)
-	const { data: revenueChart } = useRevenueChart(30)
-	const { data: salesRanking } = useSalesRanking(30, 1, 5)
+	const loaderData = useLoaderData()
+
+	const organizationId = loaderData.orgId
+
+	const { data: dashboardSummary } = useDashboardSummary(organizationId, 10)
+	const { data: revenueChart } = useRevenueChart(organizationId, 30)
+	const { data: salesRanking } = useSalesRanking(organizationId, 30, 1, 5)
 	const isRevenueNegative =
 		revenueChart?.summary.percentageChange &&
 		revenueChart?.summary.percentageChange < 0
