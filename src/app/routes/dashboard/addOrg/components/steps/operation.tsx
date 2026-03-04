@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import { useFormContext } from "react-hook-form"
-import { useActiveCategories } from "@/hooks/useCategories"
+import { useActiveRestaurantCategories } from "@/hooks/use-restaurant-categories"
 import { cn, createOrgSlug } from "@/utils/misc"
 
 interface OperationForm {
@@ -22,7 +22,7 @@ export function Operation() {
 	} = useFormContext<OperationForm>()
 
 	const { data: categories = [], isLoading: isCategoriesLoading } =
-		useActiveCategories()
+		useActiveRestaurantCategories()
 	const organizationName = watch("organizationName")
 
 	const generatedSlug = organizationName ? createOrgSlug(organizationName) : ""

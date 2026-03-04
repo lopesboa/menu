@@ -10,11 +10,11 @@ import { NavLink } from "react-router"
 import { cn } from "@/utils/misc"
 
 const navItems = [
-	{ icon: LayoutDashboard, label: "Home", path: "/" },
-	{ icon: ShoppingCart, label: "PDV", path: "/pos" },
-	{ icon: LayoutGrid, label: "Mesas", path: "/tables" },
-	{ icon: ChefHat, label: "Cozinha", path: "/kitchen" },
-	{ icon: UtensilsCrossed, label: "Cardápio", path: "/menu" },
+	{ icon: LayoutDashboard, label: "Home", path: "/dashboard" },
+	{ icon: ShoppingCart, label: "PDV", path: "/dashboard/pos" },
+	{ icon: LayoutGrid, label: "Mesas", path: "/dashboard/tables" },
+	{ icon: ChefHat, label: "Cozinha", path: "/dashboard/kitchen" },
+	{ icon: UtensilsCrossed, label: "Cardápio", path: "/dashboard/menu" },
 ]
 
 export function BottomNav() {
