@@ -39,7 +39,7 @@ export function mapTableApiToTable(table: TableApi): Table {
 }
 
 export function getTables(
-	organizationId: string,
+	organizationId: string | null,
 	signal?: AbortSignal
 ): Promise<TableApi[]> {
 	return apiFetch<TableApi[]>(`/tables/${organizationId}`, { signal })

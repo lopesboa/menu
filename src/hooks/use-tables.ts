@@ -9,15 +9,15 @@ import type { Table } from "@/types/dashboard"
 export const tableQueryKeys = {
 	all: (): ["tables"] => ["tables"],
 	list: (
-		organizationId: string
-	): ["tables", "list", { organizationId: string }] => [
+		organizationId: string | null
+	): ["tables", "list", { organizationId: string | null }] => [
 		...tableQueryKeys.all(),
 		"list",
 		{ organizationId },
 	],
 }
 
-export function useTables(organizationId: string) {
+export function useTables(organizationId: string | null) {
 	return useQuery<TableApi[], Error, Table[]>({
 		queryKey: tableQueryKeys.list(organizationId),
 		queryFn: ({ signal }) => getTables(organizationId, signal),
