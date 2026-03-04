@@ -7,45 +7,61 @@ import {
 
 export const dashboardQueryKeys = {
 	all: () => ["summary"],
-	getDashboardSummary: (days?: number) => [
+	getDashboardSummary: (organizationI: string, days?: number) => [
 		...dashboardQueryKeys.all(),
 		"dashboard-summary",
+		{ organizationI },
 		{ days },
 	],
-	getDashboardRevenueChart: (days?: number) => [
+	getDashboardRevenueChart: (organizationI: string, days?: number) => [
 		...dashboardQueryKeys.all(),
 		"revenue-chart",
+		{ organizationI },
 		{ days },
 	],
-	getDashboardSalesRanking: (days?: number, page?: number, count?: number) => [
+	getDashboardSalesRanking: (
+		organizationI: string,
+		days?: number,
+		page?: number,
+		count?: number
+	) => [
 		...dashboardQueryKeys.all(),
 		"sales-ranking",
+		{ organizationI },
 		{ days },
 		{ page },
 		{ count },
 	],
 }
 
-//TODO: Add interval on this 3 hooksto have always updated data, this is important for UX
-//Find better approach to this.
-export function useDashboardSummary(days?: number) {
+export function useDashboardSummary(organizationId: string, days?: number) {
 	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardSummary(days),
-		queryFn: ({ signal }) => getDashboardSummary(days, signal),
+		queryKey: dashboardQueryKeys.getDashboardSummary(organizationId, days),
+		queryFn: ({ signal }) => getDashboardSummary(organizationId, days, signal),
+		refetchInterval: 30_000,
+		staleTime: 10_000,
+		enabled: !!organizationId,
+		refetchOnWindowFocus: true,
 	})
 }
 
-export function useRevenueChart(days?: number) {
+export function useRevenueChart(organizationI: string, days?: number) {
 	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardRevenueChart(),
-		queryFn: ({ signal }) => getDashboardRevenueChart(days, signal),
-	})
-}
-
-export function useSalesRanking(days?: number, page?: number, count?: number) {
-	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardSalesRanking(),
+		queryKey: dashboardQueryKeys.getDashboardRevenueChart(organizationI, days),
 		queryFn: ({ signal }) =>
-			getDashboardSalesRanking(days, page, count, signal),
+			getDashboardRevenueChart(organizationI, days, signal),
+	})
+}
+
+export function useSalesRanking(
+	organizationI: string,
+	days?: number,
+	page?: number,
+	count?: number
+) {
+	return useQuery({
+		queryKey: dashboardQueryKeys.getDashboardSalesRanking(organizationI, days),
+		queryFn: ({ signal }) =>
+			getDashboardSalesRanking(organizationI, days, page, count, signal),
 	})
 }
