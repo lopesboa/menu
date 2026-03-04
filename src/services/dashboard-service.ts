@@ -3,21 +3,30 @@ import type {
 	DashboardSummary,
 	SalesRanking,
 } from "@/types/dashboard"
-import { apiFetch, ORG_ID } from "@/utils/fetch"
+import { apiFetch } from "@/utils/fetch"
 
-export function getDashboardSummary(days = 1, signal?: AbortSignal) {
-	const endpoint = `/dashboard/${ORG_ID}/summary?days=${days}`
+export function getDashboardSummary(
+	organizationId: string,
+	days = 1,
+	signal?: AbortSignal
+) {
+	const endpoint = `/dashboard/${organizationId}/summary?days=${days}`
 
 	return apiFetch<DashboardSummary>(endpoint, { signal })
 }
 
-export function getDashboardRevenueChart(days = 1, signal?: AbortSignal) {
-	const endpoint = `/dashboard/${ORG_ID}/revenue-chart?days=${days}`
+export function getDashboardRevenueChart(
+	organizationI: string,
+	days = 1,
+	signal?: AbortSignal
+) {
+	const endpoint = `/dashboard/${organizationI}/revenue-chart?days=${days}`
 
 	return apiFetch<DashboardRevenue>(endpoint, { signal })
 }
 
 export function getDashboardSalesRanking(
+	organizationI: string,
 	days = 1,
 	page = 0,
 	count = 20,
@@ -30,7 +39,7 @@ export function getDashboardSalesRanking(
 	params.append("days", days.toString())
 
 	const queryString = params.toString()
-	const endpoint = `/dashboard/${ORG_ID}/sales-ranking${queryString ? `?${queryString}` : ""}`
+	const endpoint = `/dashboard/${organizationI}/sales-ranking${queryString ? `?${queryString}` : ""}`
 
 	return apiFetch<SalesRanking>(endpoint, { signal })
 }
