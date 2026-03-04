@@ -1,6 +1,8 @@
 import type { Order, OrderStatus } from "@/types/dashboard"
 import type { OrderFilter, OrderStatsResponse } from "@/types/orders"
-import { apiFetch, ORG_ID } from "@/utils/fetch"
+import { apiFetch } from "@/utils/fetch"
+
+const ORG_ID = "ddf490e6-c0f1-4f36-a19b-e6443bd1b7cd"
 
 export function getOrders(
 	filters?: OrderFilter,
