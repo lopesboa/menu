@@ -1,6 +1,5 @@
 const API_BASE = import.meta.env.VITE_APP_SERVER_URL
 const API_KEY = import.meta.env.VITE_API_KEY
-export const ORG_ID = "90b91a39-315c-4385-8998-84bd673f31cb"
 
 export async function apiFetch<T>(
 	endpoint: string,

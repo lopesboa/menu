@@ -1,5 +1,6 @@
-import { Outlet } from "react-router"
+import { Navigate, Outlet, useLocation } from "react-router"
 import "./styles.css"
+import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
 import { cn } from "@/utils/misc"
 import { ProtectedRoute } from "../protected-routes"
 import { BottomNav } from "./components/layout/bottom-nav"
@@ -7,6 +8,21 @@ import { Sidebar } from "./components/layout/sidebar"
 import { TopBar } from "./components/layout/top-bar"
 
 export default function Dashboard() {
+	const { hasOrganization, isLoading } = useOrganizationCheck()
+	const location = useLocation()
+
+	if (isLoading) {
+		return (
+			<div className="flex h-screen items-center justify-center">
+				<div className="h-12 w-12 animate-spin rounded-full border-blue-600 border-b-2" />
+			</div>
+		)
+	}
+
+	if (!hasOrganization && location.pathname !== "/dashboard/add-org") {
+		return <Navigate replace to="/dashboard/add-org" />
+	}
+
 	return (
 		<ProtectedRoute>
 			<div className="flex min-h-screen bg-surface-50">

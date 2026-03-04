@@ -1,5 +1,4 @@
 import {
-	addBreadcrumb,
 	captureException,
 	captureMessage,
 	init,
@@ -38,17 +37,4 @@ export const sentrySetUser = (user: { id: string } | null) => {
 	} else {
 		setUser(null)
 	}
-}
-
-export const sentryAddBreadcrumb = (
-	category: string,
-	message: string,
-	data?: Record<string, unknown>
-) => {
-	addBreadcrumb({
-		category,
-		message,
-		data,
-		level: "info",
-	})
 }

@@ -2,7 +2,7 @@ import { Icon } from "@iconify-icon/react"
 import { useEffect, useRef } from "react"
 import { Link } from "react-router"
 
-type HeroSectionProps = {
+interface HeroSectionProps {
 	onShowDemo: () => void
 }
 
@@ -16,7 +16,7 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 		}
 
 		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
+			for (const entry of entries) {
 				if (entry.isIntersecting) {
 					entry.target.classList.add("animate-reveal")
 					if (entry.target.classList.contains("reveal-trigger")) {
@@ -24,7 +24,7 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 					}
 					observer.unobserve(entry.target)
 				}
-			})
+			}
 		}, observerOptions)
 
 		const section = sectionRef.current
@@ -32,12 +32,16 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 			const elements = section.querySelectorAll(
 				".scroll-reveal, .reveal-trigger"
 			)
-			elements.forEach((el) => observer.observe(el))
+			for (const el of elements) {
+				observer.observe(el)
+			}
 		}
 
 		const handleLoad = () => {
 			const textClipElements = document.querySelectorAll(".text-clip-reveal")
-			textClipElements.forEach((el) => el.classList.add("visible"))
+			for (const el of textClipElements) {
+				el.classList.add("visible")
+			}
 		}
 
 		if (document.readyState === "complete") {

@@ -70,7 +70,8 @@ export interface User {
 	name: string
 	avatar?: string
 	role: UserRole
-	restaurants: UserRestaurant[]
+
+	// restaurants: UserRestaurant[]
 	createdAt: Date
 }
 
@@ -86,7 +87,7 @@ export interface MenuItem {
 	organizationId: string
 	name: string
 	description: string
-	price: number
+	price: number | string
 	category: string
 	image: string
 	available: boolean

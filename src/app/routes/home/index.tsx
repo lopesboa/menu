@@ -2,17 +2,15 @@ import { useEffect } from "react"
 import { Link } from "react-router"
 import { DEMO_SALES_ID } from "@/app/constants"
 import { useDialogActions } from "@/app/store/dialog"
-import {
-	Button,
-	DemoSales,
-	FeaturesSection,
-	HeroSection,
-	IntegrationSection,
-	LogoSection,
-	PricingSection,
-	ROISection,
-	TestimonialsSection,
-} from "@/components"
+import { LogoSection } from "@/components/logos"
+import { FeaturesSection } from "@/components/sections/features"
+import { HeroSection } from "@/components/sections/hero"
+import { IntegrationSection } from "@/components/sections/integrations"
+import { PricingSection } from "@/components/sections/pricing"
+import { ROISection } from "@/components/sections/roi"
+import { DemoSales } from "@/components/sections/sales"
+import { TestimonialsSection } from "@/components/sections/testimonial"
+import { Button } from "@/components/ui/button"
 
 export default function Home() {
 	const { openDialog } = useDialogActions()
@@ -25,45 +23,52 @@ export default function Home() {
 		// Flashlight effect handler
 		const handleMouseMove = (e: MouseEvent) => {
 			const cards = document.querySelectorAll(".flashlight-card")
-			cards.forEach((card) => {
+			for (const card of cards) {
 				const rect = card.getBoundingClientRect()
 				const x = e.clientX - rect.left
 				const y = e.clientY - rect.top
 				;(card as HTMLElement).style.setProperty("--mouse-x", `${x}px`)
 				;(card as HTMLElement).style.setProperty("--mouse-y", `${y}px`)
-			})
+			}
 		}
 
 		const showCard = (index: number) => {
-			document
-				.querySelectorAll(".feature-card")
-				// biome-ignore lint/suspicious/useIterableCallbackReturn: forEach intentionally returns void for class manipulation
-				.forEach((c) => c.classList.remove("active"))
+			const featureCard = document.querySelectorAll(".feature-card")
+
+			for (const c of featureCard) {
+				c.classList.remove("active")
+			}
 
 			const targetCard = document.getElementById(`card-${index}`)
 			if (targetCard) {
 				targetCard.classList.add("active")
 			}
 
-			document.querySelectorAll(".feature-nav-btn").forEach((b) => {
+			const featureNavBtn = document.querySelectorAll(".feature-nav-btn")
+			for (const b of featureNavBtn) {
 				b.classList.remove("bg-white/5", "active")
 				const btn = b as HTMLElement
 				if (btn.dataset.target === `card-${index}`) {
 					b.classList.add("bg-white/5", "active")
 				}
-			})
+			}
+
 			currentCard = index
 		}
 
 		const nextCard = () => {
 			let next = currentCard + 1
-			if (next > totalCards) next = 1
+			if (next > totalCards) {
+				next = 1
+			}
 			showCard(next)
 		}
 
 		const prevCard = () => {
 			let prev = currentCard - 1
-			if (prev < 1) prev = totalCards
+			if (prev < 1) {
+				prev = totalCards
+			}
 			showCard(prev)
 		}
 
@@ -108,9 +113,9 @@ export default function Home() {
 			}
 		}
 
-		navButtons.forEach((btn) => {
+		for (const btn of navButtons) {
 			btn.addEventListener("click", handleNavClick)
-		})
+		}
 
 		document.addEventListener("mousemove", handleMouseMove)
 		startRotation()
@@ -128,9 +133,9 @@ export default function Home() {
 				prevBtn.removeEventListener("click", handlePrevClick)
 			}
 
-			navButtons.forEach((btn) => {
+			for (const btn of navButtons) {
 				btn.removeEventListener("click", handleNavClick)
-			})
+			}
 		}
 	}, [])
 

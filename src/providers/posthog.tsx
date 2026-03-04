@@ -6,6 +6,7 @@ import type { PropsWithChildren } from "react"
 const options: Partial<PostHogConfig> = {
 	api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
 	defaults: "2025-11-30",
+	capture_pageleave: true,
 } as const
 
 export function PostHogClientProvider({ children }: PropsWithChildren) {
