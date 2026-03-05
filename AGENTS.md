@@ -30,3 +30,5 @@ ALL user-facing text in Brazilian Portuguese (pt-BR).
 - [Imports](docs/imports.md)
 - [Performance](docs/performance.md)
 - [Landing Copy](docs/landing-copy.md)
+- [Architecture](docs/architecture.md)
+- [ADR 0001](docs/adr-0001-frontend-structure.md)
