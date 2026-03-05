@@ -10,16 +10,23 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { Modal } from "@/components/ui/modal"
-import { useBillingStore } from "@/domains/billing/store/billing-store"
-import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
+import {
+	useBillingActions,
+	useBillingSelectors,
+} from "@/domains/billing/store/billing-store"
+import {
+	useRestaurantActions,
+	useRestaurantSelectors,
+} from "@/domains/restaurant/store/restaurant-store"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 
 export function BillingPage() {
-	const { activeRestaurant, setActiveRestaurant, getRestaurants } =
-		useRestaurantStore()
-	const { plans, upgradePlan, billingHistory, getCurrentPlan, getNextPlan } =
-		useBillingStore()
+	const { activeRestaurant, getRestaurants } = useRestaurantSelectors()
+	const { setActiveRestaurant } = useRestaurantActions()
+	const { plans, billingHistory, getCurrentPlan, getNextPlan } =
+		useBillingSelectors()
+	const { upgradePlan } = useBillingActions()
 
 	const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 	const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
