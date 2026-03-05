@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from "react"
 import { Navigate, useLocation } from "react-router"
 import { useAuth } from "../store/auth-store"
+import { getLoginPathWithRedirect } from "./auth/manifest"
 
 export function ProtectedRoute({ children }: PropsWithChildren) {
 	const { isAuthenticated, isLoading } = useAuth()
@@ -15,7 +16,9 @@ export function ProtectedRoute({ children }: PropsWithChildren) {
 	}
 
 	if (!isAuthenticated) {
-		return <Navigate replace state={{ from: location }} to="/login" />
+		const redirectPath = `${location.pathname}${location.search}${location.hash}`
+
+		return <Navigate replace to={getLoginPathWithRedirect(redirectPath)} />
 	}
 
 	return <>{children}</>

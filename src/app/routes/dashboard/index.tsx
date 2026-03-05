@@ -21,7 +21,11 @@ export default function Dashboard() {
 	}
 
 	if (!hasOrganization && location.pathname !== dashboardRoutePaths.addOrg) {
-		return <Navigate replace to={dashboardRoutePaths.addOrg} />
+		return (
+			<ProtectedRoute>
+				<Navigate replace to={dashboardRoutePaths.addOrg} />
+			</ProtectedRoute>
+		)
 	}
 
 	return (

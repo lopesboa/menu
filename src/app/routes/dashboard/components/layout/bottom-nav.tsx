@@ -19,6 +19,7 @@ export function BottomNav() {
 									: "text-surface-400 hover:text-surface-600"
 							)
 						}
+						end={item.key === "home"}
 						key={item.fullPath}
 						to={item.fullPath}
 					>

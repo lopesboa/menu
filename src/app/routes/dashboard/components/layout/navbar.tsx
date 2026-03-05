@@ -28,6 +28,7 @@ export function DashboardNavbar({
 							isCollapsed && "lg:justify-center"
 						)
 					}
+					end={item.key === "home"}
 					key={item.fullPath}
 					onClick={onClick}
 					to={item.fullPath}

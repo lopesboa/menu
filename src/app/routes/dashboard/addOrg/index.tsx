@@ -12,17 +12,18 @@ import { useNavigate } from "react-router"
 import { toast } from "sonner"
 import { z } from "zod"
 import { useStepper, useStepperAction } from "@/app/store/stepper-store"
+import { Button } from "@/components/ui/button"
 import { useCities, useCreateAddress } from "@/hooks/useAddress"
 import { authClient } from "@/lib/client"
 import { sentryCaptureException } from "@/lib/sentry"
 import { cn } from "@/utils/misc"
+import { dashboardRoutePaths } from "../manifest"
 import { Concept } from "./components/steps/concept"
 import { Location } from "./components/steps/location"
 import { Operation } from "./components/steps/operation"
 import { StepContent } from "./components/steps/stepper-content"
 import { StepperHeader } from "./components/steps/stepper-header"
 import { StepperRoot } from "./components/steps/stepper-root"
-import { Button } from "@/components/ui/button"
 
 const step1Schema = z.object({
 	ownerName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
@@ -187,7 +188,7 @@ export default function AddOrganization() {
 						toast.success("Organização criada!", {
 							description: "Seu estabelecimento foi criado com sucesso.",
 						})
-						navigate("/dashboard", { replace: true })
+						navigate(dashboardRoutePaths.home, { replace: true })
 						authClient.useActiveOrganization
 					},
 					onError: (err) => {

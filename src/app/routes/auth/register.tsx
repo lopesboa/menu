@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/client"
 import type { SignUpForm } from "@/types/auth"
 import { SignUpFormSchema } from "@/utils/user-validation"
+import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 
 export default function Register() {
 	const navigate = useNavigate()
@@ -32,6 +33,11 @@ export default function Register() {
 	})
 
 	const onSubmit: SubmitHandler<SignUpForm> = async (data) => {
+		const redirectTo = sanitizeAuthRedirectPath(
+			data.redirectTo,
+			authRoutePaths.verify
+		)
+
 		try {
 			setLoading(true)
 			await authClient.signUp.email(
@@ -44,7 +50,7 @@ export default function Register() {
 				} as never,
 				{
 					onSuccess() {
-						navigate(data.redirectTo || "/verify", {
+						navigate(redirectTo, {
 							state: { email: data.email, redirectTo: data.redirectTo },
 						})
 					},
@@ -160,7 +166,7 @@ export default function Register() {
 				Já tem uma conta?{" "}
 				<Link
 					className="text-white underline-offset-2 hover:underline"
-					to="/login"
+					to={authRoutePaths.login}
 				>
 					Entrar
 				</Link>
