@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import { RefreshCw, Star } from "lucide-react"
 import { useState } from "react"
-import { useOrders } from "@/hooks/useOrders"
+import { useOrders } from "@/hooks/use-orders"
 import { cn } from "@/utils/misc"
 
 export function DeliveryPage() {

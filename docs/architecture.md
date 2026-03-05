@@ -80,8 +80,8 @@ src/
 - `src/app/routes/dashboard/*` -> `src/domains/dashboard/routes/*`
 - `src/components/sections/*` -> `src/domains/dashboard/ui/sections/*` (quando
   funcionalidade de dashboard) ou `src/shared/ui/sections/*` (quando generico)
-- `src/hooks/useOrders.ts` -> `src/domains/orders/hooks/use-orders.ts`
-- `src/hooks/useOrderActions.ts` ->
+- `src/hooks/use-orders.ts` -> `src/domains/orders/hooks/use-orders.ts`
+- `src/hooks/use-order-actions.ts` ->
   `src/domains/orders/hooks/use-order-actions.ts`
 - `src/hooks/use-tables.ts` -> `src/domains/tables/hooks/use-tables.ts`
 - `src/hooks/use-products.ts` -> `src/domains/menu/hooks/use-products.ts`
@@ -91,9 +91,9 @@ src/
 - `src/services/tables-service.ts` -> `src/domains/tables/api/tables-api.ts`
 - `src/services/products-service.ts` -> `src/domains/menu/api/products-api.ts`
 - `src/services/category-service.ts` -> `src/domains/menu/api/categories-api.ts`
-- `src/app/store/orderStore.ts` -> `src/domains/orders/store/order-store.ts`
-- `src/app/store/tableStore.ts` -> `src/domains/tables/store/table-store.ts`
-- `src/app/store/menuStore.ts` -> `src/domains/menu/store/menu-store.ts`
+- `src/app/store/order-store.ts` -> `src/domains/orders/store/order-store.ts`
+- `src/app/store/table-store.ts` -> `src/domains/tables/store/table-store.ts`
+- `src/app/store/menu-store.ts` -> `src/domains/menu/store/menu-store.ts`
 - `src/types/orders.ts` -> `src/domains/orders/types/orders.ts`
 - `src/types/dashboard.ts` ->
   `src/domains/*/types/*` + `src/shared/types/dashboard-common.ts`

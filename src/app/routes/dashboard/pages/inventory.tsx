@@ -9,10 +9,10 @@ import {
 	Trash2,
 } from "lucide-react"
 import { useState } from "react"
+import { inventoryItems } from "@/app/routes/dashboard/data/mock-data"
 import { Modal } from "@/components/ui/modal"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
-import { inventoryItems } from "../data/mockData"
 
 export function InventoryPage() {
 	const [searchQuery, setSearchQuery] = useState("")

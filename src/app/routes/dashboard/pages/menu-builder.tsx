@@ -2,13 +2,13 @@ import { motion } from "framer-motion"
 import { Edit, Grid, List, Plus, Search, Trash2 } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
+import { menuItems } from "@/app/routes/dashboard/data/mock-data"
 import { Modal } from "@/components/ui/modal"
 import { useCategories } from "@/hooks/use-categories"
-import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
-import { menuItems } from "../data/mockData"
 
 export function MenuBuilderPage() {
 	const [searchQuery, setSearchQuery] = useState("")

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion"
 import { DollarSign, Download, TrendingDown, TrendingUp } from "lucide-react"
+import { salesData } from "@/app/routes/dashboard/data/mock-data"
 import { formatCurrency } from "@/utils/helpers"
 import { CashFlowChart } from "../components/recharts/bar-chart"
 import { DonutChart } from "../components/recharts/donut-chart"
 import { RevenueChart } from "../components/recharts/revenue-chart"
-import { salesData } from "../data/mockData"
 
 export function SalesPage() {
 	const totalRevenue = salesData.reduce((sum, d) => sum + d.revenue, 0)

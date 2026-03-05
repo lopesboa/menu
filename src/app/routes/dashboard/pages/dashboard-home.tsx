@@ -14,7 +14,7 @@ import {
 	useDashboardSummary,
 	useRevenueChart,
 	useSalesRanking,
-} from "@/hooks/useDashboard"
+} from "@/hooks/use-dashboard"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { RevenueChart } from "../components/recharts/revenue-chart"

@@ -7,12 +7,16 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react"
-import { useOrderStats } from "@/hooks/useOrders"
+import {
+	customers,
+	menuItems,
+	salesData,
+} from "@/app/routes/dashboard/data/mock-data"
+import { useOrderStats } from "@/hooks/use-orders"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { BarChartComponent } from "../components/recharts/bar-chart"
 import { DonutChart } from "../components/recharts/donut-chart"
-import { customers, menuItems, salesData } from "../data/mockData"
 
 export function ReportsPage() {
 	const { data: stats } = useOrderStats()
