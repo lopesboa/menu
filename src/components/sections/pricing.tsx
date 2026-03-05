@@ -12,10 +12,11 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 			<div className="mx-auto max-w-7xl px-6">
 				<div className="scroll-reveal mx-auto mb-16 max-w-2xl text-center">
 					<h3 className="mb-4 font-medium text-3xl text-white tracking-tight md:text-4xl">
-						Preços simples e transparentes
+						Escolha o plano certo para o seu momento
 					</h3>
 					<p className="text-slate-400">
-						Comece de graça, cresça sem limites. Sem taxas ocultas.
+						Comece com o que faz sentido hoje e ajuste conforme sua operação
+						cresce.
 					</p>
 				</div>
 
@@ -30,6 +31,11 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							<span className="font-medium text-4xl text-white">R$ 0</span>
 							<span className="text-slate-500">/mês</span>
 						</div>
+						<p className="mb-4 text-slate-400 text-sm">
+							<span className="font-medium text-slate-300">Para quem é:</span>{" "}
+							operações que estão começando no digital e querem validar a
+							demanda sem custo fixo.
+						</p>
 						<ul className="mb-8 space-y-4 text-slate-300 text-sm">
 							<li className="flex items-center gap-3">
 								<Icon
@@ -54,11 +60,20 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							</li>
 						</ul>
 
-						<Button variant="secondary">
-							<Link aria-label="Navegar para criar conta" to="/register">
-								Começar Grátis
-							</Link>
-						</Button>
+						<div className="mt-auto space-y-3">
+							<p className="text-slate-500 text-xs">
+								Sem compromisso de longo prazo. Ajuste ou cancele conforme as
+								condições vigentes.
+							</p>
+							<Button variant="secondary">
+								<Link
+									aria-label="Navegar para criar conta grátis"
+									to="/register"
+								>
+									Criar conta grátis
+								</Link>
+							</Button>
+						</div>
 					</div>
 
 					<div className="flashlight-card scroll-reveal relative flex flex-col rounded-2xl bg-background p-8 delay-200">
@@ -76,6 +91,11 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							<span className="font-medium text-4xl text-white">R$ 49,90</span>
 							<span className="text-slate-500">/mês</span>
 						</div>
+						<p className="mb-4 text-slate-400 text-sm">
+							<span className="font-medium text-slate-300">Para quem é:</span>{" "}
+							restaurantes em crescimento que precisam de escala e mais controle
+							no dia a dia.
+						</p>
 						<ul className="mb-8 space-y-4 text-slate-300 text-sm">
 							<li className="flex items-center gap-3">
 								<Icon
@@ -107,11 +127,20 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							</li>
 						</ul>
 
-						<Button>
-							<Link aria-label="Navegar para criar conta" to="/register">
-								Assinar Pro
-							</Link>
-						</Button>
+						<div className="mt-auto space-y-3">
+							<p className="text-slate-500 text-xs">
+								Assinatura mensal com possibilidade de ajuste conforme
+								sazonalidade e volume.
+							</p>
+							<Button>
+								<Link
+									aria-label="Navegar para assinar plano profissional"
+									to="/register"
+								>
+									Assinar Profissional
+								</Link>
+							</Button>
+						</div>
 					</div>
 
 					<div className="flashlight-card scroll-reveal flex flex-col rounded-2xl bg-background p-8 delay-300">
@@ -125,6 +154,10 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 								Sob Medida
 							</span>
 						</div>
+						<p className="mb-4 text-slate-400 text-sm">
+							<span className="font-medium text-slate-300">Para quem é:</span>{" "}
+							redes e operações multiunidade com demandas avançadas de gestão.
+						</p>
 						<ul className="mb-8 space-y-4 text-slate-300 text-sm">
 							<li className="flex items-center gap-3">
 								<Icon
@@ -149,11 +182,22 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							</li>
 						</ul>
 
-						<Button onClick={handleOnTalkWithSales} variant="secondary">
-							Falar com Vendas
-						</Button>
+						<div className="mt-auto space-y-3">
+							<p className="text-slate-500 text-xs">
+								Escopo definido antes da contratação, com implantação guiada e
+								acompanhamento inicial.
+							</p>
+							<Button onClick={handleOnTalkWithSales} variant="secondary">
+								Falar com especialista
+							</Button>
+						</div>
 					</div>
 				</div>
+
+				<p className="mt-8 text-center text-slate-500 text-xs">
+					Suporte humano em horário comercial, com níveis de atendimento de
+					acordo com o plano.
+				</p>
 			</div>
 		</section>
 	)
