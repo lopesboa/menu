@@ -2,8 +2,10 @@ import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
 import { authClient } from "@/lib/client"
 import { authMiddleware } from "../middleware/auth-middleware"
+import { authRouteSegments } from "./auth/manifest"
 import { dashboardRouteSegments } from "./dashboard/manifest"
 import { RouteErrorBoundary } from "./error-boundary"
+import { NotFoundPage } from "./error-pages/not-found"
 
 const HomeLayout = lazy(() => import("../../components/layout/layout"))
 const HomeContent = lazy(() => import("./home"))
@@ -76,11 +78,14 @@ export const router = createBrowserRouter([
 			{
 				Component: AuthLayout,
 				children: [
-					{ path: "login", Component: Login },
-					{ path: "register", Component: Register },
-					{ path: "forgot", Component: Forgot },
-					{ path: "verify", Component: Verify },
-					{ path: "change-password", Component: ChangePassword },
+					{ path: authRouteSegments.login, Component: Login },
+					{ path: authRouteSegments.register, Component: Register },
+					{ path: authRouteSegments.forgot, Component: Forgot },
+					{ path: authRouteSegments.verify, Component: Verify },
+					{
+						path: authRouteSegments.changePassword,
+						Component: ChangePassword,
+					},
 				],
 			},
 		],
@@ -111,7 +116,12 @@ export const router = createBrowserRouter([
 			{ path: dashboardRouteSegments.customers, Component: Customers },
 			{ path: dashboardRouteSegments.menu, Component: MenuBuilder },
 			{ path: dashboardRouteSegments.billing, Component: Billing },
+			{ path: "*", Component: NotFoundPage },
 		],
+	},
+	{
+		path: "*",
+		Component: NotFoundPage,
 	},
 ])
 

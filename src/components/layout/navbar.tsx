@@ -1,5 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
+import { authRoutePaths } from "@/app/routes/auth/manifest"
 
 export function Navbar() {
 	return (
@@ -46,14 +47,14 @@ export function Navbar() {
 					<Link
 						aria-label="Navegar para entrar"
 						className="cursor-pointer font-medium text-slate-400 text-xs transition-colors hover:text-white"
-						to="/login"
+						to={authRoutePaths.login}
 					>
 						Entrar
 					</Link>
 					<Link
 						aria-label="Navegar para criar conta"
 						className="group relative cursor-pointer overflow-hidden rounded-full bg-white/10 px-3 py-1.5 font-medium text-white text-xs transition-all hover:bg-white/15"
-						to="/register"
+						to={authRoutePaths.register}
 					>
 						<span className="relative z-10">Criar Conta</span>
 						<div className="border-beam opacity-0 transition-opacity group-hover:opacity-100" />

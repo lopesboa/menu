@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Controller, type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useLocation, useNavigate } from "react-router"
 import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
 import {
 	InputOTP,
 	InputOTPGroup,
@@ -14,7 +15,7 @@ import { authClient } from "@/lib/client"
 import type { VerifyForm } from "@/types/auth"
 import { cn } from "@/utils/misc"
 import { VerifyFormSchema } from "@/utils/user-validation"
-import { Button } from "@/components/ui/button"
+import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 
 export default function Verify() {
 	const location = useLocation()
@@ -38,6 +39,8 @@ export default function Verify() {
 	})
 
 	const onSubmit: SubmitHandler<VerifyForm> = async (data) => {
+		const destination = sanitizeAuthRedirectPath(redirectTo)
+
 		try {
 			setLoading(true)
 			await authClient.emailOtp.verifyEmail(
@@ -47,7 +50,7 @@ export default function Verify() {
 				},
 				{
 					onSuccess() {
-						navigate(redirectTo || "/dashboard", { replace: true })
+						navigate(destination, { replace: true })
 					},
 				}
 			)
@@ -64,7 +67,7 @@ export default function Verify() {
 		<div className="flex flex-col gap-6">
 			<Link
 				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
-				to="/login"
+				to={authRoutePaths.login}
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>

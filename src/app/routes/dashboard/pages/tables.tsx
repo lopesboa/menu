@@ -15,6 +15,7 @@ import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
 import { sentryCaptureException } from "@/lib/sentry"
 import type { Table } from "@/types/dashboard"
 import { cn } from "@/utils/misc"
+import { dashboardRoutePaths } from "../manifest"
 
 export default function TablesPage() {
 	const { setTableId, setType, clearCart } = useCartStore()
@@ -50,9 +51,9 @@ export default function TablesPage() {
 			clearCart()
 			setTableId(table.id)
 			setType("dine_in")
-			navigate("/dashboard/pos")
+			navigate(dashboardRoutePaths.pos)
 		} else if (table.status === "occupied" && table.currentOrderId) {
-			navigate(`/dashboard/orders?id=${table.currentOrderId}`)
+			navigate(`${dashboardRoutePaths.orders}?id=${table.currentOrderId}`)
 		}
 	}
 

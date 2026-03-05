@@ -5,10 +5,11 @@ import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
 import { Field } from "@/components/form"
+import { Button } from "@/components/ui/button"
 import { authClient } from "@/lib/client"
 import type { ForgotForm } from "@/types/auth"
 import { ForgotFormSchema } from "@/utils/user-validation"
-import { Button } from "@/components/ui/button"
+import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 
 export default function Forgot() {
 	const navigate = useNavigate()
@@ -28,6 +29,11 @@ export default function Forgot() {
 	})
 
 	const onSubmit: SubmitHandler<ForgotForm> = async (data) => {
+		const redirectTo = sanitizeAuthRedirectPath(
+			data.redirectTo,
+			authRoutePaths.verify
+		)
+
 		try {
 			setLoading(true)
 			await authClient.emailOtp.sendVerificationOtp(
@@ -37,9 +43,9 @@ export default function Forgot() {
 				},
 				{
 					onSuccess() {
-						navigate(data.redirectTo || "/verify", {
+						navigate(redirectTo, {
 							replace: true,
-							state: { redirectTo: "/change-password" },
+							state: { redirectTo: authRoutePaths.changePassword },
 						})
 					},
 				}
@@ -57,7 +63,7 @@ export default function Forgot() {
 		<div className="flex flex-col gap-6" data-slot="auth-forgot">
 			<Link
 				className="absolute top-0 left-0 flex items-center gap-1 text-secondary text-xs transition-colors hover:text-white"
-				to="/login"
+				to={authRoutePaths.login}
 			>
 				<Icon icon="solar:arrow-left-linear" /> Voltar
 			</Link>

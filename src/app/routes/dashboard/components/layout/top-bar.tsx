@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router"
+import { authRoutePaths } from "@/app/routes/auth/manifest"
 import { useAuth, useAuthAction } from "@/app/store/auth-store"
 import { useBillingStore } from "@/app/store/billingStore"
 import { useNotificationStore } from "@/app/store/notificationStore"
@@ -61,7 +62,7 @@ export function TopBar() {
 	const handleOnLogout = () => {
 		logout()
 		setIsUserMenuOpen(false)
-		navigate("/login")
+		navigate(authRoutePaths.login)
 	}
 
 	return (
@@ -360,7 +361,7 @@ export function TopBar() {
 									onClick={() => {
 										logout()
 										setIsMobileMenuOpen(false)
-										navigate("/login")
+										navigate(authRoutePaths.login)
 									}}
 									type="button"
 								>

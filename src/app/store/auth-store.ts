@@ -3,6 +3,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { authClient } from "@/lib/client"
 import type { User } from "@/types/dashboard"
+import { dashboardRoutePaths } from "../routes/dashboard/manifest"
 
 interface AuthState {
 	user: User | null
@@ -22,7 +23,7 @@ const useAuthStore = create<AuthState>()(
 		(set) => ({
 			user: null,
 			isLoading: false,
-			isAuthenticated: true,
+			isAuthenticated: false,
 			login: async (
 				email: string,
 				password: string,
@@ -34,7 +35,7 @@ const useAuthStore = create<AuthState>()(
 					{
 						email,
 						password,
-						callbackURL: redirectTo || "/dashboard",
+						callbackURL: redirectTo || dashboardRoutePaths.home,
 						rememberMe,
 					},
 					{
