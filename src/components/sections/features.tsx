@@ -6,9 +6,11 @@ export function FeaturesSection() {
 			<div className="mx-auto grid max-w-6xl items-center gap-16 px-6 md:grid-cols-2">
 				<div className="space-y-8">
 					<h2 className="scroll-reveal font-medium text-3xl text-white tracking-tight md:text-4xl">
-						Criado para velocidade.
+						Recursos pensados para cada perfil da operação.
 						<br />
-						<span className="text-slate-500">Feito para escalar.</span>
+						<span className="text-slate-500">
+							Menos retrabalho, mais previsibilidade no dia a dia.
+						</span>
 					</h2>
 					<div className="space-y-4">
 						<button
@@ -22,11 +24,12 @@ export function FeaturesSection() {
 									<Icon icon="solar:smartphone-2-bold-duotone" width="24" />
 								</div>
 								<h3 className="font-medium text-lg text-slate-200">
-									Cardápio Digital
+									Para donos: Cardápio que vende mais
 								</h3>
 							</div>
 							<p className="pl-13 text-slate-400 text-sm">
-								Integração via QR Code nativa e fluida. Sem downloads de apps.
+								Padronize preços e itens em um único lugar para reduzir erros de
+								pedido e aumentar conversão no salão e no delivery.
 							</p>
 						</button>
 
@@ -41,11 +44,12 @@ export function FeaturesSection() {
 									<Icon icon="solar:chart-2-bold-duotone" width="24" />
 								</div>
 								<h3 className="font-medium text-lg text-slate-200">
-									Analytics em Tempo Real
+									Para gerentes: Decisão por turno
 								</h3>
 							</div>
 							<p className="pl-13 text-slate-400 text-sm">
-								Acompanhe faturamento, pratos mais vendidos e horários de pico.
+								Acompanhe faturamento, pico e itens mais vendidos para corrigir
+								a operação em tempo real, sem planilha manual.
 							</p>
 						</button>
 
@@ -60,12 +64,12 @@ export function FeaturesSection() {
 									<Icon icon="solar:box-minimalistic-bold-duotone" width="24" />
 								</div>
 								<h3 className="font-medium text-lg text-slate-200">
-									Controle de Estoque
+									Para operação: Estoque sem ruptura
 								</h3>
 							</div>
 							<p className="pl-13 text-slate-400 text-sm">
-								Pause itens automaticamente quando o estoque acabar.
-								Sincronizado.
+								Receba alerta de baixo estoque e pause itens automaticamente
+								para evitar venda sem insumo e retrabalho na cozinha.
 							</p>
 						</button>
 					</div>
