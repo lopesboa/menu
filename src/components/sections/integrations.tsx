@@ -11,11 +11,12 @@ export function IntegrationSection() {
 			<div className="relative z-10 mx-auto max-w-7xl px-6">
 				<div className="scroll-reveal mb-16 text-center">
 					<h2 className="mb-4 font-medium text-3xl text-white tracking-tight md:text-4xl">
-						Adeus, tablets espalhados
+						Menos troca de tela, mais operação fluindo
 					</h2>
 					<p className="mx-auto max-w-xl text-slate-400">
-						Centralize iFood, Rappi, cardápio digital e impressoras em uma única
-						tela. O caos da cozinha acabou.
+						Conecte iFood, Rappi, cardápio digital, pagamentos e impressoras em
+						um único painel para reduzir erros e acelerar atendimento nos
+						horários de pico.
 					</p>
 				</div>
 
@@ -39,7 +40,9 @@ export function IntegrationSection() {
 						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-red-400">
 							<Icon icon="solar:scooter-bold-duotone" width="24" />
 						</div>
-						<span className="font-medium text-slate-500 text-xs">Delivery</span>
+						<span className="font-medium text-slate-500 text-xs">
+							iFood e Rappi
+						</span>
 						<div className="absolute top-1/2 left-full -z-10 h-px w-25 origin-left -rotate-12 bg-linear-to-r from-white/10 to-transparent md:w-45" />
 					</div>
 
@@ -57,7 +60,9 @@ export function IntegrationSection() {
 						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-orange-400">
 							<Icon icon="solar:printer-bold-duotone" width="24" />
 						</div>
-						<span className="font-medium text-slate-500 text-xs">Cozinha</span>
+						<span className="font-medium text-slate-500 text-xs">
+							Impressoras
+						</span>
 						<div className="absolute bottom-1/2 left-full -z-10 h-px w-25 origin-left rotate-12 bg-linear-to-r from-white/10 to-transparent md:w-45" />
 					</div>
 
@@ -65,18 +70,25 @@ export function IntegrationSection() {
 						<div className="flex h-14 w-14 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-blue-400">
 							<Icon icon="solar:users-group-rounded-bold-duotone" width="24" />
 						</div>
-						<span className="font-medium text-slate-500 text-xs">Clientes</span>
+						<span className="font-medium text-slate-500 text-xs">
+							Cardápio digital
+						</span>
 						<div className="absolute right-full bottom-1/2 -z-10 h-px w-25 origin-right -rotate-12 bg-linear-to-l from-white/10 to-transparent md:w-45" />
 					</div>
 				</div>
 
+				<p className="mx-auto mt-4 max-w-2xl text-center text-slate-500 text-xs md:text-sm">
+					Integrações pensadas para tirar retrabalho da operação e concentrar os
+					pedidos em um só fluxo.
+				</p>
+
 				<div className="mt-8 flex justify-center">
 					<a
-						aria-label="Saiba mais vendo todas integrações"
+						aria-label="Saiba mais vendo integrações homologadas"
 						className="flex items-center gap-1 font-medium text-indigo-400 text-sm transition-colors hover:text-indigo-300"
 						href="#pricing"
 					>
-						Ver todas integrações <Icon icon="solar:arrow-right-linear" />
+						Ver integrações homologadas <Icon icon="solar:arrow-right-linear" />
 					</a>
 				</div>
 			</div>
