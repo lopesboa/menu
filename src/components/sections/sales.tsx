@@ -38,54 +38,43 @@ export function DemoSales() {
 						<Icon icon="solar:chat-round-dots-bold-duotone" width="24" />
 					</div>
 					<h3 className="font-semibold text-2xl text-white tracking-tight">
-						Fale com nossos especialistas
+						Veja, em poucos minutos, como o Menu Bão funciona no seu restaurante
 					</h3>
 					<p className="text-slate-400 text-sm">
-						Descubra como o Menu Bão pode transformar seu restaurante.
+						Agende uma demo rápida e prática para entender como vender mais com
+						menos operação manual.
 					</p>
 				</div>
 
 				<form className="space-y-4">
-					<div className="grid grid-cols-2 gap-4">
-						<div className="space-y-2">
-							<span className="font-medium text-slate-300 text-xs">Nome</span>
-							<Input
-								iconName="solar:user-bold-duotone"
-								placeholder="Seu nome"
-								type="text"
-							/>
-						</div>
-						<div className="space-y-2">
-							<span className="font-medium text-slate-300 text-xs">
-								Sobrenome
-							</span>
-							<Input
-								iconName="solar:user-bold-duotone"
-								placeholder="Seu sobrenome"
-								type="text"
-							/>
-						</div>
+					<div className="space-y-2">
+						<span className="font-medium text-slate-300 text-xs">Nome</span>
+						<Input
+							iconName="solar:user-bold-duotone"
+							placeholder="Ex.: Ana"
+							type="text"
+						/>
 					</div>
 
 					<div className="space-y-2">
 						<span className="font-medium text-slate-300 text-xs">
-							Email Corporativo
+							E-mail de trabalho
 						</span>
 
 						<Input
 							iconName="solar:letter-bold-duotone"
-							placeholder="voce@empresa.com"
+							placeholder="nome@restaurante.com.br"
 							type="email"
 						/>
 					</div>
 
 					<div className="space-y-2">
 						<span className="font-medium text-slate-300 text-xs">
-							Nome do Restaurante
+							Nome do restaurante
 						</span>
 						<Input
 							iconName="solar:shop-bold-duotone"
-							placeholder="Empresa Ltda."
+							placeholder="Ex.: Sabor da Vila"
 							type="text"
 						/>
 					</div>
@@ -93,7 +82,7 @@ export function DemoSales() {
 					<div className="grid grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<span className="font-medium text-slate-300 text-xs">
-								Telefone
+								WhatsApp
 							</span>
 							<Input
 								iconName="solar:phone-bold-duotone"
@@ -103,20 +92,22 @@ export function DemoSales() {
 						</div>
 						<div className="space-y-2">
 							<span className="font-medium text-slate-300 text-xs">
-								Nº de Unidades
+								Quantidade de unidades
 							</span>
 							<select className="w-full cursor-pointer appearance-none rounded-lg border border-white/10 bg-black/50 px-4 py-2.5 text-sm text-white transition-all placeholder:text-slate-600 focus:border-indigo-500/50 focus:outline-none focus:ring-1 focus:ring-indigo-500/50">
-								<option>1-2 Unidades</option>
-								<option>3-10 Unidades</option>
-								<option>10+ Unidades</option>
+								<option>Selecione</option>
+								<option>1 a 2 unidades</option>
+								<option>3 a 10 unidades</option>
+								<option>11 ou mais unidades</option>
 							</select>
 						</div>
 					</div>
 					<Button className="mt-9 gap-2 py-3 shadow-lg">
-						Solicitar Demonstração
+						Quero agendar minha demo
 					</Button>
 					<p className="mt-4 text-center text-[10px] text-slate-600">
-						Nossa equipe entrará em contato em até 24 horas.
+						Retorno em até 24h úteis. Seus dados são usados apenas para agendar
+						a demo.
 					</p>
 				</form>
 			</div>
