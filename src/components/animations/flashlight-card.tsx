@@ -74,26 +74,27 @@ export function SpotlightCard({
 	className,
 	gradientPosition = { x: 50, y: 0 },
 }: SpotlightCardProps) {
-	const [isHovered, setIsHovered] = useState(false)
-
 	return (
-		<div
+		<motion.div
 			className={cn(
 				"relative overflow-hidden rounded-2xl border border-surface-100 bg-white",
 				className
 			)}
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
+			initial="rest"
+			whileHover="hover"
 		>
 			<motion.div
-				animate={{ opacity: isHovered ? 1 : 0 }}
 				className="pointer-events-none absolute -inset-px opacity-0"
 				style={{
 					background: `radial-gradient(600px circle at ${gradientPosition.x}% ${gradientPosition.y}%, rgba(34, 197, 94, 0.1), transparent 40%)`,
 				}}
 				transition={{ duration: 0.3 }}
+				variants={{
+					rest: { opacity: 0 },
+					hover: { opacity: 1 },
+				}}
 			/>
 			<div className="relative z-10">{children}</div>
-		</div>
+		</motion.div>
 	)
 }

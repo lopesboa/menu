@@ -80,6 +80,7 @@ export function LetterReveal({
 	const isInView = useInView(ref, { once: true, margin: "-10%" })
 
 	const letters = text.split("")
+	const letterKeys = letters.map((letter, index) => `${letter}-${index}`)
 
 	return (
 		<div className={className} ref={ref}>
@@ -93,7 +94,7 @@ export function LetterReveal({
 					{letters.map((letter, i) => (
 						<motion.span
 							className="inline-block"
-							key={i}
+							key={letterKeys[i]}
 							variants={{
 								hidden: {
 									opacity: 0,

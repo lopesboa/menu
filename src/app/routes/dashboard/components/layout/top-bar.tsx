@@ -65,6 +65,10 @@ export function TopBar() {
 		navigate(authRoutePaths.login)
 	}
 
+	const handleCloseUserMenu = () => {
+		setIsUserMenuOpen(false)
+	}
+
 	return (
 		<>
 			<header className="sticky top-0 z-40 border-surface-100 border-b bg-white/80 backdrop-blur-xl">
@@ -150,7 +154,9 @@ export function TopBar() {
 										<img
 											alt={user.name}
 											className="h-8 w-8 rounded-lg object-cover"
+											height={32}
 											src={user.avatar}
+											width={32}
 										/>
 									) : (
 										<span className="font-semibold text-sm text-white">
@@ -172,9 +178,11 @@ export function TopBar() {
 							<AnimatePresence>
 								{isUserMenuOpen && (
 									<>
-										<div
+										<button
+											aria-label="Fechar menu de usuário"
 											className="fixed inset-0 z-40"
-											onClick={() => setIsUserMenuOpen(false)}
+											onClick={handleCloseUserMenu}
+											type="button"
 										/>
 										<motion.div
 											animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -189,7 +197,9 @@ export function TopBar() {
 															<img
 																alt={user.name}
 																className="h-10 w-10 rounded-lg object-cover"
+																height={40}
 																src={user.avatar}
+																width={40}
 															/>
 														) : (
 															<span className="font-bold text-white">
