@@ -1,10 +1,10 @@
 import type { PropsWithChildren } from "react"
 import { Navigate, useLocation } from "react-router"
-import { useAuth } from "../store/auth-store"
+import { useAuthSelectors } from "@/domains/auth/store/auth-store"
 import { getLoginPathWithRedirect } from "./auth/manifest"
 
 export function ProtectedRoute({ children }: PropsWithChildren) {
-	const { isAuthenticated, isLoading } = useAuth()
+	const { isAuthenticated, isLoading } = useAuthSelectors()
 	const location = useLocation()
 
 	if (isLoading) {

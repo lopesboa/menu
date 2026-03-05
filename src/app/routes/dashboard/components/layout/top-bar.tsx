@@ -16,9 +16,12 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { authRoutePaths } from "@/app/routes/auth/manifest"
-import { useAuth, useAuthAction } from "@/app/store/auth-store"
-import { useBillingStore } from "@/app/store/billing-store"
-import { useNotificationStore } from "@/app/store/notification-store"
+import {
+	useAuthActions,
+	useAuthSelectors,
+} from "@/domains/auth/store/auth-store"
+import { useBillingStore } from "@/domains/billing/store/billing-store"
+import { useNotificationStore } from "@/domains/notifications/store/notification-store"
 import { cn } from "@/utils/misc"
 import { dashboardRoutePaths } from "../../manifest"
 import { Notifications } from "./dashboard-notification"
@@ -31,8 +34,8 @@ export function TopBar() {
 
 	const { notifications, markAsRead, markAllAsRead, removeNotification } =
 		useNotificationStore()
-	const { user } = useAuth()
-	const { logout } = useAuthAction()
+	const { user } = useAuthSelectors()
+	const { logout } = useAuthActions()
 	const { currentPlan, getNextPlan, getCurrentPlan } = useBillingStore()
 
 	const navigate = useNavigate()

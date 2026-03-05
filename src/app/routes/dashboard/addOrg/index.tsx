@@ -11,8 +11,11 @@ import {
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
 import { z } from "zod"
-import { useStepper, useStepperAction } from "@/app/store/stepper-store"
 import { Button } from "@/components/ui/button"
+import {
+	useStepperActions,
+	useStepperSelectors,
+} from "@/domains/onboarding/store/stepper-store"
 import { useCities, useCreateAddress } from "@/hooks/use-address"
 import { authClient } from "@/lib/client"
 import { sentryCaptureException } from "@/lib/sentry"
@@ -67,8 +70,8 @@ const steps = [
 export default function AddOrganization() {
 	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
-	const { currentStep } = useStepper()
-	const { goToNext, goToPrevious, setTotalSteps } = useStepperAction()
+	const { currentStep } = useStepperSelectors()
+	const { goToNext, goToPrevious, setTotalSteps } = useStepperActions()
 	const { mutateAsync, error } = useCreateAddress()
 
 	const methods = useForm<OrganizationForm>({

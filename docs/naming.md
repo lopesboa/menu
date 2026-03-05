@@ -12,3 +12,10 @@
 - Hooks em `camelCase` com prefixo `use` (`useOrders`, `useOrderActions`).
 - Utils em `camelCase` (`formatCurrency`, `sanitizeAuthRedirectPath`).
 - Types e interfaces em `PascalCase` (`User`, `AuthState`).
+
+## Stores Zustand
+
+- Nome canonico de exports de leitura: `use<Domain>Selectors`.
+- Nome canonico de exports de escrita: `use<Domain>Actions`.
+- Durante migracao, aliases legados (`useAuth`, `useAuthAction`, etc.) podem
+  existir apenas em adaptadores de compatibilidade.
