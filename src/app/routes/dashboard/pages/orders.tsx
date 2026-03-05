@@ -10,8 +10,11 @@ import {
 } from "lucide-react"
 import type React from "react"
 import { useState } from "react"
-import { useOrdersActions, useSelectedOrder } from "@/app/store/order-store"
 import { StatusBadge } from "@/components/ui/status-badge"
+import {
+	useOrderSelectors,
+	useOrderActions as useOrderStoreActions,
+} from "@/domains/orders/store/order-store"
 import { useOrderActions } from "@/hooks/use-order-actions"
 import { useOrders } from "@/hooks/use-orders"
 import type { OrderStatus } from "@/types/dashboard"
@@ -58,8 +61,8 @@ const statusConfig: Record<
 export default function OrdersPage() {
 	const { data: orders = [] } = useOrders(undefined, 0, 50)
 	const { updateStatus } = useOrderActions()
-	const { selectOrder, setFilter } = useOrdersActions()
-	const { selectedOrder, filter } = useSelectedOrder()
+	const { selectOrder, setFilter } = useOrderStoreActions()
+	const { selectedOrder, filter } = useOrderSelectors()
 	const [activeTab, setActiveTab] = useState<OrderStatus | "all">("all")
 
 	const filteredOrders = orders.filter((order) => {

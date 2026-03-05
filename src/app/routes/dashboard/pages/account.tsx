@@ -1,13 +1,13 @@
 import { motion } from "framer-motion"
 import { Bell, Building2, Camera, Save, Shield, User } from "lucide-react"
 import { useState } from "react"
-import { useAuth } from "@/app/store/auth-store"
-import { useRestaurantStore } from "@/app/store/restaurant-store"
 import { Modal } from "@/components/ui/modal"
+import { useAuthSelectors } from "@/domains/auth/store/auth-store"
+import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
 import { cn } from "@/utils/misc"
 
 export default function AccountPage() {
-	const { user } = useAuth()
+	const { user } = useAuthSelectors()
 	const { activeRestaurant, getRestaurants, setActiveRestaurant } =
 		useRestaurantStore()
 

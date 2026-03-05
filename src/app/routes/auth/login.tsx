@@ -4,10 +4,13 @@ import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
 import { Link, useSearchParams } from "react-router"
 import { toast } from "sonner"
-import { useAuth, useAuthAction } from "@/app/store/auth-store"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import {
+	useAuthActions,
+	useAuthSelectors,
+} from "@/domains/auth/store/auth-store"
 import { usePostHogEvent } from "@/hooks"
 import { sentryCaptureException } from "@/lib/sentry"
 import type { LogInForm } from "@/types/auth"
@@ -17,8 +20,8 @@ import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 export default function Login() {
 	const [rememberMe, setRememberMe] = useState(false)
 	const { capture } = usePostHogEvent()
-	const { login } = useAuthAction()
-	const { isLoading } = useAuth()
+	const { login } = useAuthActions()
+	const { isLoading } = useAuthSelectors()
 	const [searchParams] = useSearchParams()
 
 	const {

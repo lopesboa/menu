@@ -91,9 +91,20 @@ src/
 - `src/services/tables-service.ts` -> `src/domains/tables/api/tables-api.ts`
 - `src/services/products-service.ts` -> `src/domains/menu/api/products-api.ts`
 - `src/services/category-service.ts` -> `src/domains/menu/api/categories-api.ts`
+- `src/app/store/auth-store.ts` -> `src/domains/auth/store/auth-store.ts`
+- `src/app/store/billing-store.ts` -> `src/domains/billing/store/billing-store.ts`
+- `src/app/store/restaurant-store.ts` ->
+  `src/domains/restaurant/store/restaurant-store.ts`
 - `src/app/store/order-store.ts` -> `src/domains/orders/store/order-store.ts`
+- `src/app/store/cart-store.ts` -> `src/domains/pos/store/cart-store.ts`
 - `src/app/store/table-store.ts` -> `src/domains/tables/store/table-store.ts`
 - `src/app/store/menu-store.ts` -> `src/domains/menu/store/menu-store.ts`
+- `src/app/store/notification-store.ts` ->
+  `src/domains/notifications/store/notification-store.ts`
+- `src/app/store/stepper-store.ts` ->
+  `src/domains/onboarding/store/stepper-store.ts`
+- `src/app/store/dialog.ts` -> `src/app/store/dialog.ts` (cross-domain)
+- `src/app/store/theme-store.ts` -> `src/app/store/theme-store.ts` (cross-domain)
 - `src/types/orders.ts` -> `src/domains/orders/types/orders.ts`
 - `src/types/dashboard.ts` ->
   `src/domains/*/types/*` + `src/shared/types/dashboard-common.ts`
@@ -112,6 +123,7 @@ src/
 
 - Migrar por lotes pequenos e com PRs atomicos.
 - Manter adaptadores temporarios para imports legados durante transicao.
+- Enquanto houver consumo legado, manter adaptadores em `src/app/store/*-store.ts`.
 - Reverter por modulo (nao rollback global) em caso de regressao.
 
 ## Checklist de PR (arquitetura)
