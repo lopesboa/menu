@@ -22,10 +22,11 @@ export function ROISection() {
 					<div className="scroll-reveal mb-12 flex flex-col items-end justify-between gap-6 md:flex-row">
 						<div>
 							<h2 className="mb-2 font-medium text-3xl text-white tracking-tight md:text-4xl">
-								Resultados reais
+								Resultados estimados com base em dados reais
 							</h2>
 							<p className="text-slate-400">
-								Não acredite apenas na nossa palavra. Veja os números.
+								Média de clientes ativos entre jan/2026 e mar/2026. Os
+								resultados podem variar por operação.
 							</p>
 						</div>
 
@@ -35,7 +36,7 @@ export function ROISection() {
 							onClick={handleOnToggleROIDemo}
 							type="button"
 						>
-							Calcular seu ROI{" "}
+							Calcular seu ROI estimado{" "}
 							<Icon icon="solar:calculator-minimalistic-bold-duotone" />
 						</button>
 					</div>
@@ -48,14 +49,15 @@ export function ROISection() {
 									<Icon icon="solar:graph-new-up-bold-duotone" width="24" />
 								</div>
 								<span className="font-medium text-slate-300 text-sm">
-									Crescimento Médio
+									Crescimento médio estimado
 								</span>
 							</div>
 							<div className="mb-2 font-semibold text-5xl text-white tracking-tight md:text-6xl">
 								+30%
 							</div>
 							<p className="mb-auto text-slate-400 text-sm">
-								Aumento de receita no primeiro trimestre de uso.
+								Estimativa de aumento de receita no 1º trimestre para operações
+								com uso contínuo da plataforma.
 							</p>
 
 							<div className="mt-8 flex h-32 w-full items-end gap-1 opacity-50">
@@ -76,14 +78,14 @@ export function ROISection() {
 										icon="solar:clock-circle-bold-duotone"
 									/>
 									<span className="font-medium text-slate-300 text-sm">
-										Tempo Economizado
+										Tempo estimado economizado
 									</span>
 								</div>
 								<div className="font-medium text-3xl text-white">
 									-15 Horas/sem
 								</div>
 								<p className="mt-1 text-slate-500 text-xs">
-									Em gestão manual de pedidos.
+									Média reportada por operações com até 3 unidades.
 								</p>
 							</div>
 							<div className="animation-duration flex h-16 w-16 animate-spin items-center justify-center rounded-full border-4 border-emerald-500/20 border-t-emerald-500">
@@ -102,7 +104,7 @@ export function ROISection() {
 								WhatsApp IA
 							</h3>
 							<p className="text-slate-400 text-xs">
-								Atendimento automático 24/7.
+								Automação de respostas para reduzir fila no horário de pico.
 							</p>
 						</div>
 
@@ -111,9 +113,11 @@ export function ROISection() {
 								<Icon icon="solar:shield-warning-bold-duotone" width="20" />
 							</div>
 							<h3 className="mb-1 font-medium text-lg text-white">
-								Zero Erros
+								Menos erros de pedido
 							</h3>
-							<p className="text-slate-400 text-xs">Fim dos pedidos errados.</p>
+							<p className="text-slate-400 text-xs">
+								Redução estimada de falhas com padronização de cardápio e fluxo.
+							</p>
 						</div>
 					</div>
 				</div>

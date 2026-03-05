@@ -36,10 +36,11 @@ export function ShowROI({
 							</span>
 						</div>
 						<h3 className="font-semibold text-2xl text-white tracking-tight">
-							Calcule seu potencial
+							Calcule seu ROI estimado
 						</h3>
 						<p className="mt-2 text-slate-400 text-sm">
-							Veja quanto você pode economizar e crescer com o Menu Bão.
+							Use sua base atual para simular ganhos de receita e economia de
+							tempo.
 						</p>
 					</div>
 
@@ -139,7 +140,7 @@ export function ShowROI({
 									<Icon icon="solar:graph-new-up-bold-duotone" />
 								</div>
 								<span className="font-medium text-slate-400 text-xs uppercase tracking-wider">
-									Receita Extra Anual
+									Receita anual estimada
 								</span>
 							</div>
 							<div
@@ -149,7 +150,8 @@ export function ShowROI({
 								R$ 120.000
 							</div>
 							<p className="mt-1 text-slate-500 text-xs">
-								Baseado em aumento de 20% na eficiência.
+								Estimativa com base em ganho médio de eficiência operacional
+								reportado por clientes.
 							</p>
 						</div>
 
@@ -159,7 +161,7 @@ export function ShowROI({
 									<Icon icon="solar:clock-circle-bold-duotone" />
 								</div>
 								<span className="font-medium text-slate-400 text-xs uppercase tracking-wider">
-									Horas Salvas por Ano
+									Horas economizadas por ano
 								</span>
 							</div>
 							<div
@@ -169,7 +171,7 @@ export function ShowROI({
 								260h
 							</div>
 							<p className="mt-1 text-slate-500 text-xs">
-								Equivalente a{" "}
+								Estimativa equivalente a{" "}
 								<span className="font-medium text-blue-400">
 									32 dias de trabalho
 								</span>
@@ -189,7 +191,8 @@ export function ShowROI({
 								</Link>
 							</button>
 							<p className="mt-3 text-center text-[10px] text-slate-600">
-								Estimativas baseadas em dados médios de clientes.
+								Estimativas com base em dados médios de clientes ativos entre
+								jan/2026 e mar/2026.
 							</p>
 						</div>
 					</div>
