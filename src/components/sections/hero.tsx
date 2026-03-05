@@ -82,37 +82,37 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 						<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
 						<span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
 					</span>
-					v2.0 já está disponível
+					Feito para restaurantes que querem operar sem caos
 				</div>
 
 				<h1 className="mb-6 bg-linear-to-b from-white to-white/60 bg-clip-text font-medium text-5xl text-transparent leading-[1.1] tracking-tight md:text-7xl">
 					<div className="reveal-trigger overflow-hidden text-clip-reveal">
-						<span className="pb-2">O sistema operacional</span>
+						<span className="pb-2">Pedidos, estoque e atendimento</span>
 					</div>
 					<div className="reveal-trigger overflow-hidden text-clip-reveal delay-100">
-						<span className="pb-2">para restaurantes modernos</span>
+						<span className="pb-2">no controle em um só sistema</span>
 					</div>
 				</h1>
 
 				<p className="mx-auto mb-10 max-w-xl animate-reveal text-base text-slate-400 leading-relaxed delay-300 md:text-lg">
-					Agilize pedidos, gerencie estoque e encante clientes com uma interface
-					mágica. Rápido, bonito e totalmente personalizável.
+					Centralize salão, delivery e balcão para reduzir erros, ganhar
+					agilidade e vender melhor todos os dias.
 				</p>
 
 				<div className="flex animate-reveal flex-col items-center justify-center gap-4 delay-500 md:flex-row">
 					<button
 						className="group relative cursor-pointer"
-						name="Começar Agora"
+						name="Criar conta grátis"
 						type="button"
 					>
 						<div className="absolute -inset-0.5 rounded-full bg-linear-to-r from-indigo-500 to-purple-600 opacity-50 blur transition duration-200 group-hover:opacity-100" />
 						<div className="relative flex items-center divide-x divide-slate-600 rounded-full bg-black px-8 py-3 leading-none">
 							<Link
-								aria-label="Navegar para criar conta"
+								aria-label="Navegar para criar conta grátis"
 								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
 								to="/register"
 							>
-								Começar Agora
+								Criar conta grátis
 							</Link>
 							<span className="pl-4 text-slate-400 text-sm transition-colors group-hover:text-slate-200">
 								<Icon icon="solar:arrow-right-bold-duotone" />
@@ -121,11 +121,11 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 					</button>
 					<button
 						className="rounded-full border border-white/10 bg-white/5 px-8 py-3 font-medium text-slate-300 text-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
-						name="Ver Demo"
+						name="Ver demonstração"
 						onClick={onShowDemo}
 						type="button"
 					>
-						Ver Demo
+						Ver demonstração
 					</button>
 				</div>
 			</div>

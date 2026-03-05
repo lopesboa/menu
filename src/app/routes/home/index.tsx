@@ -167,8 +167,8 @@ export default function Home() {
 					</p>
 					<div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
 						<Button className="rounded-full px-8 py-4 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-slate-200 sm:w-auto">
-							<Link aria-label="Navegar para criar conta" to="/register">
-								Começar Teste Grátis
+							<Link aria-label="Navegar para criar conta grátis" to="/register">
+								Criar conta grátis
 							</Link>
 						</Button>
 						<Button
@@ -176,7 +176,7 @@ export default function Home() {
 							onClick={handleOnShowDemo}
 							variant="secondary"
 						>
-							Começar Teste Grátis
+							Falar com especialista
 						</Button>
 					</div>
 					<p className="mt-6 text-slate-500 text-xs">
