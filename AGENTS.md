@@ -29,3 +29,4 @@ ALL user-facing text in Brazilian Portuguese (pt-BR).
 - [Analytics](docs/analytics.md)
 - [Imports](docs/imports.md)
 - [Performance](docs/performance.md)
+- [Landing Copy](docs/landing-copy.md)
