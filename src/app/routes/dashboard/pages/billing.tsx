@@ -9,9 +9,9 @@ import {
 	Zap,
 } from "lucide-react"
 import { useState } from "react"
-import { useBillingStore } from "@/app/store/billing-store"
-import { useRestaurantStore } from "@/app/store/restaurant-store"
 import { Modal } from "@/components/ui/modal"
+import { useBillingStore } from "@/domains/billing/store/billing-store"
+import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 

@@ -9,7 +9,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
-import { useCartStore } from "@/app/store/cart-store"
+import { useCartStore } from "@/domains/pos/store/cart-store"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { useTables } from "@/hooks/use-tables"
 import { sentryCaptureException } from "@/lib/sentry"
