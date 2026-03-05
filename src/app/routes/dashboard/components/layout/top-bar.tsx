@@ -19,6 +19,7 @@ import { useAuth, useAuthAction } from "@/app/store/auth-store"
 import { useBillingStore } from "@/app/store/billingStore"
 import { useNotificationStore } from "@/app/store/notificationStore"
 import { cn } from "@/utils/misc"
+import { dashboardRoutePaths } from "../../manifest"
 import { Notifications } from "./dashboard-notification"
 
 export function TopBar() {
@@ -40,10 +41,20 @@ export function TopBar() {
 	const nextPlan = getNextPlan()
 
 	const userMenuItems = [
-		{ icon: User, label: "Conta", href: "/dashboard/account" },
-		{ icon: Settings, label: "Configurações", href: "/dashboard/settings" },
+		{ icon: User, label: "Conta", href: dashboardRoutePaths.account },
+		{
+			icon: Settings,
+			label: "Configurações",
+			href: dashboardRoutePaths.settings,
+		},
 		...(user?.role === "owner" || user?.role === "manager"
-			? [{ icon: CreditCard, label: "Cobrança", href: "/dashboard/billing" }]
+			? [
+					{
+						icon: CreditCard,
+						label: "Cobrança",
+						href: dashboardRoutePaths.billing,
+					},
+				]
 			: []),
 	]
 
@@ -91,7 +102,7 @@ export function TopBar() {
 						{nextPlan && currentPlan === "free" && user?.role === "owner" && (
 							<button
 								className="hidden items-center gap-1.5 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 px-3 py-1.5 font-medium text-sm text-white shadow-lg shadow-orange-500/25 transition-all hover:from-yellow-500 hover:to-orange-600 md:flex"
-								onClick={() => navigate("/billing")}
+								onClick={() => navigate(dashboardRoutePaths.billing)}
 								type="button"
 							>
 								<Crown className="h-4 w-4" />
@@ -210,7 +221,7 @@ export function TopBar() {
 															className="flex w-full items-center gap-2 rounded-lg bg-linear-to-r from-yellow-400 to-orange-500 px-3 py-2 font-medium text-sm text-white transition-all hover:from-yellow-500 hover:to-orange-600"
 															onClick={() => {
 																setIsUserMenuOpen(false)
-																navigate("/billing")
+																navigate(dashboardRoutePaths.billing)
 															}}
 															type="button"
 														>
@@ -311,7 +322,7 @@ export function TopBar() {
 									className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-surface-600 hover:bg-surface-50"
 									onClick={() => {
 										setIsMobileMenuOpen(false)
-										navigate("/dashboard/account")
+										navigate(dashboardRoutePaths.account)
 									}}
 									type="button"
 								>
@@ -323,7 +334,7 @@ export function TopBar() {
 										className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-surface-600 hover:bg-surface-50"
 										onClick={() => {
 											setIsMobileMenuOpen(false)
-											navigate("/dashboard/billing")
+											navigate(dashboardRoutePaths.billing)
 										}}
 										type="button"
 									>
@@ -335,7 +346,7 @@ export function TopBar() {
 									className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-surface-600 hover:bg-surface-50"
 									onClick={() => {
 										setIsMobileMenuOpen(false)
-										navigate("/dashboard/settings")
+										navigate(dashboardRoutePaths.settings)
 									}}
 									type="button"
 								>

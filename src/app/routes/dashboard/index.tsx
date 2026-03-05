@@ -6,6 +6,7 @@ import { ProtectedRoute } from "../protected-routes"
 import { BottomNav } from "./components/layout/bottom-nav"
 import { Sidebar } from "./components/layout/sidebar"
 import { TopBar } from "./components/layout/top-bar"
+import { dashboardRoutePaths } from "./manifest"
 
 export default function Dashboard() {
 	const { hasOrganization, isLoading } = useOrganizationCheck()
@@ -19,8 +20,8 @@ export default function Dashboard() {
 		)
 	}
 
-	if (!hasOrganization && location.pathname !== "/dashboard/add-org") {
-		return <Navigate replace to="/dashboard/add-org" />
+	if (!hasOrganization && location.pathname !== dashboardRoutePaths.addOrg) {
+		return <Navigate replace to={dashboardRoutePaths.addOrg} />
 	}
 
 	return (
