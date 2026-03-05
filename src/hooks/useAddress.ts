@@ -13,7 +13,7 @@ export function useStates() {
 	})
 }
 
-export function useCities(stateCode: string | undefined) {
+export function useCities(stateCode: string) {
 	return useQuery({
 		queryKey: ["cities", stateCode],
 		queryFn: () => getCities(stateCode),

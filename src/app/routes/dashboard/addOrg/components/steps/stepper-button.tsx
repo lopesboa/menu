@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
 import { useStepperAction } from "@/app/store/stepper-store"
-import { Button } from "@/components"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/utils/misc"
 
 export function StepperNextButton({

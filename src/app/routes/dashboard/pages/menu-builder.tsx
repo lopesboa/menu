@@ -207,7 +207,7 @@ export function MenuBuilderPage() {
 											</p>
 										</div>
 										<span className="font-bold text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</span>
 									</div>
 									<p className="mt-2 line-clamp-2 text-sm text-surface-600">
@@ -260,7 +260,7 @@ export function MenuBuilderPage() {
 										<p className="text-sm text-surface-500">{item.category}</p>
 									</div>
 									<span className="font-bold text-primary-600">
-										{formatCurrency(item.price)}
+										{formatCurrency(+item.price)}
 									</span>
 									<div className="flex gap-1">
 										<button

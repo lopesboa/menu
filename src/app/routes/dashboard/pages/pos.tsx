@@ -30,7 +30,7 @@ interface LastOrderItem {
 	menuItem: {
 		id: string
 		name: string
-		price: number
+		price: string | number
 		image: string
 	}
 	quantity: number
@@ -192,7 +192,7 @@ export default function POSPage() {
 	})
 
 	const handlePayment = () => {
-		const order = {
+		const order: LastOrder = {
 			id: `ORD-${Date.now()}`,
 			items,
 			subtotal: getSubtotal(),
@@ -397,7 +397,7 @@ export default function POSPage() {
 											{item.name}
 										</h3>
 										<p className="font-bold text-lg text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</p>
 									</>
 								) : (
@@ -426,7 +426,7 @@ export default function POSPage() {
 											</p>
 										</div>
 										<span className="font-bold text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</span>
 									</>
 								)}
@@ -478,7 +478,7 @@ export default function POSPage() {
 										{item.menuItem.name}
 									</p>
 									<p className="text-sm text-surface-500">
-										{formatCurrency(item.menuItem.price)}
+										{formatCurrency(+item.menuItem.price)}
 									</p>
 								</div>
 								<div className="flex items-center gap-2">
@@ -683,7 +683,7 @@ export default function POSPage() {
 										{item.quantity}x {item.menuItem.name}
 									</span>
 									<span>
-										{formatCurrency(item.menuItem.price * item.quantity)}
+										{formatCurrency(+item.menuItem.price * item.quantity)}
 									</span>
 								</div>
 							))}
