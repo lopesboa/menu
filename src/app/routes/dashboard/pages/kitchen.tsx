@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
 import { CheckCircle, ChefHat, Clock, Volume2, VolumeX } from "lucide-react"
 import { useEffect, useState } from "react"
-import { useOrderActions } from "@/hooks/useOrderActions"
-import { useOrders } from "@/hooks/useOrders"
+import { useOrderActions } from "@/hooks/use-order-actions"
+import { useOrders } from "@/hooks/use-orders"
 import type { OrderStatus } from "@/types/dashboard"
 import { cn } from "@/utils/misc"
 

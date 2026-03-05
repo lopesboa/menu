@@ -5,12 +5,12 @@ import { type SubmitHandler, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useDialogActions } from "@/app/store/dialog"
 import { Field } from "@/components/form"
+import { Button } from "@/components/ui/button"
+import { Dialog } from "@/components/ui/dialog"
+import { Stepper } from "@/components/ui/stepper"
 import { authClient } from "@/lib/client"
 import { cn, createOrgSlug } from "@/utils/misc"
 import { OrganizationFormSchema } from "@/utils/user-validation"
-import { Dialog } from "@/components/ui/dialog"
-import { Stepper } from "@/components/ui/stepper"
-import { Button } from "@/components/ui/button"
 
 interface OrganizationForm {
 	slug: string

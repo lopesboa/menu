@@ -4,7 +4,7 @@ import {
 	updateOrderStatus,
 } from "@/services/orders-service"
 import type { OrderStatus } from "@/types/dashboard"
-import { orderQueryKeys } from "./useOrders"
+import { orderQueryKeys } from "./use-orders"
 
 export function useOrderActions() {
 	const queryClient = useQueryClient()

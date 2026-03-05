@@ -46,12 +46,17 @@ export function SkeletonTable({
 }
 
 export function SkeletonList({ items = 4 }: { items?: number }) {
+	const itemKeys = Array.from(
+		{ length: items },
+		(_, index) => `item-${index + 1}`
+	)
+
 	return (
 		<div className="space-y-3">
-			{Array.from({ length: items }).map((_, i) => (
+			{itemKeys.map((itemKey) => (
 				<div
 					className="flex items-center gap-4 rounded-xl border border-surface-100 bg-white p-4"
-					key={i}
+					key={itemKey}
 				>
 					<Skeleton className="h-12 w-12 rounded-xl" />
 					<div className="flex-1 space-y-2">
@@ -65,11 +70,13 @@ export function SkeletonList({ items = 4 }: { items?: number }) {
 }
 
 export function SkeletonDashboard() {
+	const cardKeys = ["card-1", "card-2", "card-3", "card-4"]
+
 	return (
 		<div className="space-y-6">
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-				{Array.from({ length: 4 }).map((_, i) => (
-					<SkeletonCard key={i} />
+				{cardKeys.map((cardKey) => (
+					<SkeletonCard key={cardKey} />
 				))}
 			</div>
 			<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">

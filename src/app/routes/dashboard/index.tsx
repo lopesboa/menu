@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router"
 import "./styles.css"
-import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { cn } from "@/utils/misc"
 import { ProtectedRoute } from "../protected-routes"
 import { BottomNav } from "./components/layout/bottom-nav"

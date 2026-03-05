@@ -1,7 +1,14 @@
 # Naming Conventions
 
-- Components: PascalCase (e.g., `Button.tsx`)
-- Hooks: camelCase prefixed with `use` (e.g., `useOrders.ts`)
-- Utils: camelCase (e.g., `helpers.ts`)
-- Stores: camelCase with `Store` suffix (e.g., `auth-store.ts`)
-- Types/Interfaces: PascalCase (e.g., `User`, `AuthState`)
+## Arquivos
+
+- Usar `kebab-case` para todos os arquivos (`app.tsx`, `use-orders.ts`, `order-store.ts`).
+- Stores devem seguir `*-store.ts`.
+- Hooks devem seguir `use-*.ts`.
+
+## Identificadores
+
+- Componentes React em `PascalCase` (`Button`, `DashboardHome`).
+- Hooks em `camelCase` com prefixo `use` (`useOrders`, `useOrderActions`).
+- Utils em `camelCase` (`formatCurrency`, `sanitizeAuthRedirectPath`).
+- Types e interfaces em `PascalCase` (`User`, `AuthState`).

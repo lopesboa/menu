@@ -1,11 +1,11 @@
 import { Icon } from "@iconify-icon/react"
 import { cn } from "@/utils/misc"
 
-type Step = {
+interface Step {
 	label: string
 }
 
-type StepperProps = {
+interface StepperProps {
 	steps: Step[]
 	currentStep: number
 	onStepClick?: (index: number) => void

@@ -1,8 +1,8 @@
 import { Icon } from "@iconify-icon/react"
 import { type ChangeEvent, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { useCities, useStates } from "@/hooks/useAddress"
-import { useCepSearch } from "@/hooks/useCepSearch"
+import { useCities, useStates } from "@/hooks/use-address"
+import { useCepSearch } from "@/hooks/use-cep-search"
 import { cn } from "@/utils/misc"
 
 interface LocationForm {
