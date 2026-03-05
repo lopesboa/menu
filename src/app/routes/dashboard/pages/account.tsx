@@ -3,13 +3,16 @@ import { Bell, Building2, Camera, Save, Shield, User } from "lucide-react"
 import { useState } from "react"
 import { Modal } from "@/components/ui/modal"
 import { useAuthSelectors } from "@/domains/auth/store/auth-store"
-import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
+import {
+	useRestaurantActions,
+	useRestaurantSelectors,
+} from "@/domains/restaurant/store/restaurant-store"
 import { cn } from "@/utils/misc"
 
 export default function AccountPage() {
 	const { user } = useAuthSelectors()
-	const { activeRestaurant, getRestaurants, setActiveRestaurant } =
-		useRestaurantStore()
+	const { activeRestaurant, getRestaurants } = useRestaurantSelectors()
+	const { setActiveRestaurant } = useRestaurantActions()
 
 	const [activeTab, setActiveTab] = useState<
 		"profile" | "notifications" | "security"
