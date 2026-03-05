@@ -1,21 +1,9 @@
 import { motion } from "framer-motion"
-import {
-	ChefHat,
-	LayoutDashboard,
-	LayoutGrid,
-	ShoppingCart,
-	UtensilsCrossed,
-} from "lucide-react"
 import { NavLink } from "react-router"
 import { cn } from "@/utils/misc"
+import { getDashboardNavigation } from "../../manifest"
 
-const navItems = [
-	{ icon: LayoutDashboard, label: "Home", path: "/dashboard" },
-	{ icon: ShoppingCart, label: "PDV", path: "/dashboard/pos" },
-	{ icon: LayoutGrid, label: "Mesas", path: "/dashboard/tables" },
-	{ icon: ChefHat, label: "Cozinha", path: "/dashboard/kitchen" },
-	{ icon: UtensilsCrossed, label: "Cardápio", path: "/dashboard/menu" },
-]
+const navItems = getDashboardNavigation("bottom")
 
 export function BottomNav() {
 	return (
@@ -31,12 +19,16 @@ export function BottomNav() {
 									: "text-surface-400 hover:text-surface-600"
 							)
 						}
-						key={item.path}
-						to={item.path}
+						key={item.fullPath}
+						to={item.fullPath}
 					>
 						{({ isActive }) => (
 							<>
-								<item.icon className={cn("h-5 w-5", isActive && "scale-110")} />
+								{item.icon && (
+									<item.icon
+										className={cn("h-5 w-5", isActive && "scale-110")}
+									/>
+								)}
 								<span className="font-medium text-xs">{item.label}</span>
 								{isActive && (
 									<motion.div

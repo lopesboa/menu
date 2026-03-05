@@ -2,6 +2,7 @@ import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
 import { authClient } from "@/lib/client"
 import { authMiddleware } from "../middleware/auth-middleware"
+import { dashboardRouteSegments } from "./dashboard/manifest"
 import { RouteErrorBoundary } from "./error-boundary"
 
 const HomeLayout = lazy(() => import("../../components/layout/layout"))
@@ -21,6 +22,46 @@ const Orders = lazy(() => import("./dashboard/pages/orders"))
 const POS = lazy(() => import("./dashboard/pages/pos"))
 const Settings = lazy(() => import("./dashboard/pages/settings"))
 const Tables = lazy(() => import("./dashboard/pages/tables"))
+const Sales = lazy(() =>
+	import("./dashboard/pages/sales").then((module) => ({
+		default: module.SalesPage,
+	}))
+)
+const Reports = lazy(() =>
+	import("./dashboard/pages/reports").then((module) => ({
+		default: module.ReportsPage,
+	}))
+)
+const Inventory = lazy(() =>
+	import("./dashboard/pages/inventory").then((module) => ({
+		default: module.InventoryPage,
+	}))
+)
+const Kitchen = lazy(() =>
+	import("./dashboard/pages/kitchen").then((module) => ({
+		default: module.KitchenPage,
+	}))
+)
+const Delivery = lazy(() =>
+	import("./dashboard/pages/delivery").then((module) => ({
+		default: module.DeliveryPage,
+	}))
+)
+const Customers = lazy(() =>
+	import("./dashboard/pages/customers").then((module) => ({
+		default: module.CustomersPage,
+	}))
+)
+const MenuBuilder = lazy(() =>
+	import("./dashboard/pages/menu-builder").then((module) => ({
+		default: module.MenuBuilderPage,
+	}))
+)
+const Billing = lazy(() =>
+	import("./dashboard/pages/billing").then((module) => ({
+		default: module.BillingPage,
+	}))
+)
 
 export const router = createBrowserRouter([
 	{
@@ -53,12 +94,23 @@ export const router = createBrowserRouter([
 		ErrorBoundary: RouteErrorBoundary,
 		children: [
 			{ index: true, Component: DashboardHome, loader: organizationLoader },
-			{ path: "add-org", Component: DashboardAddOrganization },
-			{ path: "account", Component: Account },
-			{ path: "orders", Component: Orders },
-			{ path: "pos", Component: POS },
-			{ path: "settings", Component: Settings },
-			{ path: "tables", Component: Tables },
+			{
+				path: dashboardRouteSegments.addOrg,
+				Component: DashboardAddOrganization,
+			},
+			{ path: dashboardRouteSegments.account, Component: Account },
+			{ path: dashboardRouteSegments.orders, Component: Orders },
+			{ path: dashboardRouteSegments.pos, Component: POS },
+			{ path: dashboardRouteSegments.settings, Component: Settings },
+			{ path: dashboardRouteSegments.tables, Component: Tables },
+			{ path: dashboardRouteSegments.sales, Component: Sales },
+			{ path: dashboardRouteSegments.reports, Component: Reports },
+			{ path: dashboardRouteSegments.inventory, Component: Inventory },
+			{ path: dashboardRouteSegments.kitchen, Component: Kitchen },
+			{ path: dashboardRouteSegments.delivery, Component: Delivery },
+			{ path: dashboardRouteSegments.customers, Component: Customers },
+			{ path: dashboardRouteSegments.menu, Component: MenuBuilder },
+			{ path: dashboardRouteSegments.billing, Component: Billing },
 		],
 	},
 ])
