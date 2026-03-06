@@ -84,6 +84,8 @@ src/
   `src/domains/orders/ui/pages/kitchen-page.tsx`
 - `src/app/routes/dashboard/pages/delivery.tsx` ->
   `src/domains/orders/ui/pages/delivery-page.tsx`
+- `src/app/routes/dashboard/pages/tables.tsx` ->
+  `src/domains/tables/ui/pages/tables-page.tsx`
 - `src/components/sections/*` -> `src/domains/dashboard/ui/sections/*` (quando
   funcionalidade de dashboard) ou `src/shared/ui/sections/*` (quando generico)
 - `src/hooks/use-orders.ts` -> `src/domains/orders/hooks/use-orders.ts`
