@@ -1,6 +1,7 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { Cart, MenuItem } from "@/types/dashboard"
+import type { MenuItem } from "@/shared/types/menu-item-types"
+import type { Cart } from "../types/cart-types"
 
 interface CartState extends Cart {
 	addItem: (menuItem: MenuItem, quantity?: number, notes?: string) => void

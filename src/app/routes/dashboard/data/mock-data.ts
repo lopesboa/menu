@@ -3,7 +3,7 @@ import type {
 	InventoryItem,
 	MenuItem,
 	SalesData,
-} from "@/types/dashboard"
+} from "@/app/routes/dashboard/types/mock-dashboard-data-types"
 
 export const menuItems: MenuItem[] = [
 	{

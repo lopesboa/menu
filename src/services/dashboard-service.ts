@@ -2,7 +2,8 @@ import type {
 	DashboardRevenue,
 	DashboardSummary,
 	SalesRanking,
-} from "@/types/dashboard"
+} from "@/app/routes/dashboard/types/dashboard-analytics-types"
+
 import { apiFetch } from "@/utils/fetch"
 
 export function getDashboardSummary(
