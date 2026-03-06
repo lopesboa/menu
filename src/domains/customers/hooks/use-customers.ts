@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { getCustomers, mapCustomerApiToCustomer } from "../api/customers-api"
 import type { Customer, CustomerApi } from "../types/customer-types"
-import { customersQueryKeys } from "./customers-query-keys"
+import { customersQueryKeys } from "./use-customers-query-keys"
 
 export function useCustomers(organizationId: string | null | undefined) {
 	return useQuery<CustomerApi[], Error, Customer[]>({
