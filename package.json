@@ -6,11 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "architecture:check": "node ./scripts/architecture-guardrails.mjs",
     "format": "biome format --write",
     "preview": "vite preview",
     "check": "ultracite check",
     "fix": "ultracite fix",
-    "pr_ready": "ultracite check && npm run test",
+    "pr_ready": "ultracite check && node ./scripts/architecture-guardrails.mjs && npm run test",
     "test": "echo 'No tests configured yet'"
   },
   "dependencies": {

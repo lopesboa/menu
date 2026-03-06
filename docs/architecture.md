@@ -127,6 +127,21 @@ src/
 4. Migrar dominios (orders, tables, menu/categories).
 5. Adicionar guardrails de arquitetura no CI.
 
+## Guardrails no CI
+
+- Comando: `pnpm architecture:check`.
+- Workflow: `.github/workflows/ci.yml` executa build, check e guardrails em PRs.
+- `biome.json` aplica `noRestrictedImports` em `src/domains` e `src/shared`
+  para evitar imports proibidos por camada.
+- Falhas cobertas:
+  - boundary entre `app/domains/shared`
+  - ciclos arquiteturais entre modulos monitorados
+  - naming em arquivos-chave (`kebab-case`, `*-store`, `use-*` em domains)
+- Excecoes temporarias devem ser registradas em
+  `scripts/architecture-guardrails-exceptions.json` e revisadas no PR.
+- Excecoes temporarias no Biome devem ficar explicitas em `overrides` com escopo
+  minimo e plano de remocao.
+
 ## Plano de rollback
 
 - Migrar por lotes pequenos e com PRs atomicos.

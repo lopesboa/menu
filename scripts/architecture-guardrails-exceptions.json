@@ -1,0 +1,29 @@
+{
+  "boundaryViolations": [
+    {
+      "from": "domains/auth/store/auth-store.ts",
+      "to": "app/routes/dashboard/manifest"
+    },
+    {
+      "from": "domains/tables/ui/pages/tables-page.tsx",
+      "to": "app/routes/dashboard/manifest"
+    },
+    {
+      "from": "domains/tables/ui/pages/tables-page.tsx",
+      "to": "domains/pos/store/cart-store"
+    }
+  ],
+  "cycleAllowList": [],
+  "namingAllowList": [
+    "src/domains/categories/hooks/categories-query-keys.ts",
+    "src/domains/categories/types/category.types.ts",
+    "src/domains/menu/hooks/products-query-keys.ts",
+    "src/domains/menu/types/menu.types.ts",
+    "src/domains/menu/types/product.types.ts",
+    "src/domains/orders/hooks/orders-query-keys.ts",
+    "src/domains/orders/types/order-query.types.ts",
+    "src/domains/orders/types/order.types.ts",
+    "src/domains/tables/hooks/tables-query-keys.ts",
+    "src/domains/tables/types/table.types.ts"
+  ]
+}
