@@ -11,7 +11,7 @@ import {
 	useAuthActions,
 	useAuthSelectors,
 } from "@/domains/auth/store/auth-store"
-import { usePostHogEvent } from "@/hooks"
+import { usePostHogEvent } from "@/hooks/use-posthog"
 import { sentryCaptureException } from "@/lib/sentry"
 import type { LogInForm } from "@/types/auth"
 import { SignInFormSchema } from "@/utils/user-validation"

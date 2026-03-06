@@ -21,6 +21,7 @@ ALL user-facing text in Brazilian Portuguese (pt-BR).
 ## Guides
 
 - [Code Style](docs/code-style.md)
+- [Contributing](CONTRIBUTING.md)
 - [TypeScript](docs/typescript.md)
 - [React](docs/react.md)
 - [Naming](docs/naming.md)
