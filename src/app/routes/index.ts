@@ -2,8 +2,10 @@ import { lazy } from "react"
 import { createBrowserRouter } from "react-router"
 import { authClient } from "@/lib/client"
 import { authMiddleware } from "../middleware/auth-middleware"
+import { authRouteSegments } from "./auth/manifest"
 import { dashboardRouteSegments } from "./dashboard/manifest"
 import { RouteErrorBoundary } from "./error-boundary"
+import { NotFoundPage } from "./error-pages/not-found"
 
 const HomeLayout = lazy(() => import("../../components/layout/layout"))
 const HomeContent = lazy(() => import("./home"))
@@ -18,10 +20,10 @@ const Dashboard = lazy(() => import("./dashboard"))
 const DashboardAddOrganization = lazy(() => import("./dashboard/addOrg"))
 const DashboardHome = lazy(() => import("./dashboard/pages/dashboard-home"))
 const Account = lazy(() => import("./dashboard/pages/account"))
-const Orders = lazy(() => import("./dashboard/pages/orders"))
+const Orders = lazy(() => import("@/domains/orders/ui/pages/orders-page"))
 const POS = lazy(() => import("./dashboard/pages/pos"))
 const Settings = lazy(() => import("./dashboard/pages/settings"))
-const Tables = lazy(() => import("./dashboard/pages/tables"))
+const Tables = lazy(() => import("@/domains/tables/ui/pages/tables-page"))
 const Sales = lazy(() =>
 	import("./dashboard/pages/sales").then((module) => ({
 		default: module.SalesPage,
@@ -38,12 +40,12 @@ const Inventory = lazy(() =>
 	}))
 )
 const Kitchen = lazy(() =>
-	import("./dashboard/pages/kitchen").then((module) => ({
+	import("@/domains/orders/ui/pages/kitchen-page").then((module) => ({
 		default: module.KitchenPage,
 	}))
 )
 const Delivery = lazy(() =>
-	import("./dashboard/pages/delivery").then((module) => ({
+	import("@/domains/orders/ui/pages/delivery-page").then((module) => ({
 		default: module.DeliveryPage,
 	}))
 )
@@ -76,11 +78,14 @@ export const router = createBrowserRouter([
 			{
 				Component: AuthLayout,
 				children: [
-					{ path: "login", Component: Login },
-					{ path: "register", Component: Register },
-					{ path: "forgot", Component: Forgot },
-					{ path: "verify", Component: Verify },
-					{ path: "change-password", Component: ChangePassword },
+					{ path: authRouteSegments.login, Component: Login },
+					{ path: authRouteSegments.register, Component: Register },
+					{ path: authRouteSegments.forgot, Component: Forgot },
+					{ path: authRouteSegments.verify, Component: Verify },
+					{
+						path: authRouteSegments.changePassword,
+						Component: ChangePassword,
+					},
 				],
 			},
 		],
@@ -111,7 +116,12 @@ export const router = createBrowserRouter([
 			{ path: dashboardRouteSegments.customers, Component: Customers },
 			{ path: dashboardRouteSegments.menu, Component: MenuBuilder },
 			{ path: dashboardRouteSegments.billing, Component: Billing },
+			{ path: "*", Component: NotFoundPage },
 		],
+	},
+	{
+		path: "*",
+		Component: NotFoundPage,
 	},
 ])
 

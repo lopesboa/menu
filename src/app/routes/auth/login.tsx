@@ -2,22 +2,27 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
 import { useState } from "react"
 import { type SubmitHandler, useForm } from "react-hook-form"
-import { Link } from "react-router"
+import { Link, useSearchParams } from "react-router"
 import { toast } from "sonner"
-import { useAuth, useAuthAction } from "@/app/store/auth-store"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
-import { usePostHogEvent } from "@/hooks"
+import { Input } from "@/components/ui/input"
+import {
+	useAuthActions,
+	useAuthSelectors,
+} from "@/domains/auth/store/auth-store"
+import { usePostHogEvent } from "@/hooks/use-posthog"
 import { sentryCaptureException } from "@/lib/sentry"
 import type { LogInForm } from "@/types/auth"
 import { SignInFormSchema } from "@/utils/user-validation"
-import { Input } from "@/components/ui/input"
+import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 
 export default function Login() {
 	const [rememberMe, setRememberMe] = useState(false)
 	const { capture } = usePostHogEvent()
-	const { login } = useAuthAction()
-	const { isLoading } = useAuth()
+	const { login } = useAuthActions()
+	const { isLoading } = useAuthSelectors()
+	const [searchParams] = useSearchParams()
 
 	const {
 		register,
@@ -35,8 +40,10 @@ export default function Login() {
 	})
 
 	const onSubmit: SubmitHandler<LogInForm> = async (data) => {
+		const redirectTo = sanitizeAuthRedirectPath(searchParams.get("redirectTo"))
+
 		try {
-			await login(data.email, data.password, rememberMe)
+			await login(data.email, data.password, rememberMe, redirectTo)
 		} catch (error) {
 			sentryCaptureException(error)
 			toast.error("Falha no login", {
@@ -130,7 +137,7 @@ export default function Login() {
 					</label>
 					<Link
 						className="cursor-pointer text-secondary text-xs transition-colors hover:text-white"
-						to="/forgot"
+						to={authRoutePaths.forgot}
 					>
 						Esqueceu sua senha?
 					</Link>
@@ -152,7 +159,7 @@ export default function Login() {
 				<Link
 					className="cursor-pointer text-white underline-offset-2 hover:underline"
 					onClick={() => capture("link_clicked", { link_name: "register" })}
-					to="/register"
+					to={authRoutePaths.register}
 				>
 					Criar conta
 				</Link>

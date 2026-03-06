@@ -15,14 +15,14 @@ import {
 } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
-import { useCartStore } from "@/app/store/cartStore"
-import { useRestaurantStore } from "@/app/store/restaurant-store"
 import { Modal } from "@/components/ui/modal"
-import { useCategories } from "@/hooks/use-categories"
-import { useProducts } from "@/hooks/use-products"
-import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
+import { useCategories } from "@/domains/categories/hooks/use-categories"
+import { useProducts } from "@/domains/menu/hooks/use-products"
+import { useCartStore } from "@/domains/pos/store/cart-store"
+import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
-import type { PaymentMethod } from "@/types/dashboard"
+import type { PaymentMethod } from "@/shared/types/commerce-types"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 
@@ -30,7 +30,7 @@ interface LastOrderItem {
 	menuItem: {
 		id: string
 		name: string
-		price: number
+		price: string | number
 		image: string
 	}
 	quantity: number
@@ -192,7 +192,7 @@ export default function POSPage() {
 	})
 
 	const handlePayment = () => {
-		const order = {
+		const order: LastOrder = {
 			id: `ORD-${Date.now()}`,
 			items,
 			subtotal: getSubtotal(),
@@ -397,7 +397,7 @@ export default function POSPage() {
 											{item.name}
 										</h3>
 										<p className="font-bold text-lg text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</p>
 									</>
 								) : (
@@ -426,7 +426,7 @@ export default function POSPage() {
 											</p>
 										</div>
 										<span className="font-bold text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</span>
 									</>
 								)}
@@ -478,7 +478,7 @@ export default function POSPage() {
 										{item.menuItem.name}
 									</p>
 									<p className="text-sm text-surface-500">
-										{formatCurrency(item.menuItem.price)}
+										{formatCurrency(+item.menuItem.price)}
 									</p>
 								</div>
 								<div className="flex items-center gap-2">
@@ -683,7 +683,7 @@ export default function POSPage() {
 										{item.quantity}x {item.menuItem.name}
 									</span>
 									<span>
-										{formatCurrency(item.menuItem.price * item.quantity)}
+										{formatCurrency(+item.menuItem.price * item.quantity)}
 									</span>
 								</div>
 							))}

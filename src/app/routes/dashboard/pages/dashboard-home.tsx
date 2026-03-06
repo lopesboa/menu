@@ -8,17 +8,17 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react"
+import { useLoaderData } from "react-router"
 import { StatusBadge } from "@/components/ui/status-badge"
 import {
 	useDashboardSummary,
 	useRevenueChart,
 	useSalesRanking,
-} from "@/hooks/useDashboard"
+} from "@/hooks/use-dashboard"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { RevenueChart } from "../components/recharts/revenue-chart"
 import { MetricCard } from "../components/ui/metric-card"
-import { useLoaderData } from "react-router"
 
 export default function DashboardHome() {
 	const loaderData = useLoaderData()
@@ -38,7 +38,7 @@ export default function DashboardHome() {
 	const stats = [
 		{
 			title: "Faturamento Hoje",
-			value: formatCurrency(dashboardSummary?.stats.revenue.current),
+			value: formatCurrency(dashboardSummary?.stats.revenue.current || 0),
 			change: dashboardSummary?.stats.revenue.percentageChange || 0,
 			icon: DollarSign,
 			iconColor: "text-green-600",

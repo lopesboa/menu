@@ -1,59 +1,37 @@
-import { apiFetch } from "@/utils/fetch"
+import {
+	createCategory as createCategoryFromDomain,
+	deleteCategory as deleteCategoryFromDomain,
+	getCategories as getCategoriesFromDomain,
+	getCategoryById as getCategoryByIdFromDomain,
+	updateCategory as updateCategoryFromDomain,
+} from "@/domains/categories/api/categories-api"
+import type {
+	CategoryApi as CategoryApiFromDomain,
+	CreateCategoryPayload as CreateCategoryPayloadFromDomain,
+	UpdateCategoryPayload as UpdateCategoryPayloadFromDomain,
+} from "@/domains/categories/types/category.types"
 
-export interface CategoryApi {
-	id: string
-	organizationId: string
-	name: string
-	description: string | null
-	order: number | null
-	active: boolean
-	createdAt: string
-	updatedAt: string
-}
+export type CategoryApi = CategoryApiFromDomain
+export type CreateCategoryPayload = CreateCategoryPayloadFromDomain
+export type UpdateCategoryPayload = UpdateCategoryPayloadFromDomain
 
-export interface CreateCategoryPayload {
-	organizationId: string
-	name: string
-	description?: string | null
-	order?: number
-	active?: boolean
-}
-
-export interface UpdateCategoryPayload {
-	name?: string
-	description?: string | null
-	order?: number
-	active?: boolean
-}
-
-export function getCategories(
-	organizationId: string,
-	signal?: AbortSignal
-): Promise<CategoryApi[]> {
-	return apiFetch<CategoryApi[]>(`/categories/${organizationId}`, {
-		signal,
-	})
+export function getCategories(organizationId: string, signal?: AbortSignal) {
+	return getCategoriesFromDomain(organizationId, signal)
 }
 
 export function getCategoryById(
 	organizationId: string,
 	catId: string,
 	signal?: AbortSignal
-): Promise<CategoryApi> {
-	return apiFetch<CategoryApi>(`/categories/${organizationId}/${catId}`, {
-		signal,
-	})
+) {
+	return getCategoryByIdFromDomain(organizationId, catId, signal)
 }
 
 export function createCategory(
 	data: CreateCategoryPayload,
 	signal?: AbortSignal
-): Promise<CategoryApi> {
-	return apiFetch<CategoryApi>("/categories", {
-		signal,
-		method: "POST",
-		body: JSON.stringify(data),
-	})
+) {
+	return createCategoryFromDomain(data, signal)
 }
 
 export function updateCategory(
@@ -61,21 +39,14 @@ export function updateCategory(
 	catId: string,
 	data: UpdateCategoryPayload,
 	signal?: AbortSignal
-): Promise<CategoryApi> {
-	return apiFetch<CategoryApi>(`/categories/${organizationId}/${catId}`, {
-		signal,
-		method: "PATCH",
-		body: JSON.stringify(data),
-	})
+) {
+	return updateCategoryFromDomain(organizationId, catId, data, signal)
 }
 
 export function deleteCategory(
 	organizationId: string,
 	catId: string,
 	signal?: AbortSignal
-): Promise<{ success: boolean } | { message: string } | unknown> {
-	return apiFetch(`/categories/${organizationId}/${catId}`, {
-		signal,
-		method: "DELETE",
-	})
+) {
+	return deleteCategoryFromDomain(organizationId, catId, signal)
 }

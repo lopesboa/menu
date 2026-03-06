@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.2/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
   "vcs": {
     "enabled": false,
     "clientKind": "git",
@@ -65,5 +65,64 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["src/domains/**/*.{ts,tsx,js,jsx}"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@/app/**"],
+                    "message": "domains/* nao pode importar app/*. Use app/router para integracao."
+                  },
+                  {
+                    "group": ["@/domains/**"],
+                    "message": "domains/* nao pode importar outro dominio diretamente. Use shared/types ou integracao via app/router."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "src/domains/auth/store/auth-store.ts",
+        "src/domains/tables/ui/pages/tables-page.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/shared/**/*.{ts,tsx,js,jsx}"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["@/app/**", "@/domains/**"],
+                    "message": "shared/* nao pode importar app/* nem domains/*."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "extends": ["ultracite/biome/core", "ultracite/biome/react"]
 }

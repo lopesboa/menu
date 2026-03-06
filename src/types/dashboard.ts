@@ -1,209 +1,39 @@
-export type OrderStatus =
-	| "pending"
-	| "confirmed"
-	| "preparing"
-	| "ready"
-	| "delivered"
-	| "cancelled"
-	| "rejected"
-export type PaymentMethod = "cash" | "credit" | "debit" | "pix" | "meal_voucher"
-export type OrderType = "dine_in" | "takeaway" | "delivery"
-export type TableStatus = "available" | "occupied" | "reserved" | "cleaning"
-export type UserRole = "owner" | "manager" | "cashier" | "kitchen" | "waiter"
-
-export type SubscriptionTier = "free" | "pro" | "enterprise"
-export type SubscriptionStatus = "active" | "cancelled" | "expired" | "trial"
-
-export interface SubscriptionPlan {
-	id: SubscriptionTier
-	name: string
-	price: number
-	interval: "month" | "year"
-	features: string[]
-	limits: {
-		ordersPerMonth: number
-		products: number
-		staff: number
-		locations: number
-		analytics: "basic" | "advanced" | "full"
-	}
-}
-
-export interface Subscription {
-	id: string
-	organizationId: string
-	plan: SubscriptionTier
-	status: SubscriptionStatus
-	currentPeriodStart: Date
-	currentPeriodEnd: Date
-	cancelAtPeriodEnd: boolean
-}
-
-export interface Restaurant {
-	id: string
-	ownerId: string
-	name: string
-	slug: string
-	logo?: string
-	address: string
-	phone: string
-	timezone: string
-	currency: string
-	settings: RestaurantSettings
-	subscription: Subscription
-	createdAt: Date
-	updatedAt: Date
-}
-
-export interface RestaurantSettings {
-	requireCashierApproval: boolean
-	defaultPaymentMethods: PaymentMethod[]
-	taxRate: number
-	invoicePrefix: string
-	theme: "light" | "dark" | "system"
-	timezone: string
-}
-
-export interface User {
-	id: string
-	email: string
-	name: string
-	avatar?: string
-	role: UserRole
-
-	// restaurants: UserRestaurant[]
-	createdAt: Date
-}
-
-export interface UserRestaurant {
-	organizationId: string
-	restaurantName: string
-	role: UserRole
-	isOwner: boolean
-}
-
-export interface MenuItem {
-	id: string
-	organizationId: string
-	name: string
-	description: string
-	price: number | string
-	category: string
-	image: string
-	available: boolean
-	preparationTime: number
-	calories?: number
-	allergens?: string[]
-	recipe?: Recipe
-}
-
-export interface RecipeIngredient {
-	inventoryItemId: string
-	name: string
-	quantity: number
-	unit: string
-}
-
-export interface Recipe {
-	id: string
-	menuItemId: string
-	ingredients: RecipeIngredient[]
-	yield: number
-	instructions?: string
-}
-
-export interface OrderItem {
-	id: string
-	menuItemId: string
-	name: string
-	quantity: number
-	price: number
-	notes?: string
-	status: OrderStatus
-	recipeUsed?: boolean
-}
-
-export interface Order {
-	id: string
-	organizationId: string
-	tableId?: string
-	customerId?: string
-	staffId?: string
-	orderItems: OrderItem[]
-	status: OrderStatus
-	approvalStatus?: "pending" | "approved" | "rejected"
-	approvedBy?: string
-	approvalNotes?: string
-	type: OrderType
-	subtotal: number
-	tax: number
-	discount: number
-	total: number
-	paymentMethod?: PaymentMethod
-	paymentStatus: "pending" | "paid" | "refunded"
-	splitBill?: SplitBill[]
-	createdAt: Date
-	updatedAt: Date
-	customerName?: string
-	notes?: string
-	orderNumber: number
-	itemsCount?: number
-}
-
-export interface SplitBill {
-	id: string
-	amount: number
-	paymentMethod?: PaymentMethod
-	paid: boolean
-}
-
-export interface Table {
-	id: string
-	organizationId: string
-	number: number
-	capacity: number
-	status: TableStatus
-	currentOrderId?: string
-	section: string
-}
-
-export interface Customer {
-	id: string
-	organizationId: string
-	name: string
-	email: string
-	phone: string
-	totalOrders: number
-	totalSpent: number
-	loyaltyPoints: number
-	lastVisit: Date
-	preferences?: string[]
-	avatar?: string
-}
-
-export interface Staff {
-	id: string
-	organizationId: string
-	name: string
-	role: UserRole
-	avatar: string
-	active: boolean
-	pin?: string
-}
-
-export interface InventoryItem {
-	id: string
-	organizationId: string
-	name: string
-	quantity: number
-	unit: string
-	minQuantity: number
-	category: string
-	lastRestocked: Date
-	costPerUnit: number
-	location?: string
-	supplier?: string
-}
+export type {
+	DashboardRevenue,
+	DashboardSummary,
+	RevenueChartPoint as Daum,
+	SalesData,
+	SalesRanking,
+} from "@/app/routes/dashboard/types/dashboard-analytics-types"
+export type { User, UserRestaurant } from "@/domains/auth/types/user-types"
+export type { Customer } from "@/domains/customers/types/customer-types"
+export type { InventoryItem } from "@/domains/inventory/types/inventory-item-types"
+export type { Notification } from "@/domains/notifications/types/notification-types"
+export type {
+	Order,
+	OrderItem,
+	OrderStatus,
+	SplitBill,
+} from "@/domains/orders/types/order.types"
+export type { Cart, CartItem } from "@/domains/pos/types/cart-types"
+export type {
+	Restaurant,
+	RestaurantSettings,
+} from "@/domains/restaurant/types/restaurant-types"
+export type { Table, TableStatus } from "@/domains/tables/types/table.types"
+export type { OrderType, PaymentMethod } from "@/shared/types/commerce-types"
+export type {
+	MenuItem,
+	Recipe,
+	RecipeIngredient,
+} from "@/shared/types/menu-item-types"
+export type {
+	Subscription,
+	SubscriptionPlan,
+	SubscriptionStatus,
+	SubscriptionTier,
+} from "@/shared/types/subscription-types"
+export type { UserRole } from "@/shared/types/user-role-types"
 
 export interface InventoryTransaction {
 	id: string
@@ -216,23 +46,6 @@ export interface InventoryTransaction {
 	createdAt: Date
 }
 
-export interface Notification {
-	id: string
-	type: "info" | "success" | "warning" | "error"
-	title: string
-	message: string
-	read: boolean
-	createdAt: Date
-	actionUrl?: string
-}
-
-export interface SalesData {
-	date: string
-	revenue: number
-	orders: number
-	expenses: number
-}
-
 export interface DashboardMetrics {
 	revenue: number
 	orders: number
@@ -241,114 +54,12 @@ export interface DashboardMetrics {
 	lowStockItems: number
 }
 
-export interface CartItem {
-	menuItem: MenuItem
-	quantity: number
-	notes?: string
-}
-
-export interface Cart {
-	items: CartItem[]
-	customerId?: string
-	tableId?: string
-	type: OrderType
-	notes?: string
-	splitCount?: number
-}
-
-export interface DashboardRevenue {
-	data: Daum[]
-	summary: RevenueSummary
-}
-
-export interface DashboardSummary {
-	stats: Stats
-	recentOrders: RecentOrders
-	tablesStatus: TablesStatus
-	topProducts: TopProduct[]
-	period: Period
-}
-
-export interface SalesRanking {
-	products: ProductRanking[]
-	pagination: Pagination
-}
-
-interface ProductRanking {
-	rank: number
+export interface Staff {
 	id: string
+	organizationId: string
 	name: string
-	category: string
-	price: number
-	quantitySold: number
-	revenue: number
-}
-
-interface Pagination {
-	page: number
-	limit: number
-	total: number
-	totalPages: number
-}
-
-export interface Daum {
-	date: string
-	revenue: number
-	orders: number
-}
-
-interface RevenueSummary {
-	totalRevenue: number
-	percentageChange: number
-}
-
-interface StatsRoot {
-	current: number
-	previous: number
-	percentageChange: number
-}
-
-interface Tables {
-	occupied: number
-	total: number
-	percentageChange: number
-}
-
-interface Stats {
-	revenue: StatsRoot
-	orders: StatsRoot
-	tables: Tables
-}
-
-interface RecentOrders {
-	total: number
-	orders: Order[]
-}
-
-interface TablesStatus {
-	summary: Summary
-	tables: Table[]
-}
-
-interface Summary {
-	available: number
-	occupied: number
-	reserved: number
-	cleaning: number
-	total: number
-}
-
-interface TopProduct {
-	rank: number
-	id: string
-	name: string
-	category: string
-	price: number
-	quantitySold: number
-}
-
-interface Period {
-	days: number
-	startDate: string
-	endDate: string
+	role: import("@/shared/types/user-role-types").UserRole
+	avatar: string
+	active: boolean
+	pin?: string
 }

@@ -15,9 +15,16 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { useNavigate } from "react-router"
-import { useAuth, useAuthAction } from "@/app/store/auth-store"
-import { useBillingStore } from "@/app/store/billingStore"
-import { useNotificationStore } from "@/app/store/notificationStore"
+import { authRoutePaths } from "@/app/routes/auth/manifest"
+import {
+	useAuthActions,
+	useAuthSelectors,
+} from "@/domains/auth/store/auth-store"
+import { useBillingSelectors } from "@/domains/billing/store/billing-store"
+import {
+	useNotificationActions,
+	useNotificationSelectors,
+} from "@/domains/notifications/store/notification-store"
 import { cn } from "@/utils/misc"
 import { dashboardRoutePaths } from "../../manifest"
 import { Notifications } from "./dashboard-notification"
@@ -28,11 +35,12 @@ export function TopBar() {
 	const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-	const { notifications, markAsRead, markAllAsRead, removeNotification } =
-		useNotificationStore()
-	const { user } = useAuth()
-	const { logout } = useAuthAction()
-	const { currentPlan, getNextPlan, getCurrentPlan } = useBillingStore()
+	const { notifications } = useNotificationSelectors()
+	const { markAsRead, markAllAsRead, removeNotification } =
+		useNotificationActions()
+	const { user } = useAuthSelectors()
+	const { logout } = useAuthActions()
+	const { currentPlan, getNextPlan, getCurrentPlan } = useBillingSelectors()
 
 	const navigate = useNavigate()
 
@@ -61,7 +69,11 @@ export function TopBar() {
 	const handleOnLogout = () => {
 		logout()
 		setIsUserMenuOpen(false)
-		navigate("/login")
+		navigate(authRoutePaths.login)
+	}
+
+	const handleCloseUserMenu = () => {
+		setIsUserMenuOpen(false)
 	}
 
 	return (
@@ -149,7 +161,9 @@ export function TopBar() {
 										<img
 											alt={user.name}
 											className="h-8 w-8 rounded-lg object-cover"
+											height={32}
 											src={user.avatar}
+											width={32}
 										/>
 									) : (
 										<span className="font-semibold text-sm text-white">
@@ -171,9 +185,11 @@ export function TopBar() {
 							<AnimatePresence>
 								{isUserMenuOpen && (
 									<>
-										<div
+										<button
+											aria-label="Fechar menu de usuário"
 											className="fixed inset-0 z-40"
-											onClick={() => setIsUserMenuOpen(false)}
+											onClick={handleCloseUserMenu}
+											type="button"
 										/>
 										<motion.div
 											animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -188,7 +204,9 @@ export function TopBar() {
 															<img
 																alt={user.name}
 																className="h-10 w-10 rounded-lg object-cover"
+																height={40}
 																src={user.avatar}
+																width={40}
 															/>
 														) : (
 															<span className="font-bold text-white">
@@ -360,7 +378,7 @@ export function TopBar() {
 									onClick={() => {
 										logout()
 										setIsMobileMenuOpen(false)
-										navigate("/login")
+										navigate(authRoutePaths.login)
 									}}
 									type="button"
 								>

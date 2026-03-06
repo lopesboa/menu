@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
 import { Award, Mail, Phone, Search, ShoppingBag, Star } from "lucide-react"
 import { useState } from "react"
+import { customers } from "@/app/routes/dashboard/data/mock-data"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
-import { customers } from "../data/mockData"
 
 export function CustomersPage() {
 	const [searchQuery, setSearchQuery] = useState("")

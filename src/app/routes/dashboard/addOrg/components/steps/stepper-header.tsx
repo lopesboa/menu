@@ -1,6 +1,9 @@
 import { Icon } from "@iconify-icon/react"
 import { useEffect } from "react"
-import { useStepper, useStepperAction } from "@/app/store/stepper-store"
+import {
+	useStepperActions,
+	useStepperSelectors,
+} from "@/domains/onboarding/store/stepper-store"
 import { cn } from "@/utils/misc"
 
 interface Step {
@@ -16,8 +19,8 @@ export function StepperHeader({
 	steps,
 	allowClickNavigation = true,
 }: StepperHeaderProps) {
-	const { setCurrentStep, setTotalSteps } = useStepperAction()
-	const { currentStep } = useStepper()
+	const { setCurrentStep, setTotalSteps } = useStepperActions()
+	const { currentStep } = useStepperSelectors()
 
 	useEffect(() => {
 		setTotalSteps(steps.length)

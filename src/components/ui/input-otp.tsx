@@ -1,4 +1,3 @@
-import { Icon } from "@iconify-icon/react"
 import { OTPInput, OTPInputContext } from "input-otp"
 import { useContext } from "react"
 import { cn } from "@/utils/misc"
@@ -64,11 +63,16 @@ function InputOTPSlot({
 	)
 }
 
-function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
+function InputOTPSeparator({
+	className,
+	...props
+}: React.ComponentProps<"hr">) {
 	return (
-		<div data-slot="input-otp-separator" role="separator" {...props}>
-			<Icon icon="lucide:minus" />
-		</div>
+		<hr
+			className={cn("h-px w-3 border-none bg-transparent", className)}
+			data-slot="input-otp-separator"
+			{...props}
+		/>
 	)
 }
 

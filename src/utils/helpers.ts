@@ -1,8 +1,8 @@
 import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns"
 import { ptBR } from "date-fns/locale"
 
-export function formatCurrency(value: number | undefined): string {
-	if (!value) {
+export function formatCurrency(value: number): string {
+	if (!Number.isFinite(value)) {
 		return new Intl.NumberFormat("pt-BR", {
 			style: "currency",
 			currency: "BRL",

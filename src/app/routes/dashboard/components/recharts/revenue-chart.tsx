@@ -9,11 +9,11 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts"
+import type { RevenueChartPoint } from "@/app/routes/dashboard/types/dashboard-analytics-types"
 import { ErrorBoundary } from "@/components/error-boundary"
-import type { Daum } from "@/types/dashboard"
 
 interface RevenueChartProps {
-	data: Daum[]
+	data: RevenueChartPoint[]
 	showOrders?: boolean
 }
 

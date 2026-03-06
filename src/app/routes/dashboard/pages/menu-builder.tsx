@@ -2,13 +2,13 @@ import { motion } from "framer-motion"
 import { Edit, Grid, List, Plus, Search, Trash2 } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
+import { menuItems } from "@/app/routes/dashboard/data/mock-data"
 import { Modal } from "@/components/ui/modal"
-import { useCategories } from "@/hooks/use-categories"
-import { useOrganizationCheck } from "@/hooks/useOrganizationCheck"
+import { useCategories } from "@/domains/categories/hooks/use-categories"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
-import { menuItems } from "../data/mockData"
 
 export function MenuBuilderPage() {
 	const [searchQuery, setSearchQuery] = useState("")
@@ -207,7 +207,7 @@ export function MenuBuilderPage() {
 											</p>
 										</div>
 										<span className="font-bold text-primary-600">
-											{formatCurrency(item.price)}
+											{formatCurrency(+item.price)}
 										</span>
 									</div>
 									<p className="mt-2 line-clamp-2 text-sm text-surface-600">
@@ -260,7 +260,7 @@ export function MenuBuilderPage() {
 										<p className="text-sm text-surface-500">{item.category}</p>
 									</div>
 									<span className="font-bold text-primary-600">
-										{formatCurrency(item.price)}
+										{formatCurrency(+item.price)}
 									</span>
 									<div className="flex gap-1">
 										<button

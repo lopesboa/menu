@@ -1,6 +1,6 @@
 import { Icon } from "@iconify-icon/react"
-import { Button } from "@/components"
 import { Field } from "@/components/form"
+import { Button } from "@/components/ui/button"
 
 export default function ChangePassword() {
 	return (

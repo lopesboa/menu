@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router"
 import { Button } from "@/components/ui/button"
+import { authRoutePaths } from "../auth/manifest"
 
 export function AuthErrorPage() {
 	const navigate = useNavigate()
 
 	const handleLogin = () => {
-		navigate("/login")
+		navigate(authRoutePaths.login)
 	}
 
 	return (

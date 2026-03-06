@@ -1,6 +1,13 @@
-import type { Order, OrderStatus } from "@/types/dashboard"
-import type { OrderFilter, OrderStatsResponse } from "@/types/orders"
-import { apiFetch } from "@/utils/fetch"
+import {
+	createOrder as domainCreateOrder,
+	getOrderByOrderId as domainGetOrderByOrderId,
+	getOrderStats as domainGetOrderStats,
+	getOrders as domainGetOrders,
+	updateOrderApproval as domainUpdateOrderApproval,
+	updateOrderStatus as domainUpdateOrderStatus,
+} from "@/domains/orders/api/orders-api"
+import type { OrderStatus } from "@/domains/orders/types/order.types"
+import type { OrderFilter } from "@/domains/orders/types/order-query.types"
 
 const ORG_ID = "ddf490e6-c0f1-4f36-a19b-e6443bd1b7cd"
 
@@ -10,44 +17,25 @@ export function getOrders(
 	count = 20,
 	signal?: AbortSignal
 ) {
-	const params = new URLSearchParams()
-
-	if (filters?.status) {
-		params.append("status", filters.status)
-	}
-	if (filters?.orderType) {
-		params.append("orderType", filters.orderType)
-	}
-	if (filters?.startDate) {
-		params.append("startDate", filters.startDate)
-	}
-	if (filters?.endDate) {
-		params.append("endDate", filters.endDate)
-	}
-
-	params.append("limit", count.toString())
-	params.append("offset", page.toString())
-
-	const queryString = params.toString()
-	const endpoint = `/orders/${ORG_ID}${queryString ? `?${queryString}` : ""}`
-
-	return apiFetch<Order[]>(endpoint, { signal })
+	return domainGetOrders({
+		organizationId: ORG_ID,
+		filters,
+		page,
+		count,
+		signal,
+	})
 }
 
 export function getOrderStats(signal?: AbortSignal) {
-	return apiFetch<OrderStatsResponse>(`/orders/${ORG_ID}/stats`, { signal })
+	return domainGetOrderStats(ORG_ID, signal)
 }
 
 export function getOrderByOrderId(orderId: string, signal?: AbortSignal) {
-	return apiFetch(`/orders/${ORG_ID}/${orderId}`, { signal })
+	return domainGetOrderByOrderId(ORG_ID, orderId, signal)
 }
 
 export function createOrder(data: unknown, signal?: AbortSignal) {
-	return apiFetch("/orders", {
-		signal,
-		method: "POST",
-		body: JSON.stringify(data),
-	})
+	return domainCreateOrder(data, signal)
 }
 
 export function updateOrderStatus(
@@ -55,11 +43,7 @@ export function updateOrderStatus(
 	orderId: string,
 	signal?: AbortSignal
 ) {
-	return apiFetch(`/orders/${ORG_ID}/${orderId}/status`, {
-		signal,
-		method: "PATCH",
-		body: JSON.stringify({ status }),
-	})
+	return domainUpdateOrderStatus(ORG_ID, status, orderId, signal)
 }
 
 export function updateOrderApproval(
@@ -70,9 +54,5 @@ export function updateOrderApproval(
 	orderId: string,
 	signal?: AbortSignal
 ) {
-	return apiFetch(`/orders/${ORG_ID}/${orderId}/approval`, {
-		signal,
-		method: "PATCH",
-		body: JSON.stringify(body),
-	})
+	return domainUpdateOrderApproval(ORG_ID, body, orderId, signal)
 }

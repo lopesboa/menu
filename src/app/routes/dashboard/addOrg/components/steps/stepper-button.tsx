@@ -1,12 +1,12 @@
 import { Icon } from "@iconify-icon/react"
-import { useStepperAction } from "@/app/store/stepper-store"
-import { Button } from "@/components"
+import { Button } from "@/components/ui/button"
+import { useStepperActions } from "@/domains/onboarding/store/stepper-store"
 import { cn } from "@/utils/misc"
 
 export function StepperNextButton({
 	children,
 }: React.ComponentProps<"button">) {
-	const { goToNext } = useStepperAction()
+	const { goToNext } = useStepperActions()
 
 	const handleClick = () => {
 		goToNext()
@@ -32,7 +32,7 @@ export function StepperNextButton({
 export function StepperPreviousButton({
 	children,
 }: React.ComponentProps<"button">) {
-	const { goToPrevious } = useStepperAction()
+	const { goToPrevious } = useStepperActions()
 
 	const handleClick = () => {
 		goToPrevious()

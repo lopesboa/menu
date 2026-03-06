@@ -2,7 +2,8 @@ import type {
 	DashboardRevenue,
 	DashboardSummary,
 	SalesRanking,
-} from "@/types/dashboard"
+} from "@/app/routes/dashboard/types/dashboard-analytics-types"
+
 import { apiFetch } from "@/utils/fetch"
 
 export function getDashboardSummary(
@@ -16,17 +17,17 @@ export function getDashboardSummary(
 }
 
 export function getDashboardRevenueChart(
-	organizationI: string,
+	organizationId: string,
 	days = 1,
 	signal?: AbortSignal
 ) {
-	const endpoint = `/dashboard/${organizationI}/revenue-chart?days=${days}`
+	const endpoint = `/dashboard/${organizationId}/revenue-chart?days=${days}`
 
 	return apiFetch<DashboardRevenue>(endpoint, { signal })
 }
 
 export function getDashboardSalesRanking(
-	organizationI: string,
+	organizationId: string,
 	days = 1,
 	page = 0,
 	count = 20,
@@ -39,7 +40,7 @@ export function getDashboardSalesRanking(
 	params.append("days", days.toString())
 
 	const queryString = params.toString()
-	const endpoint = `/dashboard/${organizationI}/sales-ranking${queryString ? `?${queryString}` : ""}`
+	const endpoint = `/dashboard/${organizationId}/sales-ranking${queryString ? `?${queryString}` : ""}`
 
 	return apiFetch<SalesRanking>(endpoint, { signal })
 }

@@ -5,7 +5,7 @@
 import { motion } from "framer-motion"
 import { Bell, X } from "lucide-react"
 import type { MouseEventHandler } from "react"
-import type { Notification } from "@/types/dashboard"
+import type { Notification } from "@/domains/notifications/types/notification-types"
 import { cn } from "@/utils/misc"
 
 interface NotificationProps {

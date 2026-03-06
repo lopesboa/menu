@@ -1,4 +1,4 @@
-import { useStepper } from "@/app/store/stepper-store"
+import { useStepperSelectors } from "@/domains/onboarding/store/stepper-store"
 import { cn } from "@/utils/misc"
 
 type StepContentProps = React.ComponentProps<"div"> & {
@@ -6,7 +6,7 @@ type StepContentProps = React.ComponentProps<"div"> & {
 }
 
 export function StepContent({ step, className, ...props }: StepContentProps) {
-	const { currentStep } = useStepper()
+	const { currentStep } = useStepperSelectors()
 
 	if (currentStep !== step) {
 		return null
