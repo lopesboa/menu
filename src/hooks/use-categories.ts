@@ -1,130 +1,42 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { categoriesQueryKeys } from "@/domains/categories/hooks/categories-query-keys"
 import {
-	type CategoryApi,
-	type CreateCategoryPayload,
-	createCategory,
-	deleteCategory,
-	getCategories,
-	getCategoryById,
-	type UpdateCategoryPayload,
-	updateCategory,
-} from "@/services/category-service"
+	useCategories as useCategoriesFromDomain,
+	useCategoryById as useCategoryByIdFromDomain,
+	useCreateCategory as useCreateCategoryFromDomain,
+	useDeleteCategory as useDeleteCategoryFromDomain,
+	useUpdateCategory as useUpdateCategoryFromDomain,
+} from "@/domains/categories/hooks/use-categories"
+import type {
+	CategoryApi as CategoryApiFromDomain,
+	CreateCategoryPayload as CreateCategoryPayloadFromDomain,
+	UpdateCategoryPayload as UpdateCategoryPayloadFromDomain,
+} from "@/domains/categories/types/category.types"
 
-export const categoryQueryKeys = {
-	all: (): ["categories"] => ["categories"],
-	list: (
-		organizationId: string | null | undefined
-	): ["categories", "list", { organizationId: string | null | undefined }] => [
-		...categoryQueryKeys.all(),
-		"list",
-		{ organizationId },
-	],
-	one: (
-		organizationId: string | null | undefined,
-		catId: string | null | undefined
-	): [
-		"categories",
-		"one",
-		{ organizationId: string | null | undefined },
-		{ catId: string | null | undefined },
-	] => [...categoryQueryKeys.all(), "one", { organizationId }, { catId }],
-}
+export type CategoryApi = CategoryApiFromDomain
+export type CreateCategoryPayload = CreateCategoryPayloadFromDomain
+export type UpdateCategoryPayload = UpdateCategoryPayloadFromDomain
+
+export const categoryQueryKeys = categoriesQueryKeys
 
 export function useCategories(organizationId: string | null | undefined) {
-	return useQuery<CategoryApi[]>({
-		queryKey: categoryQueryKeys.list(organizationId),
-		queryFn: ({ signal }) => getCategories(organizationId as string, signal),
-		enabled: Boolean(organizationId),
-	})
+	return useCategoriesFromDomain(organizationId)
 }
 
 export function useCategoryById(
 	organizationId: string | null | undefined,
 	catId: string | null | undefined
 ) {
-	return useQuery<CategoryApi>({
-		queryKey: categoryQueryKeys.one(organizationId, catId),
-		queryFn: ({ signal }) =>
-			getCategoryById(organizationId as string, catId as string, signal),
-		enabled: Boolean(organizationId && catId),
-	})
+	return useCategoryByIdFromDomain(organizationId, catId)
 }
 
 export function useCreateCategory() {
-	const queryClient = useQueryClient()
-
-	return useMutation({
-		mutationFn: ({
-			data,
-			signal,
-		}: {
-			data: CreateCategoryPayload
-			signal?: AbortSignal
-		}) => createCategory(data, signal),
-		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoryQueryKeys.list(dataOrganizationId(variables.data)),
-			})
-		},
-	})
+	return useCreateCategoryFromDomain()
 }
 
 export function useUpdateCategory() {
-	const queryClient = useQueryClient()
-
-	return useMutation({
-		mutationFn: ({
-			organizationId,
-			catId,
-			data,
-			signal,
-		}: {
-			organizationId: string
-			catId: string
-			data: UpdateCategoryPayload
-			signal?: AbortSignal
-		}) => updateCategory(organizationId, catId, data, signal),
-		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoryQueryKeys.list(variables.organizationId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: categoryQueryKeys.one(
-					variables.organizationId,
-					variables.catId
-				),
-			})
-		},
-	})
+	return useUpdateCategoryFromDomain()
 }
 
 export function useDeleteCategory() {
-	const queryClient = useQueryClient()
-
-	return useMutation({
-		mutationFn: ({
-			organizationId,
-			catId,
-			signal,
-		}: {
-			organizationId: string
-			catId: string
-			signal?: AbortSignal
-		}) => deleteCategory(organizationId, catId, signal),
-		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoryQueryKeys.list(variables.organizationId),
-			})
-			queryClient.removeQueries({
-				queryKey: categoryQueryKeys.one(
-					variables.organizationId,
-					variables.catId
-				),
-			})
-		},
-	})
-}
-
-function dataOrganizationId(data: CreateCategoryPayload): string {
-	return data.organizationId
+	return useDeleteCategoryFromDomain()
 }
