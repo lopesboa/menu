@@ -1,19 +1,7 @@
-export interface OrderFilter {
-	status?: string
-	orderType?: string
-	startDate?: string
-	endDate?: string
-	limit?: number
-	offset?: number
-}
+import type {
+	OrderFilter as DomainOrderFilter,
+	OrderStatsResponse as DomainOrderStatsResponse,
+} from "@/domains/orders/types/order-query.types"
 
-export interface OrderStatsResponse {
-	totalOrders: number
-	totalRevenue: string
-	pendingOrders: number
-	preparingOrders: number
-	readyOrders: number
-	deliveredOrders: number
-	cancelledOrders: number
-	activeOrders: number
-}
+export type OrderFilter = DomainOrderFilter
+export type OrderStatsResponse = DomainOrderStatsResponse

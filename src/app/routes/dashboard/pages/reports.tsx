@@ -12,14 +12,16 @@ import {
 	menuItems,
 	salesData,
 } from "@/app/routes/dashboard/data/mock-data"
-import { useOrderStats } from "@/hooks/use-orders"
+import { useOrderStats } from "@/domains/orders/hooks/use-orders"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { BarChartComponent } from "../components/recharts/bar-chart"
 import { DonutChart } from "../components/recharts/donut-chart"
 
 export function ReportsPage() {
-	const { data: stats } = useOrderStats()
+	const { organizationId } = useOrganizationCheck()
+	const { data: stats } = useOrderStats(organizationId)
 
 	const topProducts = menuItems
 		.map((item) => ({
