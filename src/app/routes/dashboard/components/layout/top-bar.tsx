@@ -16,9 +16,15 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { authRoutePaths } from "@/app/routes/auth/manifest"
-import { useAuth, useAuthAction } from "@/app/store/auth-store"
-import { useBillingStore } from "@/app/store/billing-store"
-import { useNotificationStore } from "@/app/store/notification-store"
+import {
+	useAuthActions,
+	useAuthSelectors,
+} from "@/domains/auth/store/auth-store"
+import { useBillingSelectors } from "@/domains/billing/store/billing-store"
+import {
+	useNotificationActions,
+	useNotificationSelectors,
+} from "@/domains/notifications/store/notification-store"
 import { cn } from "@/utils/misc"
 import { dashboardRoutePaths } from "../../manifest"
 import { Notifications } from "./dashboard-notification"
@@ -29,11 +35,12 @@ export function TopBar() {
 	const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-	const { notifications, markAsRead, markAllAsRead, removeNotification } =
-		useNotificationStore()
-	const { user } = useAuth()
-	const { logout } = useAuthAction()
-	const { currentPlan, getNextPlan, getCurrentPlan } = useBillingStore()
+	const { notifications } = useNotificationSelectors()
+	const { markAsRead, markAllAsRead, removeNotification } =
+		useNotificationActions()
+	const { user } = useAuthSelectors()
+	const { logout } = useAuthActions()
+	const { currentPlan, getNextPlan, getCurrentPlan } = useBillingSelectors()
 
 	const navigate = useNavigate()
 
