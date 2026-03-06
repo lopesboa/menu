@@ -1,9 +1,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { authClient } from "@/lib/client"
 
+export const organizationQueryKeys = {
+	all: ["organization"] as const,
+	session: () => [...organizationQueryKeys.all, "session"] as const,
+}
+
 export function useOrganizationCheck() {
 	const { data, isLoading, error } = useQuery({
-		queryKey: ["session"],
+		queryKey: organizationQueryKeys.session(),
 		queryFn: async () => {
 			const result = await authClient.getSession()
 			return result.data?.session

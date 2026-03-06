@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { sentryCaptureException } from "@/lib/sentry"
 import { updateOrderApproval, updateOrderStatus } from "../api/orders-api"
 import type { OrderStatus } from "../types/order.types"
-import { ordersQueryKeys } from "./orders-query-keys"
+import { invalidateOrdersCache, ordersQueryKeys } from "./orders-query-keys"
 
 export function useOrderActions(organizationId: string | null) {
 	const queryClient = useQueryClient()
 
 	const statusMutation = useMutation({
+		mutationKey: ordersQueryKeys.mutations.status(organizationId),
 		mutationFn: ({
 			orderId,
 			status,
@@ -15,19 +17,20 @@ export function useOrderActions(organizationId: string | null) {
 			status: OrderStatus
 		}) => updateOrderStatus(organizationId as string, status, orderId),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.lists(organizationId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.detail(organizationId, variables.orderId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.stats(organizationId),
+			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
+		},
+		onError: (error, variables) => {
+			sentryCaptureException(error, {
+				context: "orders_update_status",
+				organizationId,
+				orderId: variables.orderId,
+				status: variables.status,
 			})
 		},
 	})
 
 	const approvalMutation = useMutation({
+		mutationKey: ordersQueryKeys.mutations.approval(organizationId),
 		mutationFn: ({
 			orderId,
 			approvalStatus,
@@ -43,14 +46,14 @@ export function useOrderActions(organizationId: string | null) {
 				orderId
 			),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.lists(organizationId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.detail(organizationId, variables.orderId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: ordersQueryKeys.stats(organizationId),
+			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
+		},
+		onError: (error, variables) => {
+			sentryCaptureException(error, {
+				context: "orders_update_approval",
+				organizationId,
+				orderId: variables.orderId,
+				approvalStatus: variables.approvalStatus,
 			})
 		},
 	})
