@@ -1,5 +1,6 @@
 import { create } from "zustand"
-import type { Restaurant, SubscriptionTier } from "@/types/dashboard"
+import type { SubscriptionTier } from "@/shared/types/subscription-types"
+import type { Restaurant } from "../types/restaurant-types"
 
 interface RestaurantState {
 	activeRestaurant: Restaurant | null

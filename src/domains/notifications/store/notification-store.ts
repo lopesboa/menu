@@ -1,6 +1,6 @@
 import { create } from "zustand"
-import type { Notification } from "@/types/dashboard"
 import { generateId } from "@/utils/helpers"
+import type { Notification } from "../types/notification-types"
 
 interface NotificationStore {
 	notifications: Notification[]

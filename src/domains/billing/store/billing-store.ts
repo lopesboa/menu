@@ -1,5 +1,8 @@
 import { create } from "zustand"
-import type { SubscriptionPlan, SubscriptionTier } from "@/types/dashboard"
+import type {
+	SubscriptionPlan,
+	SubscriptionTier,
+} from "@/shared/types/subscription-types"
 
 export const subscriptionPlans: SubscriptionPlan[] = [
 	{
