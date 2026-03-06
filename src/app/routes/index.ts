@@ -23,7 +23,7 @@ const Account = lazy(() => import("./dashboard/pages/account"))
 const Orders = lazy(() => import("@/domains/orders/ui/pages/orders-page"))
 const POS = lazy(() => import("./dashboard/pages/pos"))
 const Settings = lazy(() => import("./dashboard/pages/settings"))
-const Tables = lazy(() => import("./dashboard/pages/tables"))
+const Tables = lazy(() => import("@/domains/tables/ui/pages/tables-page"))
 const Sales = lazy(() =>
 	import("./dashboard/pages/sales").then((module) => ({
 		default: module.SalesPage,

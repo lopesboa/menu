@@ -19,3 +19,12 @@
 - Nome canonico de exports de escrita: `use<Domain>Actions`.
 - Durante migracao, aliases legados (`useAuth`, `useAuthAction`, etc.) podem
   existir apenas em adaptadores de compatibilidade.
+
+## Branches e PRs
+
+- Padrao de branch: `issueNumber/descricao-curta`.
+- Nao usar apenas `issueNumber/` como nome de branch.
+- Exemplo correto para multiplas PRs na mesma issue:
+  - `37/updates_orders_query_keys`
+  - `37/updates_orders_ui_states`
+- Preferir PRs pequenas e sequenciais para a mesma issue quando necessario.
