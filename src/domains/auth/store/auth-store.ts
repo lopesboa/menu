@@ -3,7 +3,7 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 import { dashboardRoutePaths } from "@/app/routes/dashboard/manifest"
 import { authClient } from "@/lib/client"
-import type { User } from "@/types/dashboard"
+import type { User } from "../types/user-types"
 
 interface AuthState {
 	user: User | null

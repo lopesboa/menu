@@ -22,7 +22,7 @@ import { useCartStore } from "@/domains/pos/store/cart-store"
 import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
-import type { PaymentMethod } from "@/types/dashboard"
+import type { PaymentMethod } from "@/shared/types/commerce-types"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 

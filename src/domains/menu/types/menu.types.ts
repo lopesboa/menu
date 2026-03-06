@@ -1,1 +1,1 @@
-export type { MenuItem } from "@/types/dashboard"
+export type { MenuItem } from "@/shared/types/menu-item-types"
