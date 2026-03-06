@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import type { MenuItem } from "@/types/dashboard"
+import type { MenuItem } from "../types/menu.types"
 
 interface MenuStore {
 	menuItems: MenuItem[]

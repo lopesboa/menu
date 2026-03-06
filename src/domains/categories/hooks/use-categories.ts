@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { sentryCaptureException } from "@/lib/sentry"
 import {
 	createCategory,
 	deleteCategory,
@@ -11,7 +12,10 @@ import type {
 	CreateCategoryPayload,
 	UpdateCategoryPayload,
 } from "../types/category.types"
-import { categoriesQueryKeys } from "./categories-query-keys"
+import {
+	categoriesQueryKeys,
+	invalidateCategoriesCache,
+} from "./categories-query-keys"
 
 export function useCategories(organizationId: string | null | undefined) {
 	return useQuery<CategoryApi[]>({
@@ -37,6 +41,7 @@ export function useCreateCategory() {
 	const queryClient = useQueryClient()
 
 	return useMutation({
+		mutationKey: categoriesQueryKeys.mutations.create(undefined),
 		mutationFn: ({
 			data,
 			signal,
@@ -45,8 +50,12 @@ export function useCreateCategory() {
 			signal?: AbortSignal
 		}) => createCategory(data, signal),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoriesQueryKeys.list(variables.data.organizationId),
+			invalidateCategoriesCache(queryClient, variables.data.organizationId)
+		},
+		onError: (error, variables) => {
+			sentryCaptureException(error, {
+				context: "categories_create",
+				organizationId: variables.data.organizationId,
 			})
 		},
 	})
@@ -56,6 +65,7 @@ export function useUpdateCategory() {
 	const queryClient = useQueryClient()
 
 	return useMutation({
+		mutationKey: categoriesQueryKeys.mutations.update(undefined),
 		mutationFn: ({
 			organizationId,
 			catId,
@@ -68,14 +78,17 @@ export function useUpdateCategory() {
 			signal?: AbortSignal
 		}) => updateCategory(organizationId, catId, data, signal),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoriesQueryKeys.list(variables.organizationId),
-			})
-			queryClient.invalidateQueries({
-				queryKey: categoriesQueryKeys.one(
-					variables.organizationId,
-					variables.catId
-				),
+			invalidateCategoriesCache(
+				queryClient,
+				variables.organizationId,
+				variables.catId
+			)
+		},
+		onError: (error, variables) => {
+			sentryCaptureException(error, {
+				context: "categories_update",
+				organizationId: variables.organizationId,
+				catId: variables.catId,
 			})
 		},
 	})
@@ -85,6 +98,7 @@ export function useDeleteCategory() {
 	const queryClient = useQueryClient()
 
 	return useMutation({
+		mutationKey: categoriesQueryKeys.mutations.remove(undefined),
 		mutationFn: ({
 			organizationId,
 			catId,
@@ -95,14 +109,19 @@ export function useDeleteCategory() {
 			signal?: AbortSignal
 		}) => deleteCategory(organizationId, catId, signal),
 		onSuccess: (_, variables) => {
-			queryClient.invalidateQueries({
-				queryKey: categoriesQueryKeys.list(variables.organizationId),
-			})
+			invalidateCategoriesCache(queryClient, variables.organizationId)
 			queryClient.removeQueries({
 				queryKey: categoriesQueryKeys.one(
 					variables.organizationId,
 					variables.catId
 				),
+			})
+		},
+		onError: (error, variables) => {
+			sentryCaptureException(error, {
+				context: "categories_delete",
+				organizationId: variables.organizationId,
+				catId: variables.catId,
 			})
 		},
 	})

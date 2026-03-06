@@ -6,37 +6,32 @@ import {
 } from "@/services/dashboard-service"
 
 export const dashboardQueryKeys = {
-	all: () => ["summary"],
-	getDashboardSummary: (organizationI: string, days?: number) => [
-		...dashboardQueryKeys.all(),
-		"dashboard-summary",
-		{ organizationI },
-		{ days },
+	all: ["dashboard"] as const,
+	summary: (organizationId: string, days?: number) => [
+		...dashboardQueryKeys.all,
+		"summary",
+		{ organizationId, days },
 	],
-	getDashboardRevenueChart: (organizationI: string, days?: number) => [
-		...dashboardQueryKeys.all(),
+	revenueChart: (organizationId: string, days?: number) => [
+		...dashboardQueryKeys.all,
 		"revenue-chart",
-		{ organizationI },
-		{ days },
+		{ organizationId, days },
 	],
-	getDashboardSalesRanking: (
-		organizationI: string,
+	salesRanking: (
+		organizationId: string,
 		days?: number,
 		page?: number,
 		count?: number
 	) => [
-		...dashboardQueryKeys.all(),
+		...dashboardQueryKeys.all,
 		"sales-ranking",
-		{ organizationI },
-		{ days },
-		{ page },
-		{ count },
+		{ organizationId, days, page, count },
 	],
 }
 
 export function useDashboardSummary(organizationId: string, days?: number) {
 	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardSummary(organizationId, days),
+		queryKey: dashboardQueryKeys.summary(organizationId, days),
 		queryFn: ({ signal }) => getDashboardSummary(organizationId, days, signal),
 		refetchInterval: 30_000,
 		staleTime: 10_000,
@@ -45,23 +40,28 @@ export function useDashboardSummary(organizationId: string, days?: number) {
 	})
 }
 
-export function useRevenueChart(organizationI: string, days?: number) {
+export function useRevenueChart(organizationId: string, days?: number) {
 	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardRevenueChart(organizationI, days),
+		queryKey: dashboardQueryKeys.revenueChart(organizationId, days),
 		queryFn: ({ signal }) =>
-			getDashboardRevenueChart(organizationI, days, signal),
+			getDashboardRevenueChart(organizationId, days, signal),
 	})
 }
 
 export function useSalesRanking(
-	organizationI: string,
+	organizationId: string,
 	days?: number,
 	page?: number,
 	count?: number
 ) {
 	return useQuery({
-		queryKey: dashboardQueryKeys.getDashboardSalesRanking(organizationI, days),
+		queryKey: dashboardQueryKeys.salesRanking(
+			organizationId,
+			days,
+			page,
+			count
+		),
 		queryFn: ({ signal }) =>
-			getDashboardSalesRanking(organizationI, days, page, count, signal),
+			getDashboardSalesRanking(organizationId, days, page, count, signal),
 	})
 }
