@@ -2,29 +2,34 @@
 
 ## Arquivos
 
-- Usar `kebab-case` para todos os arquivos (`app.tsx`, `use-orders.ts`, `order-store.ts`).
+- Usar `kebab-case` para todos os arquivos.
 - Stores devem seguir `*-store.ts`.
 - Hooks devem seguir `use-*.ts`.
+- Tipos de dominio devem seguir `*.types.ts` quando aplicavel.
 
 ## Identificadores
 
-- Componentes React em `PascalCase` (`Button`, `DashboardHome`).
-- Hooks em `camelCase` com prefixo `use` (`useOrders`, `useOrderActions`).
-- Utils em `camelCase` (`formatCurrency`, `sanitizeAuthRedirectPath`).
-- Types e interfaces em `PascalCase` (`User`, `AuthState`).
+- Componentes React em `PascalCase`.
+- Hooks em `camelCase` com prefixo `use`.
+- Helpers e utils em `camelCase`.
+- Tipos e interfaces em `PascalCase`.
 
-## Stores Zustand
+## Estado (Zustand)
 
-- Nome canonico de exports de leitura: `use<Domain>Selectors`.
-- Nome canonico de exports de escrita: `use<Domain>Actions`.
-- Durante migracao, aliases legados (`useAuth`, `useAuthAction`, etc.) podem
-  existir apenas em adaptadores de compatibilidade.
+- Exports canonicos de leitura: `use<Domain>Selectors`.
+- Exports canonicos de escrita: `use<Domain>Actions`.
+- Store principal: `use<Domain>Store`.
+- Nao criar novos aliases legados (`useAuth`, `useAuthAction`, etc).
+
+## Imports
+
+- Preferir alias absoluto `@/`.
+- Importar direto do modulo canonico (ex.: `@/hooks/use-posthog`).
+- Nao usar barrel para esconder ownership de modulo.
+- Nao criar wrappers de compatibilidade em `src/app/store/*`.
 
 ## Branches e PRs
 
 - Padrao de branch: `issueNumber/descricao-curta`.
-- Nao usar apenas `issueNumber/` como nome de branch.
-- Exemplo correto para multiplas PRs na mesma issue:
-  - `37/updates_orders_query_keys`
-  - `37/updates_orders_ui_states`
-- Preferir PRs pequenas e sequenciais para a mesma issue quando necessario.
+- Exemplo: `42/limpeza-orfaos-e-docs`.
+- Preferir PRs pequenos e com escopo unico.
