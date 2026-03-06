@@ -1,27 +1,62 @@
 import { motion } from "framer-motion"
 import { Award, Mail, Phone, Search, ShoppingBag, Star } from "lucide-react"
-import { useState } from "react"
-import { customers } from "@/app/routes/dashboard/data/mock-data"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
+import { useCustomers } from "@/domains/customers/hooks/use-customers"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 
 export function CustomersPage() {
 	const [searchQuery, setSearchQuery] = useState("")
+	const { organizationId } = useOrganizationCheck()
+	const {
+		data: customers = [],
+		error: customersError,
+		isError: isCustomersError,
+		isLoading: isCustomersLoading,
+		refetch: refetchCustomers,
+	} = useCustomers(organizationId)
+	const hasNotifiedCustomersError = useRef(false)
 
-	const filteredCustomers = customers.filter((customer) => {
-		if (searchQuery) {
-			const query = searchQuery.toLowerCase()
-			return (
-				customer.name.toLowerCase().includes(query) ||
-				customer.email.toLowerCase().includes(query) ||
-				customer.phone.includes(query)
-			)
+	useEffect(() => {
+		if (
+			!(isCustomersError && customersError) ||
+			hasNotifiedCustomersError.current
+		) {
+			if (!isCustomersError) {
+				hasNotifiedCustomersError.current = false
+			}
+			return
 		}
-		return true
-	})
 
-	const topCustomers = [...customers]
-		.sort((a, b) => b.totalSpent - a.totalSpent)
-		.slice(0, 5)
+		hasNotifiedCustomersError.current = true
+		toast.error("Falha ao carregar os clientes")
+		sentryCaptureException(customersError, {
+			context: "customers_list_fetch",
+			organizationId,
+		})
+	}, [isCustomersError, customersError, organizationId])
+
+	const filteredCustomers = useMemo(() => {
+		return customers.filter((customer) => {
+			if (searchQuery) {
+				const query = searchQuery.toLowerCase()
+				return (
+					customer.name.toLowerCase().includes(query) ||
+					customer.email.toLowerCase().includes(query) ||
+					customer.phone.includes(query)
+				)
+			}
+			return true
+		})
+	}, [customers, searchQuery])
+
+	const topCustomers = useMemo(() => {
+		return [...customers]
+			.sort((a, b) => b.totalSpent - a.totalSpent)
+			.slice(0, 5)
+	}, [customers])
 
 	return (
 		<div className="space-y-6">
@@ -123,64 +158,98 @@ export function CustomersPage() {
 							</div>
 						</div>
 						<div className="divide-y divide-surface-100">
-							{filteredCustomers.map((customer, index) => (
-								<motion.div
-									animate={{ opacity: 1, x: 0 }}
-									className="cursor-pointer p-4 transition-colors hover:bg-surface-50"
-									initial={{ opacity: 0, x: -20 }}
-									key={customer.id}
-									transition={{ delay: index * 0.03 }}
-								>
-									<div className="flex items-center gap-4">
-										<div className="h-12 w-12 overflow-hidden rounded-full bg-surface-100">
-											{customer.avatar ? (
-												<img
-													alt={customer.name}
-													className="h-full w-full object-cover"
-													height={48}
-													src={customer.avatar}
-													width={48}
-												/>
-											) : (
-												<div className="flex h-full w-full items-center justify-center font-semibold text-surface-600">
-													{customer.name.charAt(0)}
-												</div>
-											)}
-										</div>
-										<div className="flex-1">
-											<div className="flex items-center gap-2">
-												<h3 className="font-semibold text-surface-900">
-													{customer.name}
-												</h3>
-												{customer.loyaltyPoints > 400 && (
-													<span className="rounded-full bg-yellow-100 px-2 py-0.5 font-medium text-xs text-yellow-700">
-														VIP
-													</span>
+							{isCustomersLoading && (
+								<div className="p-6 text-center text-surface-600">
+									Carregando clientes...
+								</div>
+							)}
+							{isCustomersError && !isCustomersLoading && (
+								<div className="flex flex-col items-center gap-3 p-6 text-center">
+									<p className="font-medium text-red-700">
+										Não foi possível carregar os clientes.
+									</p>
+									<button
+										className="btn-secondary"
+										onClick={() => refetchCustomers()}
+										type="button"
+									>
+										Tentar novamente
+									</button>
+								</div>
+							)}
+							{!(organizationId || isCustomersLoading || isCustomersError) && (
+								<div className="p-6 text-center text-surface-600">
+									Nenhuma organização ativa encontrada.
+								</div>
+							)}
+							{organizationId &&
+								!(isCustomersLoading || isCustomersError) &&
+								filteredCustomers.length === 0 && (
+									<div className="p-6 text-center text-surface-600">
+										{searchQuery
+											? "Nenhum cliente encontrado para a busca."
+											: "Nenhum cliente encontrado para esta organização."}
+									</div>
+								)}
+							{!(isCustomersLoading || isCustomersError) &&
+								filteredCustomers.map((customer, index) => (
+									<motion.div
+										animate={{ opacity: 1, x: 0 }}
+										className="cursor-pointer p-4 transition-colors hover:bg-surface-50"
+										initial={{ opacity: 0, x: -20 }}
+										key={customer.id}
+										transition={{ delay: index * 0.03 }}
+									>
+										<div className="flex items-center gap-4">
+											<div className="h-12 w-12 overflow-hidden rounded-full bg-surface-100">
+												{customer.avatar ? (
+													<img
+														alt={customer.name}
+														className="h-full w-full object-cover"
+														height={48}
+														src={customer.avatar}
+														width={48}
+													/>
+												) : (
+													<div className="flex h-full w-full items-center justify-center font-semibold text-surface-600">
+														{customer.name.charAt(0)}
+													</div>
 												)}
 											</div>
-											<div className="mt-1 flex items-center gap-4 text-sm text-surface-500">
-												<span className="flex items-center gap-1">
-													<Mail className="h-3 w-3" />
-													{customer.email}
-												</span>
-												<span className="flex items-center gap-1">
-													<Phone className="h-3 w-3" />
-													{customer.phone}
-												</span>
+											<div className="flex-1">
+												<div className="flex items-center gap-2">
+													<h3 className="font-semibold text-surface-900">
+														{customer.name}
+													</h3>
+													{customer.loyaltyPoints > 400 && (
+														<span className="rounded-full bg-yellow-100 px-2 py-0.5 font-medium text-xs text-yellow-700">
+															VIP
+														</span>
+													)}
+												</div>
+												<div className="mt-1 flex items-center gap-4 text-sm text-surface-500">
+													<span className="flex items-center gap-1">
+														<Mail className="h-3 w-3" />
+														{customer.email || "Sem e-mail"}
+													</span>
+													<span className="flex items-center gap-1">
+														<Phone className="h-3 w-3" />
+														{customer.phone || "Sem telefone"}
+													</span>
+												</div>
+											</div>
+											<div className="text-right">
+												<p className="font-bold text-surface-900">
+													{formatCurrency(customer.totalSpent)}
+												</p>
+												<p className="text-sm text-surface-500">
+													{customer.totalOrders} pedidos •{" "}
+													{formatRelativeTime(customer.lastVisit)}
+												</p>
 											</div>
 										</div>
-										<div className="text-right">
-											<p className="font-bold text-surface-900">
-												{formatCurrency(customer.totalSpent)}
-											</p>
-											<p className="text-sm text-surface-500">
-												{customer.totalOrders} pedidos •{" "}
-												{formatRelativeTime(customer.lastVisit)}
-											</p>
-										</div>
-									</div>
-								</motion.div>
-							))}
+									</motion.div>
+								))}
 						</div>
 					</div>
 				</motion.div>
