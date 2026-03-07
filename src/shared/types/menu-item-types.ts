@@ -16,6 +16,7 @@ export interface Recipe {
 export interface MenuItem {
 	id: string
 	organizationId: string
+	categoryId?: string
 	name: string
 	description: string
 	price: number | string
