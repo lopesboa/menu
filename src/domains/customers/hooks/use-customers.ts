@@ -1,7 +1,14 @@
 import { useQuery } from "@tanstack/react-query"
 import { getCustomers, mapCustomerApiToCustomer } from "../api/customers-api"
 import type { Customer, CustomerApi } from "../types/customer-types"
-import { customersQueryKeys } from "./use-customers-query-keys"
+
+export const customersQueryKeys = {
+	all: ["customers"] as const,
+	lists: (organizationId: string | null | undefined) =>
+		[...customersQueryKeys.all, "list", { organizationId }] as const,
+	list: (organizationId: string | null | undefined) =>
+		[...customersQueryKeys.lists(organizationId)] as const,
+}
 
 export function useCustomers(organizationId: string | null | undefined) {
 	return useQuery<CustomerApi[], Error, Customer[]>({

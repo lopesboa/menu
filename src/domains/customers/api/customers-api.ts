@@ -1,40 +1,9 @@
 import { apiFetch } from "@/utils/fetch"
 import type { Customer, CustomerApi } from "../types/customer-types"
 
-interface CustomersApiEnvelope {
-	customers?: CustomerApi[]
-	data?: CustomerApi[]
-	items?: CustomerApi[]
-}
-
-type CustomersApiResponse = CustomerApi[] | CustomersApiEnvelope
-
-function normalizeCustomersResponse(
-	response: CustomersApiResponse
-): CustomerApi[] {
-	if (Array.isArray(response)) {
-		return response
-	}
-
-	if (Array.isArray(response.customers)) {
-		return response.customers
-	}
-
-	if (Array.isArray(response.data)) {
-		return response.data
-	}
-
-	if (Array.isArray(response.items)) {
-		return response.items
-	}
-
-	return []
-}
-
 export function mapCustomerApiToCustomer(customer: CustomerApi): Customer {
 	return {
-		id: customer.id,
-		organizationId: customer.organizationId,
+		...customer,
 		name: customer.name?.trim() || "Cliente sem nome",
 		email: customer.email?.trim() || "",
 		phone: customer.phone?.trim() || "",
@@ -51,12 +20,7 @@ export async function getCustomers(
 	organizationId: string,
 	signal?: AbortSignal
 ): Promise<CustomerApi[]> {
-	const response = await apiFetch<CustomersApiResponse>(
-		`/customers/${organizationId}`,
-		{
-			signal,
-		}
-	)
-
-	return normalizeCustomersResponse(response)
+	return await apiFetch<CustomerApi[]>(`/customers/${organizationId}`, {
+		signal,
+	})
 }
