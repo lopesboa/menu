@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { Award, Mail, Phone, Search, ShoppingBag, Star } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useCustomers } from "@/domains/customers/hooks/use-customers"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
@@ -17,46 +17,32 @@ export function CustomersPage() {
 		isLoading: isCustomersLoading,
 		refetch: refetchCustomers,
 	} = useCustomers(organizationId)
-	const hasNotifiedCustomersError = useRef(false)
 
 	useEffect(() => {
-		if (
-			!(isCustomersError && customersError) ||
-			hasNotifiedCustomersError.current
-		) {
-			if (!isCustomersError) {
-				hasNotifiedCustomersError.current = false
-			}
-			return
+		if (isCustomersError && customersError) {
+			toast.error("Falha ao carregar os clientes")
+			sentryCaptureException(customersError, {
+				context: "customers_list_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedCustomersError.current = true
-		toast.error("Falha ao carregar os clientes")
-		sentryCaptureException(customersError, {
-			context: "customers_list_fetch",
-			organizationId,
-		})
 	}, [isCustomersError, customersError, organizationId])
 
-	const filteredCustomers = useMemo(() => {
-		return customers.filter((customer) => {
-			if (searchQuery) {
-				const query = searchQuery.toLowerCase()
-				return (
-					customer.name.toLowerCase().includes(query) ||
-					customer.email.toLowerCase().includes(query) ||
-					customer.phone.includes(query)
-				)
-			}
-			return true
-		})
-	}, [customers, searchQuery])
+	const filteredCustomers = customers.filter((customer) => {
+		if (searchQuery) {
+			const query = searchQuery.toLowerCase()
+			return (
+				customer.name.toLowerCase().includes(query) ||
+				customer.email.toLowerCase().includes(query) ||
+				customer.phone.includes(query)
+			)
+		}
+		return true
+	})
 
-	const topCustomers = useMemo(() => {
-		return [...customers]
-			.sort((a, b) => b.totalSpent - a.totalSpent)
-			.slice(0, 5)
-	}, [customers])
+	const topCustomers = [...customers]
+		.sort((a, b) => b.totalSpent - a.totalSpent)
+		.slice(0, 5)
 
 	return (
 		<div className="space-y-6">
