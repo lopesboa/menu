@@ -7,16 +7,33 @@ import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 
+const PAGE_SIZE = 20
+
+//TODO: O Scroll de customer precisa manter fixo todo resto, fazer o scroll apenas da parte
+//de cliente sem mover top clientes e a busca.
 export function CustomersPage() {
 	const [searchQuery, setSearchQuery] = useState("")
+	const [offset, setOffset] = useState(0)
 	const { organizationId } = useOrganizationCheck()
 	const {
-		data: customers = [],
+		data,
 		error: customersError,
 		isError: isCustomersError,
 		isLoading: isCustomersLoading,
 		refetch: refetchCustomers,
-	} = useCustomers(organizationId)
+		isFetching: isCustomersFetching,
+	} = useCustomers({
+		organizationId,
+		limit: PAGE_SIZE,
+		offset,
+		search: searchQuery.trim() || undefined,
+	})
+
+	const customers = data?.customers ?? []
+	const pagination = data?.pagination
+	const totalCustomers = pagination?.total ?? customers.length
+	const currentPage = Math.floor((pagination?.offset ?? offset) / PAGE_SIZE) + 1
+	const totalPages = Math.max(1, Math.ceil(totalCustomers / PAGE_SIZE))
 
 	useEffect(() => {
 		if (isCustomersError && customersError) {
@@ -28,22 +45,12 @@ export function CustomersPage() {
 		}
 	}, [isCustomersError, customersError, organizationId])
 
-	const filteredCustomers = customers.filter((customer) => {
-		if (searchQuery) {
-			const query = searchQuery.toLowerCase()
-			return (
-				customer.name.toLowerCase().includes(query) ||
-				customer.email.toLowerCase().includes(query) ||
-				customer.phone.includes(query)
-			)
-		}
-		return true
-	})
-
+	//TODO: Seria melhor ter esses dados do retorno do backend
 	const topCustomers = [...customers]
 		.sort((a, b) => b.totalSpent - a.totalSpent)
 		.slice(0, 5)
 
+	//TODO: Os dados de "Faturamento Total", "Pontos Distribuídos" e "Total de Visitas" precisam vir do backend.
 	return (
 		<div className="space-y-6">
 			<motion.div
@@ -73,7 +80,7 @@ export function CustomersPage() {
 						<div>
 							<p className="text-sm text-surface-500">Total de Clientes</p>
 							<p className="font-bold text-2xl text-surface-900">
-								{customers.length}
+								{totalCustomers}
 							</p>
 						</div>
 					</div>
@@ -142,6 +149,11 @@ export function CustomersPage() {
 									value={searchQuery}
 								/>
 							</div>
+							{isCustomersFetching && !isCustomersLoading && (
+								<p className="mt-2 text-surface-500 text-xs">
+									Atualizando clientes...
+								</p>
+							)}
 						</div>
 						<div className="divide-y divide-surface-100">
 							{isCustomersLoading && (
@@ -170,7 +182,7 @@ export function CustomersPage() {
 							)}
 							{organizationId &&
 								!(isCustomersLoading || isCustomersError) &&
-								filteredCustomers.length === 0 && (
+								customers.length === 0 && (
 									<div className="p-6 text-center text-surface-600">
 										{searchQuery
 											? "Nenhum cliente encontrado para a busca."
@@ -178,7 +190,7 @@ export function CustomersPage() {
 									</div>
 								)}
 							{!(isCustomersLoading || isCustomersError) &&
-								filteredCustomers.map((customer, index) => (
+								customers.map((customer, index) => (
 									<motion.div
 										animate={{ opacity: 1, x: 0 }}
 										className="cursor-pointer p-4 transition-colors hover:bg-surface-50"
@@ -236,6 +248,37 @@ export function CustomersPage() {
 										</div>
 									</motion.div>
 								))}
+							{organizationId && !isCustomersLoading && !isCustomersError && (
+								<div className="flex items-center justify-between border-surface-100 border-t px-4 py-3 text-sm">
+									<p className="text-surface-500">
+										Página {currentPage} de {totalPages}
+									</p>
+									<div className="flex items-center gap-2">
+										<button
+											className="btn-secondary"
+											disabled={offset <= 0}
+											onClick={() =>
+												setOffset((currentOffset) =>
+													Math.max(0, currentOffset - PAGE_SIZE)
+												)
+											}
+											type="button"
+										>
+											Anterior
+										</button>
+										<button
+											className="btn-secondary"
+											disabled={offset + PAGE_SIZE >= totalCustomers}
+											onClick={() =>
+												setOffset((currentOffset) => currentOffset + PAGE_SIZE)
+											}
+											type="button"
+										>
+											Próxima
+										</button>
+									</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</motion.div>

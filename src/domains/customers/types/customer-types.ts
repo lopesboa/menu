@@ -15,6 +15,7 @@ export interface Customer {
 export interface CustomerApi {
 	id: string
 	organizationId: string
+	userId: string | null
 	name: string | null
 	email: string | null
 	phone: string | null
