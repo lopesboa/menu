@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { Award, Mail, Phone, Search, ShoppingBag, Star } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useCustomers } from "@/domains/customers/hooks/use-customers"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
@@ -9,11 +9,11 @@ import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 
 const PAGE_SIZE = 20
 
+//TODO: O Scroll de customer precisa manter fixo todo resto, fazer o scroll apenas da parte
+//de cliente sem mover top clientes e a busca.
 export function CustomersPage() {
 	const [searchQuery, setSearchQuery] = useState("")
-	const [debouncedSearch, setDebouncedSearch] = useState("")
 	const [offset, setOffset] = useState(0)
-	const hasNotifiedCustomersError = useRef(false)
 	const { organizationId } = useOrganizationCheck()
 	const {
 		data,
@@ -26,7 +26,7 @@ export function CustomersPage() {
 		organizationId,
 		limit: PAGE_SIZE,
 		offset,
-		search: debouncedSearch || undefined,
+		search: searchQuery.trim() || undefined,
 	})
 
 	const customers = data?.customers ?? []
@@ -36,39 +36,21 @@ export function CustomersPage() {
 	const totalPages = Math.max(1, Math.ceil(totalCustomers / PAGE_SIZE))
 
 	useEffect(() => {
-		const timeout = window.setTimeout(() => {
-			setDebouncedSearch(searchQuery.trim())
-			setOffset(0)
-		}, 350)
-
-		return () => window.clearTimeout(timeout)
-	}, [searchQuery])
-
-	useEffect(() => {
-		if (
-			!(isCustomersError && customersError) ||
-			hasNotifiedCustomersError.current
-		) {
-			if (!isCustomersError) {
-				hasNotifiedCustomersError.current = false
-			}
-			return
+		if (isCustomersError && customersError) {
+			toast.error("Falha ao carregar os clientes")
+			sentryCaptureException(customersError, {
+				context: "customers_list_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedCustomersError.current = true
-		toast.error("Falha ao carregar os clientes")
-		sentryCaptureException(customersError, {
-			context: "customers_list_fetch",
-			organizationId,
-		})
 	}, [isCustomersError, customersError, organizationId])
 
-	const topCustomers = useMemo(
-		() =>
-			[...customers].sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 5),
-		[customers]
-	)
+	//TODO: Seria melhor ter esses dados do retorno do backend
+	const topCustomers = [...customers]
+		.sort((a, b) => b.totalSpent - a.totalSpent)
+		.slice(0, 5)
 
+	//TODO: Os dados de "Faturamento Total", "Pontos Distribuídos" e "Total de Visitas" precisam vir do backend.
 	return (
 		<div className="space-y-6">
 			<motion.div
@@ -202,7 +184,7 @@ export function CustomersPage() {
 								!(isCustomersLoading || isCustomersError) &&
 								customers.length === 0 && (
 									<div className="p-6 text-center text-surface-600">
-										{debouncedSearch
+										{searchQuery
 											? "Nenhum cliente encontrado para a busca."
 											: "Nenhum cliente encontrado para esta organização."}
 									</div>
