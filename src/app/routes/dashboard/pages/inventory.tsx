@@ -8,7 +8,7 @@ import {
 	Search,
 	Trash2,
 } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Modal } from "@/components/ui/modal"
 import {
@@ -20,94 +20,79 @@ import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 
+const PAGE_SIZE = 20
+
+//TODO: rever essa quantitdade de estados, seria uma boa zustand/useReducer aqui
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: página reúne estados de listagem, alerta e paginação do inventário.
 export function InventoryPage() {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [selectedCategory, setSelectedCategory] = useState("all")
+	const [offset, setOffset] = useState(0)
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const { organizationId } = useOrganizationCheck()
 	const {
-		data: inventoryItems = [],
+		data: inventoryData,
 		error: inventoryError,
 		isError: isInventoryError,
 		isLoading: isInventoryLoading,
 		refetch: refetchInventory,
-	} = useInventory(organizationId)
+		isFetching: isInventoryFetching,
+	} = useInventory({
+		organizationId,
+		limit: PAGE_SIZE,
+		offset,
+		search: searchQuery.trim() || undefined,
+		category: selectedCategory !== "all" ? selectedCategory : undefined,
+	})
 	const {
-		data: lowStockItems = [],
+		data: lowStockData,
 		error: lowStockError,
 		isError: isLowStockError,
 		isLoading: isLowStockLoading,
 		refetch: refetchLowStock,
-	} = useInventoryLowStock(organizationId)
-	const hasNotifiedInventoryError = useRef(false)
-	const hasNotifiedLowStockError = useRef(false)
+	} = useInventoryLowStock({
+		organizationId,
+		limit: 1,
+		offset: 0,
+	})
+	const inventoryItems = inventoryData?.items ?? []
+	const inventoryPagination = inventoryData?.pagination
+	const lowStockTotal = lowStockData?.pagination.total ?? 0
+	const totalInventoryItems =
+		inventoryPagination?.total ?? inventoryItems.length
+	const currentPage =
+		Math.floor((inventoryPagination?.offset ?? offset) / PAGE_SIZE) + 1
+	const totalPages = Math.max(1, Math.ceil(totalInventoryItems / PAGE_SIZE))
 
 	useEffect(() => {
-		if (
-			!(isInventoryError && inventoryError) ||
-			hasNotifiedInventoryError.current
-		) {
-			if (!isInventoryError) {
-				hasNotifiedInventoryError.current = false
-			}
-			return
+		if (isInventoryError && inventoryError) {
+			toast.error("Falha ao carregar o inventário")
+			sentryCaptureException(inventoryError, {
+				context: "inventory_list_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedInventoryError.current = true
-		toast.error("Falha ao carregar o inventário")
-		sentryCaptureException(inventoryError, {
-			context: "inventory_list_fetch",
-			organizationId,
-		})
 	}, [isInventoryError, inventoryError, organizationId])
 
 	useEffect(() => {
-		if (
-			!(isLowStockError && lowStockError) ||
-			hasNotifiedLowStockError.current
-		) {
-			if (!isLowStockError) {
-				hasNotifiedLowStockError.current = false
-			}
-			return
+		if (isLowStockError && lowStockError) {
+			toast.error("Falha ao carregar os alertas de estoque")
+			sentryCaptureException(lowStockError, {
+				context: "inventory_low_stock_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedLowStockError.current = true
-		toast.error("Falha ao carregar os alertas de estoque")
-		sentryCaptureException(lowStockError, {
-			context: "inventory_low_stock_fetch",
-			organizationId,
-		})
 	}, [isLowStockError, lowStockError, organizationId])
 
-	const categories = useMemo(
-		() => ["all", ...new Set(inventoryItems.map((item) => item.category))],
-		[inventoryItems]
-	)
+	//TODO: categories e totalValue precisam vir do backend
+	const categories = [
+		"all",
+		...new Set(inventoryItems.map((item) => item.category)),
+	]
 
-	const filteredItems = useMemo(() => {
-		return inventoryItems.filter((item) => {
-			if (selectedCategory !== "all" && item.category !== selectedCategory) {
-				return false
-			}
-			if (searchQuery) {
-				const query = searchQuery.toLowerCase()
-				return (
-					item.name.toLowerCase().includes(query) ||
-					item.category.toLowerCase().includes(query)
-				)
-			}
-			return true
-		})
-	}, [inventoryItems, selectedCategory, searchQuery])
-
-	const totalValue = useMemo(
-		() =>
-			inventoryItems.reduce(
-				(sum, item) => sum + item.quantity * item.costPerUnit,
-				0
-			),
-		[inventoryItems]
+	const totalValue = inventoryItems.reduce(
+		(sum, item) => sum + item.quantity * item.costPerUnit,
+		0
 	)
 
 	return (
@@ -165,7 +150,7 @@ export function InventoryPage() {
 				</motion.div>
 			)}
 
-			{!(isLowStockLoading || isLowStockError) && lowStockItems.length > 0 && (
+			{!(isLowStockLoading || isLowStockError) && lowStockTotal > 0 && (
 				<motion.div
 					animate={{ opacity: 1, y: 0 }}
 					className="flex items-center gap-4 rounded-2xl border border-red-200 bg-red-50 p-4"
@@ -177,7 +162,7 @@ export function InventoryPage() {
 							Atenção! Itens com estoque baixo
 						</p>
 						<p className="text-red-700 text-sm">
-							{lowStockItems.length} itens precisam ser repostos em breve
+							{lowStockTotal} itens precisam ser repostos em breve
 						</p>
 					</div>
 					<button
@@ -204,7 +189,7 @@ export function InventoryPage() {
 						<div>
 							<p className="text-sm text-surface-500">Total de Itens</p>
 							<p className="font-bold text-2xl text-surface-900">
-								{inventoryItems.length}
+								{totalInventoryItems}
 							</p>
 						</div>
 					</div>
@@ -230,7 +215,7 @@ export function InventoryPage() {
 						<div>
 							<p className="text-sm text-surface-500">Estoque Baixo</p>
 							<p className="font-bold text-2xl text-surface-900">
-								{lowStockItems.length}
+								{lowStockTotal}
 							</p>
 						</div>
 					</div>
@@ -254,6 +239,11 @@ export function InventoryPage() {
 							value={searchQuery}
 						/>
 					</div>
+					{isInventoryFetching && !isInventoryLoading && (
+						<p className="text-surface-500 text-xs">
+							Atualizando inventário...
+						</p>
+					)}
 					<div className="flex gap-2">
 						{categories.map((category) => (
 							<button
@@ -264,7 +254,10 @@ export function InventoryPage() {
 										: "text-surface-600 hover:bg-surface-50"
 								)}
 								key={category}
-								onClick={() => setSelectedCategory(category)}
+								onClick={() => {
+									setSelectedCategory(category)
+									setOffset(0)
+								}}
 								type="button"
 							>
 								{category === "all" ? "Todos" : category}
@@ -344,7 +337,7 @@ export function InventoryPage() {
 
 							{organizationId &&
 								!(isInventoryLoading || isInventoryError) &&
-								filteredItems.length === 0 && (
+								inventoryItems.length === 0 && (
 									<tr>
 										<td
 											className="px-6 py-8 text-center text-surface-600"
@@ -358,7 +351,7 @@ export function InventoryPage() {
 								)}
 
 							{!(isInventoryLoading || isInventoryError) &&
-								filteredItems.map((item, index) => (
+								inventoryItems.map((item, index) => (
 									<motion.tr
 										animate={{ opacity: 1, y: 0 }}
 										className="border-surface-50 border-b hover:bg-surface-50"
@@ -437,6 +430,37 @@ export function InventoryPage() {
 								))}
 						</tbody>
 					</table>
+					{organizationId && !isInventoryLoading && !isInventoryError && (
+						<div className="flex items-center justify-between border-surface-100 border-t px-4 py-3 text-sm">
+							<p className="text-surface-500">
+								Página {currentPage} de {totalPages}
+							</p>
+							<div className="flex items-center gap-2">
+								<button
+									className="btn-secondary"
+									disabled={offset <= 0}
+									onClick={() =>
+										setOffset((currentOffset) =>
+											Math.max(0, currentOffset - PAGE_SIZE)
+										)
+									}
+									type="button"
+								>
+									Anterior
+								</button>
+								<button
+									className="btn-secondary"
+									disabled={offset + PAGE_SIZE >= totalInventoryItems}
+									onClick={() =>
+										setOffset((currentOffset) => currentOffset + PAGE_SIZE)
+									}
+									type="button"
+								>
+									Próxima
+								</button>
+							</div>
+						</div>
+					)}
 				</div>
 			</motion.div>
 

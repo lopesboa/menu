@@ -4,34 +4,62 @@ import type {
 	InventoryItemApi,
 } from "../types/inventory-item-types"
 
-interface InventoryApiEnvelope {
-	inventory?: InventoryItemApi[]
-	items?: InventoryItemApi[]
-	data?: InventoryItemApi[]
+export interface InventoryPagination {
+	limit: number
+	offset: number
+	total: number
 }
 
-type InventoryApiResponse = InventoryItemApi[] | InventoryApiEnvelope
+export interface InventoryListApiResponse {
+	data: InventoryItemApi[]
+	pagination: InventoryPagination
+}
 
-function normalizeInventoryResponse(
-	response: InventoryApiResponse
-): InventoryItemApi[] {
-	if (Array.isArray(response)) {
-		return response
+interface InventoryQueryParams {
+	limit?: number
+	offset?: number
+	search?: string
+	category?: string
+	minStock?: number
+	maxStock?: number
+}
+
+interface GetInventoryParams extends InventoryQueryParams {
+	organizationId: string
+	signal?: AbortSignal
+}
+
+function buildInventoryQueryParams(params: InventoryQueryParams): string {
+	const queryParams = new URLSearchParams()
+
+	if (typeof params.limit === "number") {
+		queryParams.set(
+			"limit",
+			Math.min(100, Math.max(1, Math.trunc(params.limit))).toString()
+		)
 	}
 
-	if (Array.isArray(response.inventory)) {
-		return response.inventory
+	if (typeof params.offset === "number") {
+		queryParams.set("offset", Math.max(0, Math.trunc(params.offset)).toString())
 	}
 
-	if (Array.isArray(response.items)) {
-		return response.items
+	if (params.search?.trim()) {
+		queryParams.set("search", params.search.trim())
 	}
 
-	if (Array.isArray(response.data)) {
-		return response.data
+	if (params.category?.trim()) {
+		queryParams.set("category", params.category.trim())
 	}
 
-	return []
+	if (typeof params.minStock === "number") {
+		queryParams.set("minStock", Math.max(0, params.minStock).toString())
+	}
+
+	if (typeof params.maxStock === "number") {
+		queryParams.set("maxStock", Math.max(0, params.maxStock).toString())
+	}
+
+	return queryParams.toString()
 }
 
 export function mapInventoryApiToInventoryItem(
@@ -55,25 +83,23 @@ export function mapInventoryApiToInventoryItem(
 }
 
 export async function getInventory(
-	organizationId: string,
-	signal?: AbortSignal
-): Promise<InventoryItemApi[]> {
-	const response = await apiFetch<InventoryApiResponse>(
-		`/inventory/${organizationId}`,
-		{ signal }
-	)
+	params: GetInventoryParams
+): Promise<InventoryListApiResponse> {
+	const queryString = buildInventoryQueryParams(params)
+	const endpoint = `/inventory/${params.organizationId}${queryString ? `?${queryString}` : ""}`
 
-	return normalizeInventoryResponse(response)
+	return await apiFetch<InventoryListApiResponse>(endpoint, {
+		signal: params.signal,
+	})
 }
 
 export async function getInventoryLowStock(
-	organizationId: string,
-	signal?: AbortSignal
-): Promise<InventoryItemApi[]> {
-	const response = await apiFetch<InventoryApiResponse>(
-		`/inventory/${organizationId}/low-stock`,
-		{ signal }
-	)
+	params: GetInventoryParams
+): Promise<InventoryListApiResponse> {
+	const queryString = buildInventoryQueryParams(params)
+	const endpoint = `/inventory/${params.organizationId}/low-stock${queryString ? `?${queryString}` : ""}`
 
-	return normalizeInventoryResponse(response)
+	return await apiFetch<InventoryListApiResponse>(endpoint, {
+		signal: params.signal,
+	})
 }
