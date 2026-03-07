@@ -8,7 +8,7 @@ import {
 	Search,
 	Trash2,
 } from "lucide-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { Modal } from "@/components/ui/modal"
 import {
@@ -22,10 +22,10 @@ import { cn } from "@/utils/misc"
 
 const PAGE_SIZE = 20
 
+//TODO: rever essa quantitdade de estados, seria uma boa zustand/useReducer aqui
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: página reúne estados de listagem, alerta e paginação do inventário.
 export function InventoryPage() {
 	const [searchQuery, setSearchQuery] = useState("")
-	const [debouncedSearch, setDebouncedSearch] = useState("")
 	const [selectedCategory, setSelectedCategory] = useState("all")
 	const [offset, setOffset] = useState(0)
 	const [isModalOpen, setIsModalOpen] = useState(false)
@@ -41,7 +41,7 @@ export function InventoryPage() {
 		organizationId,
 		limit: PAGE_SIZE,
 		offset,
-		search: debouncedSearch || undefined,
+		search: searchQuery.trim() || undefined,
 		category: selectedCategory !== "all" ? selectedCategory : undefined,
 	})
 	const {
@@ -63,68 +63,36 @@ export function InventoryPage() {
 	const currentPage =
 		Math.floor((inventoryPagination?.offset ?? offset) / PAGE_SIZE) + 1
 	const totalPages = Math.max(1, Math.ceil(totalInventoryItems / PAGE_SIZE))
-	const hasNotifiedInventoryError = useRef(false)
-	const hasNotifiedLowStockError = useRef(false)
 
 	useEffect(() => {
-		const timeout = window.setTimeout(() => {
-			setDebouncedSearch(searchQuery.trim())
-			setOffset(0)
-		}, 350)
-
-		return () => window.clearTimeout(timeout)
-	}, [searchQuery])
-
-	useEffect(() => {
-		if (
-			!(isInventoryError && inventoryError) ||
-			hasNotifiedInventoryError.current
-		) {
-			if (!isInventoryError) {
-				hasNotifiedInventoryError.current = false
-			}
-			return
+		if (isInventoryError && inventoryError) {
+			toast.error("Falha ao carregar o inventário")
+			sentryCaptureException(inventoryError, {
+				context: "inventory_list_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedInventoryError.current = true
-		toast.error("Falha ao carregar o inventário")
-		sentryCaptureException(inventoryError, {
-			context: "inventory_list_fetch",
-			organizationId,
-		})
 	}, [isInventoryError, inventoryError, organizationId])
 
 	useEffect(() => {
-		if (
-			!(isLowStockError && lowStockError) ||
-			hasNotifiedLowStockError.current
-		) {
-			if (!isLowStockError) {
-				hasNotifiedLowStockError.current = false
-			}
-			return
+		if (isLowStockError && lowStockError) {
+			toast.error("Falha ao carregar os alertas de estoque")
+			sentryCaptureException(lowStockError, {
+				context: "inventory_low_stock_fetch",
+				organizationId,
+			})
 		}
-
-		hasNotifiedLowStockError.current = true
-		toast.error("Falha ao carregar os alertas de estoque")
-		sentryCaptureException(lowStockError, {
-			context: "inventory_low_stock_fetch",
-			organizationId,
-		})
 	}, [isLowStockError, lowStockError, organizationId])
 
-	const categories = useMemo(
-		() => ["all", ...new Set(inventoryItems.map((item) => item.category))],
-		[inventoryItems]
-	)
+	//TODO: categories e totalValue precisam vir do backend
+	const categories = [
+		"all",
+		...new Set(inventoryItems.map((item) => item.category)),
+	]
 
-	const totalValue = useMemo(
-		() =>
-			inventoryItems.reduce(
-				(sum, item) => sum + item.quantity * item.costPerUnit,
-				0
-			),
-		[inventoryItems]
+	const totalValue = inventoryItems.reduce(
+		(sum, item) => sum + item.quantity * item.costPerUnit,
+		0
 	)
 
 	return (
@@ -375,7 +343,7 @@ export function InventoryPage() {
 											className="px-6 py-8 text-center text-surface-600"
 											colSpan={7}
 										>
-											{debouncedSearch
+											{searchQuery
 												? "Nenhum item encontrado para a busca."
 												: "Nenhum item de inventário encontrado."}
 										</td>
