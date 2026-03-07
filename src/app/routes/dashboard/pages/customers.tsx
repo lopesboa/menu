@@ -1,48 +1,73 @@
 import { motion } from "framer-motion"
 import { Award, Mail, Phone, Search, ShoppingBag, Star } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { toast } from "sonner"
 import { useCustomers } from "@/domains/customers/hooks/use-customers"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 
+const PAGE_SIZE = 20
+
 export function CustomersPage() {
 	const [searchQuery, setSearchQuery] = useState("")
+	const [debouncedSearch, setDebouncedSearch] = useState("")
+	const [offset, setOffset] = useState(0)
+	const hasNotifiedCustomersError = useRef(false)
 	const { organizationId } = useOrganizationCheck()
 	const {
-		data: customers = [],
+		data,
 		error: customersError,
 		isError: isCustomersError,
 		isLoading: isCustomersLoading,
 		refetch: refetchCustomers,
-	} = useCustomers(organizationId)
-
-	useEffect(() => {
-		if (isCustomersError && customersError) {
-			toast.error("Falha ao carregar os clientes")
-			sentryCaptureException(customersError, {
-				context: "customers_list_fetch",
-				organizationId,
-			})
-		}
-	}, [isCustomersError, customersError, organizationId])
-
-	const filteredCustomers = customers.filter((customer) => {
-		if (searchQuery) {
-			const query = searchQuery.toLowerCase()
-			return (
-				customer.name.toLowerCase().includes(query) ||
-				customer.email.toLowerCase().includes(query) ||
-				customer.phone.includes(query)
-			)
-		}
-		return true
+		isFetching: isCustomersFetching,
+	} = useCustomers({
+		organizationId,
+		limit: PAGE_SIZE,
+		offset,
+		search: debouncedSearch || undefined,
 	})
 
-	const topCustomers = [...customers]
-		.sort((a, b) => b.totalSpent - a.totalSpent)
-		.slice(0, 5)
+	const customers = data?.customers ?? []
+	const pagination = data?.pagination
+	const totalCustomers = pagination?.total ?? customers.length
+	const currentPage = Math.floor((pagination?.offset ?? offset) / PAGE_SIZE) + 1
+	const totalPages = Math.max(1, Math.ceil(totalCustomers / PAGE_SIZE))
+
+	useEffect(() => {
+		const timeout = window.setTimeout(() => {
+			setDebouncedSearch(searchQuery.trim())
+			setOffset(0)
+		}, 350)
+
+		return () => window.clearTimeout(timeout)
+	}, [searchQuery])
+
+	useEffect(() => {
+		if (
+			!(isCustomersError && customersError) ||
+			hasNotifiedCustomersError.current
+		) {
+			if (!isCustomersError) {
+				hasNotifiedCustomersError.current = false
+			}
+			return
+		}
+
+		hasNotifiedCustomersError.current = true
+		toast.error("Falha ao carregar os clientes")
+		sentryCaptureException(customersError, {
+			context: "customers_list_fetch",
+			organizationId,
+		})
+	}, [isCustomersError, customersError, organizationId])
+
+	const topCustomers = useMemo(
+		() =>
+			[...customers].sort((a, b) => b.totalSpent - a.totalSpent).slice(0, 5),
+		[customers]
+	)
 
 	return (
 		<div className="space-y-6">
@@ -73,7 +98,7 @@ export function CustomersPage() {
 						<div>
 							<p className="text-sm text-surface-500">Total de Clientes</p>
 							<p className="font-bold text-2xl text-surface-900">
-								{customers.length}
+								{totalCustomers}
 							</p>
 						</div>
 					</div>
@@ -142,6 +167,11 @@ export function CustomersPage() {
 									value={searchQuery}
 								/>
 							</div>
+							{isCustomersFetching && !isCustomersLoading && (
+								<p className="mt-2 text-surface-500 text-xs">
+									Atualizando clientes...
+								</p>
+							)}
 						</div>
 						<div className="divide-y divide-surface-100">
 							{isCustomersLoading && (
@@ -170,15 +200,15 @@ export function CustomersPage() {
 							)}
 							{organizationId &&
 								!(isCustomersLoading || isCustomersError) &&
-								filteredCustomers.length === 0 && (
+								customers.length === 0 && (
 									<div className="p-6 text-center text-surface-600">
-										{searchQuery
+										{debouncedSearch
 											? "Nenhum cliente encontrado para a busca."
 											: "Nenhum cliente encontrado para esta organização."}
 									</div>
 								)}
 							{!(isCustomersLoading || isCustomersError) &&
-								filteredCustomers.map((customer, index) => (
+								customers.map((customer, index) => (
 									<motion.div
 										animate={{ opacity: 1, x: 0 }}
 										className="cursor-pointer p-4 transition-colors hover:bg-surface-50"
@@ -236,6 +266,37 @@ export function CustomersPage() {
 										</div>
 									</motion.div>
 								))}
+							{organizationId && !isCustomersLoading && !isCustomersError && (
+								<div className="flex items-center justify-between border-surface-100 border-t px-4 py-3 text-sm">
+									<p className="text-surface-500">
+										Página {currentPage} de {totalPages}
+									</p>
+									<div className="flex items-center gap-2">
+										<button
+											className="btn-secondary"
+											disabled={offset <= 0}
+											onClick={() =>
+												setOffset((currentOffset) =>
+													Math.max(0, currentOffset - PAGE_SIZE)
+												)
+											}
+											type="button"
+										>
+											Anterior
+										</button>
+										<button
+											className="btn-secondary"
+											disabled={offset + PAGE_SIZE >= totalCustomers}
+											onClick={() =>
+												setOffset((currentOffset) => currentOffset + PAGE_SIZE)
+											}
+											type="button"
+										>
+											Próxima
+										</button>
+									</div>
+								</div>
+							)}
 						</div>
 					</div>
 				</motion.div>
