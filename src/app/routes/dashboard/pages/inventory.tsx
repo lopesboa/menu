@@ -8,9 +8,15 @@ import {
 	Search,
 	Trash2,
 } from "lucide-react"
-import { useState } from "react"
-import { inventoryItems } from "@/app/routes/dashboard/data/mock-data"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { toast } from "sonner"
 import { Modal } from "@/components/ui/modal"
+import {
+	useInventory,
+	useInventoryLowStock,
+} from "@/domains/inventory/hooks/use-inventory"
+import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 
@@ -18,33 +24,90 @@ export function InventoryPage() {
 	const [searchQuery, setSearchQuery] = useState("")
 	const [selectedCategory, setSelectedCategory] = useState("all")
 	const [isModalOpen, setIsModalOpen] = useState(false)
+	const { organizationId } = useOrganizationCheck()
+	const {
+		data: inventoryItems = [],
+		error: inventoryError,
+		isError: isInventoryError,
+		isLoading: isInventoryLoading,
+		refetch: refetchInventory,
+	} = useInventory(organizationId)
+	const {
+		data: lowStockItems = [],
+		error: lowStockError,
+		isError: isLowStockError,
+		isLoading: isLowStockLoading,
+		refetch: refetchLowStock,
+	} = useInventoryLowStock(organizationId)
+	const hasNotifiedInventoryError = useRef(false)
+	const hasNotifiedLowStockError = useRef(false)
 
-	const categories = [
-		"all",
-		...new Set(inventoryItems.map((item) => item.category)),
-	]
-
-	const filteredItems = inventoryItems.filter((item) => {
-		if (selectedCategory !== "all" && item.category !== selectedCategory) {
-			return false
+	useEffect(() => {
+		if (
+			!(isInventoryError && inventoryError) ||
+			hasNotifiedInventoryError.current
+		) {
+			if (!isInventoryError) {
+				hasNotifiedInventoryError.current = false
+			}
+			return
 		}
-		if (searchQuery) {
-			const query = searchQuery.toLowerCase()
-			return (
-				item.name.toLowerCase().includes(query) ||
-				item.category.toLowerCase().includes(query)
-			)
-		}
-		return true
-	})
 
-	const lowStockItems = inventoryItems.filter(
-		(item) => item.quantity <= item.minQuantity
+		hasNotifiedInventoryError.current = true
+		toast.error("Falha ao carregar o inventário")
+		sentryCaptureException(inventoryError, {
+			context: "inventory_list_fetch",
+			organizationId,
+		})
+	}, [isInventoryError, inventoryError, organizationId])
+
+	useEffect(() => {
+		if (
+			!(isLowStockError && lowStockError) ||
+			hasNotifiedLowStockError.current
+		) {
+			if (!isLowStockError) {
+				hasNotifiedLowStockError.current = false
+			}
+			return
+		}
+
+		hasNotifiedLowStockError.current = true
+		toast.error("Falha ao carregar os alertas de estoque")
+		sentryCaptureException(lowStockError, {
+			context: "inventory_low_stock_fetch",
+			organizationId,
+		})
+	}, [isLowStockError, lowStockError, organizationId])
+
+	const categories = useMemo(
+		() => ["all", ...new Set(inventoryItems.map((item) => item.category))],
+		[inventoryItems]
 	)
 
-	const totalValue = inventoryItems.reduce(
-		(sum, item) => sum + item.quantity * item.costPerUnit,
-		0
+	const filteredItems = useMemo(() => {
+		return inventoryItems.filter((item) => {
+			if (selectedCategory !== "all" && item.category !== selectedCategory) {
+				return false
+			}
+			if (searchQuery) {
+				const query = searchQuery.toLowerCase()
+				return (
+					item.name.toLowerCase().includes(query) ||
+					item.category.toLowerCase().includes(query)
+				)
+			}
+			return true
+		})
+	}, [inventoryItems, selectedCategory, searchQuery])
+
+	const totalValue = useMemo(
+		() =>
+			inventoryItems.reduce(
+				(sum, item) => sum + item.quantity * item.costPerUnit,
+				0
+			),
+		[inventoryItems]
 	)
 
 	return (
@@ -70,7 +133,39 @@ export function InventoryPage() {
 				</button>
 			</motion.div>
 
-			{lowStockItems.length > 0 && (
+			{isLowStockLoading && (
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="rounded-2xl border border-surface-100 bg-white p-4 text-surface-600"
+					initial={{ opacity: 0, y: 20 }}
+				>
+					Carregando alertas de estoque...
+				</motion.div>
+			)}
+
+			{isLowStockError && !isLowStockLoading && (
+				<motion.div
+					animate={{ opacity: 1, y: 0 }}
+					className="flex items-center gap-4 rounded-2xl border border-red-200 bg-red-50 p-4"
+					initial={{ opacity: 0, y: 20 }}
+				>
+					<AlertTriangle className="h-6 w-6 shrink-0 text-red-600" />
+					<div className="flex-1">
+						<p className="font-medium text-red-900">
+							Não foi possível carregar os alertas de estoque
+						</p>
+					</div>
+					<button
+						className="btn-secondary border-red-200 text-red-700 hover:bg-red-100"
+						onClick={() => refetchLowStock()}
+						type="button"
+					>
+						Tentar novamente
+					</button>
+				</motion.div>
+			)}
+
+			{!(isLowStockLoading || isLowStockError) && lowStockItems.length > 0 && (
 				<motion.div
 					animate={{ opacity: 1, y: 0 }}
 					className="flex items-center gap-4 rounded-2xl border border-red-200 bg-red-50 p-4"
@@ -87,6 +182,7 @@ export function InventoryPage() {
 					</div>
 					<button
 						className="btn-secondary border-red-200 text-red-700 hover:bg-red-100"
+						onClick={() => setSelectedCategory("all")}
 						type="button"
 					>
 						Visualizar
@@ -205,81 +301,140 @@ export function InventoryPage() {
 							</tr>
 						</thead>
 						<tbody>
-							{filteredItems.map((item, index) => (
-								<motion.tr
-									animate={{ opacity: 1, y: 0 }}
-									className="border-surface-50 border-b hover:bg-surface-50"
-									initial={{ opacity: 0, y: 10 }}
-									key={item.id}
-									transition={{ delay: index * 0.03 }}
-								>
-									<td className="px-6 py-4">
-										<p className="font-medium text-surface-900">{item.name}</p>
+							{!(organizationId || isInventoryLoading || isInventoryError) && (
+								<tr>
+									<td
+										className="px-6 py-8 text-center text-surface-600"
+										colSpan={7}
+									>
+										Nenhuma organização ativa encontrada.
 									</td>
-									<td className="px-6 py-4">
-										<span className="rounded-full bg-surface-100 px-2 py-1 text-surface-600 text-xs">
-											{item.category}
-										</span>
+								</tr>
+							)}
+
+							{isInventoryLoading && (
+								<tr>
+									<td
+										className="px-6 py-8 text-center text-surface-600"
+										colSpan={7}
+									>
+										Carregando inventário...
 									</td>
-									<td className="px-6 py-4">
-										<span
-											className={cn(
-												"font-medium",
-												item.quantity <= item.minQuantity
-													? "text-red-600"
-													: "text-surface-900"
-											)}
-										>
-											{item.quantity} {item.unit}
-										</span>
-									</td>
-									<td className="px-6 py-4 text-surface-500">
-										{item.minQuantity} {item.unit}
-									</td>
-									<td className="px-6 py-4 text-surface-900">
-										{formatCurrency(item.costPerUnit)}
-									</td>
-									<td className="px-6 py-4">
-										{(() => {
-											if (item.quantity <= item.minQuantity) {
-												return (
-													<span className="rounded-full bg-red-100 px-2 py-1 font-medium text-red-700 text-xs">
-														Crítico
-													</span>
-												)
-											}
-											if (item.quantity <= item.minQuantity * 1.5) {
-												return (
-													<span className="rounded-full bg-yellow-100 px-2 py-1 font-medium text-xs text-yellow-700">
-														Baixo
-													</span>
-												)
-											}
-											return (
-												<span className="rounded-full bg-green-100 px-2 py-1 font-medium text-green-700 text-xs">
-													Normal
-												</span>
-											)
-										})()}
-									</td>
-									<td className="px-6 py-4">
-										<div className="flex items-center justify-end gap-2">
+								</tr>
+							)}
+
+							{isInventoryError && !isInventoryLoading && (
+								<tr>
+									<td className="px-6 py-8 text-center" colSpan={7}>
+										<div className="flex flex-col items-center gap-3">
+											<p className="font-medium text-red-700">
+												Não foi possível carregar o inventário.
+											</p>
 											<button
-												className="rounded-lg p-2 transition-colors hover:bg-surface-100"
+												className="btn-secondary"
+												onClick={() => refetchInventory()}
 												type="button"
 											>
-												<Edit className="h-4 w-4 text-surface-600" />
-											</button>
-											<button
-												className="rounded-lg p-2 transition-colors hover:bg-red-50"
-												type="button"
-											>
-												<Trash2 className="h-4 w-4 text-red-600" />
+												Tentar novamente
 											</button>
 										</div>
 									</td>
-								</motion.tr>
-							))}
+								</tr>
+							)}
+
+							{organizationId &&
+								!(isInventoryLoading || isInventoryError) &&
+								filteredItems.length === 0 && (
+									<tr>
+										<td
+											className="px-6 py-8 text-center text-surface-600"
+											colSpan={7}
+										>
+											{searchQuery
+												? "Nenhum item encontrado para a busca."
+												: "Nenhum item de inventário encontrado."}
+										</td>
+									</tr>
+								)}
+
+							{!(isInventoryLoading || isInventoryError) &&
+								filteredItems.map((item, index) => (
+									<motion.tr
+										animate={{ opacity: 1, y: 0 }}
+										className="border-surface-50 border-b hover:bg-surface-50"
+										initial={{ opacity: 0, y: 10 }}
+										key={item.id}
+										transition={{ delay: index * 0.03 }}
+									>
+										<td className="px-6 py-4">
+											<p className="font-medium text-surface-900">
+												{item.name}
+											</p>
+										</td>
+										<td className="px-6 py-4">
+											<span className="rounded-full bg-surface-100 px-2 py-1 text-surface-600 text-xs">
+												{item.category}
+											</span>
+										</td>
+										<td className="px-6 py-4">
+											<span
+												className={cn(
+													"font-medium",
+													item.quantity <= item.minQuantity
+														? "text-red-600"
+														: "text-surface-900"
+												)}
+											>
+												{item.quantity} {item.unit}
+											</span>
+										</td>
+										<td className="px-6 py-4 text-surface-500">
+											{item.minQuantity} {item.unit}
+										</td>
+										<td className="px-6 py-4 text-surface-900">
+											{formatCurrency(item.costPerUnit)}
+										</td>
+										<td className="px-6 py-4">
+											{(() => {
+												if (item.quantity <= item.minQuantity) {
+													return (
+														<span className="rounded-full bg-red-100 px-2 py-1 font-medium text-red-700 text-xs">
+															Crítico
+														</span>
+													)
+												}
+												if (item.quantity <= item.minQuantity * 1.5) {
+													return (
+														<span className="rounded-full bg-yellow-100 px-2 py-1 font-medium text-xs text-yellow-700">
+															Baixo
+														</span>
+													)
+												}
+												return (
+													<span className="rounded-full bg-green-100 px-2 py-1 font-medium text-green-700 text-xs">
+														Normal
+													</span>
+												)
+											})()}
+										</td>
+										<td className="px-6 py-4">
+											<div className="flex items-center justify-end gap-2">
+												<button
+													className="rounded-lg p-2 transition-colors hover:bg-surface-100"
+													type="button"
+												>
+													<Edit className="h-4 w-4 text-surface-600" />
+												</button>
+												<button
+													className="rounded-lg p-2 transition-colors hover:bg-red-50"
+													type="button"
+												>
+													<Trash2 className="h-4 w-4 text-red-600" />
+												</button>
+											</div>
+										</td>
+									</motion.tr>
+								))}
 						</tbody>
 					</table>
 				</div>
