@@ -28,12 +28,6 @@ export function Operation() {
 		},
 	})
 
-	const handleOrganizationNameChange = (event: {
-		target: { value: string }
-	}) => {
-		organizationNameField.onChange(event)
-	}
-
 	return (
 		<div className="step-pane inactive-right" id="step-2">
 			<div className="animate-reveal">
