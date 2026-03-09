@@ -33,7 +33,7 @@ arquitetura, naming e ownership no repositorio.
 
 ## Fluxo recomendado de PR
 
-1. Criar branch no padrao `issueNumber/descricao-curta`.
+1. Criar branch no padrao `JIRA-Key/descricao-curta`.
 2. Implementar mudanca com escopo unico.
 3. Rodar validacoes locais:
    - `pnpm build`
