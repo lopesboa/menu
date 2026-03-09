@@ -1,13 +1,8 @@
 import "./styles.css"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Icon } from "@iconify-icon/react"
-import { useState } from "react"
-import {
-	FormProvider,
-	type SubmitHandler,
-	useForm,
-	useWatch,
-} from "react-hook-form"
+import { useEffect, useState } from "react"
+import { FormProvider, type SubmitHandler, useForm } from "react-hook-form"
 import { useNavigate } from "react-router"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -16,183 +11,84 @@ import {
 	useStepperActions,
 	useStepperSelectors,
 } from "@/domains/onboarding/store/stepper-store"
-import { useCities, useCreateAddress } from "@/hooks/use-address"
 import { authClient } from "@/lib/client"
 import { sentryCaptureException } from "@/lib/sentry"
-import { cn } from "@/utils/misc"
+import { cn, createOrgSlug } from "@/utils/misc"
 import { dashboardRoutePaths } from "../manifest"
-import { Concept } from "./components/steps/concept"
-import { Location } from "./components/steps/location"
 import { Operation } from "./components/steps/operation"
 import { StepContent } from "./components/steps/stepper-content"
 import { StepperHeader } from "./components/steps/stepper-header"
 import { StepperRoot } from "./components/steps/stepper-root"
 
-const step1Schema = z.object({
-	ownerName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
-	ownerDocType: z.string().min(1, "Selecione o tipo de documento"),
-	ownerDocNumber: z.string().min(1, "Número do documento é obrigatório"),
-})
-
-const step2Schema = z.object({
+const organizationSchema = z.object({
 	organizationName: z.string().min(3, "Nome deve ter pelo menos 3 caracteres"),
-	slug: z
-		.string()
-		.min(1, "Slug é obrigatório")
-		.regex(/^[a-z0-9-]+$/, "Apenas letras minúsculas, números e hífens"),
-	phone: z.string().min(1, "Telefone é obrigatório"),
-	docType: z.string().min(1, "Selecione o tipo de documento"),
-	docNumber: z.string().min(1, "Número do documento é obrigatório"),
-	categoryId: z.string().min(1, "Selecione uma categoria"),
-	// operationType: z.string().min(1, "Selecione o tipo de operação"),
 })
 
-const step3Schema = z.object({
-	zipCode: z.string().min(1, "CEP é obrigatório"),
-	state: z.string().min(1, "Selecione um estado"),
-	city: z.string().min(1, "Selecione uma cidade"),
-	street: z.string().min(1, "Endereço é obrigatório"),
-	number: z.string().min(1, "Número é obrigatório"),
-	complement: z.string().optional(),
-	neighborhood: z.string().min(1, "Bairro é obrigatório"),
-})
-
-const fullSchema = step1Schema.merge(step2Schema).merge(step3Schema)
+const fullSchema = organizationSchema
 
 type OrganizationForm = z.infer<typeof fullSchema>
 
-const steps = [
-	{ label: "Dados Pessoais" },
-	{ label: "Empresa" },
-	{ label: "Endereço" },
-]
+const steps = [{ label: "Estabelecimento" }]
 
 export default function AddOrganization() {
 	const [loading, setLoading] = useState(false)
 	const navigate = useNavigate()
 	const { currentStep } = useStepperSelectors()
-	const { goToNext, goToPrevious, setTotalSteps } = useStepperActions()
-	const { mutateAsync, error } = useCreateAddress()
+	const { reset, setTotalSteps } = useStepperActions()
+
+	useEffect(() => {
+		reset()
+		setTotalSteps(steps.length)
+
+		return () => {
+			reset()
+		}
+	}, [reset, setTotalSteps])
 
 	const methods = useForm<OrganizationForm>({
 		resolver: zodResolver(fullSchema),
 		mode: "onChange",
 		defaultValues: {
-			ownerName: "",
-			ownerDocType: undefined,
-			ownerDocNumber: "",
 			organizationName: "",
-			slug: "",
-			phone: "",
-			docType: undefined,
-			docNumber: "",
-			categoryId: "",
-			// operationType: "",
-			zipCode: "",
-			state: "",
-			city: "",
-			street: "",
-			number: "",
-			complement: "",
-			neighborhood: "",
 		},
 	})
 
-	const { handleSubmit, trigger } = methods
-
-	const [state, city] = useWatch({
-		control: methods.control,
-		name: ["state", "city"],
-	})
-
-	const { data: cities = [] } = useCities(state)
-	const selectedCity = cities.find((c) => c.name === city)
-
-	const validateCurrentStep = async (): Promise<boolean> => {
-		let fieldsToValidate: (keyof OrganizationForm)[] = []
-
-		switch (currentStep) {
-			case 1:
-				fieldsToValidate = ["ownerName", "ownerDocType", "ownerDocNumber"]
-				break
-			case 2:
-				fieldsToValidate = [
-					"organizationName",
-					"slug",
-					"phone",
-					"docType",
-					"docNumber",
-					"categoryId",
-					// "operationType",
-				]
-				break
-			case 3:
-				fieldsToValidate = [
-					"zipCode",
-					"state",
-					"city",
-					"street",
-					"number",
-					"neighborhood",
-				]
-				break
-			default:
-				fieldsToValidate = []
-		}
-
-		const isValid = await trigger(fieldsToValidate)
-		return isValid
-	}
+	const { handleSubmit } = methods
 
 	const onSubmit: SubmitHandler<OrganizationForm> = async (data) => {
 		try {
 			setLoading(true)
 
-			const addressData = {
-				street: data.street,
-				number: data.number,
-				complement: data.complement,
-				neighborhood: data.neighborhood,
-				zipCode: data.zipCode,
-				cityId: selectedCity?.id || "",
-			}
+			const slug = createOrgSlug(data.organizationName)
 
-			const { id: addressId } = await mutateAsync(addressData)
+			if (!slug) {
+				toast.error("Falha na criação", {
+					description:
+						"Nao foi possivel gerar o link do estabelecimento a partir do nome informado.",
+				})
+				return
+			}
 
 			const metadata = {
-				// operationType: data.operationType,
-				// ownerName: data.ownerName,
-				ownerDocType: data.ownerDocType,
-				ownerDocNumber: data.ownerDocNumber,
 				plan: "free",
 			}
-
-			console.log(data.categoryId, addressId, error)
 
 			await authClient.organization.create(
 				{
 					name: data.organizationName,
-					slug: data.slug,
+					slug,
 					logo: "",
 					metadata,
-					isActive: true,
-					// phone: data.phone,
-					docType: data.docType.toLowerCase(),
-					// planExpiresAt: new Date(),
-					docNumber: data.docNumber,
-					categoryId: data.categoryId,
-					addressId,
-					// isOpen: true,
-
-					keepCurrentActiveOrganization: true,
+					keepCurrentActiveOrganization: false,
 				} as never,
 				{
 					onSuccess: () => {
-						toast.success("Organização criada!", {
-							description: "Seu estabelecimento foi criado com sucesso.",
+						reset()
+						toast.success("Estabelecimento criado!", {
+							description:
+								"Agora você pode completar os demais dados dentro da plataforma.",
 						})
 						navigate(dashboardRoutePaths.home, { replace: true })
-						authClient.useActiveOrganization
 					},
 					onError: (err) => {
 						toast.error("Falha na criação", {
@@ -209,23 +105,6 @@ export default function AddOrganization() {
 			})
 		} finally {
 			setLoading(false)
-		}
-	}
-
-	const handleNext = async () => {
-		if (currentStep < steps.length) {
-			const isValid = await validateCurrentStep()
-			if (isValid) {
-				goToNext()
-			}
-		} else {
-			handleSubmit(onSubmit)()
-		}
-	}
-
-	const handleBack = () => {
-		if (currentStep > 1) {
-			goToPrevious()
 		}
 	}
 
@@ -255,11 +134,11 @@ export default function AddOrganization() {
 								Criar Estabelecimento
 							</h3>
 							<p className="animate-enter text-slate-500 text-xs delay-500">
-								Configure seu estabelecimento em minutos.
+								Comece com o essencial e complete o restante depois.
 							</p>
 						</div>
 					</div>
-					<StepperHeader steps={steps} />
+					<StepperHeader allowClickNavigation={false} steps={steps} />
 
 					<FormProvider {...methods}>
 						<form
@@ -268,13 +147,7 @@ export default function AddOrganization() {
 							onSubmit={handleSubmit(onSubmit)}
 						>
 							<StepContent step={1}>
-								<Concept />
-							</StepContent>
-							<StepContent step={2}>
 								<Operation />
-							</StepContent>
-							<StepContent step={3}>
-								<Location />
 							</StepContent>
 						</form>
 					</FormProvider>
@@ -289,7 +162,6 @@ export default function AddOrganization() {
 							isFirstStep ? "opacity-0" : ""
 						)}
 						fullWidth={false}
-						onClick={handleBack}
 						type="button"
 						variant="ghost"
 					>
@@ -301,10 +173,10 @@ export default function AddOrganization() {
 						className="group flex transform cursor-pointer items-center gap-3 rounded-xl bg-slate-900 py-3.5 pr-6 pl-8 font-medium text-sm text-white shadow-slate-900/20 shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30"
 						fullWidth={false}
 						loading={loading}
-						onClick={handleNext}
+						onClick={() => handleSubmit(onSubmit)()}
 						type="button"
 					>
-						<span>{currentStep === steps.length ? "Criar" : "Continuar"}</span>
+						<span>Criar estabelecimento</span>
 						<Icon
 							className="transition-transform group-hover:translate-x-1"
 							icon="solar:arrow-right-linear"
