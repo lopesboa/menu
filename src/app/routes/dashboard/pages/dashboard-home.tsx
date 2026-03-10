@@ -1,29 +1,196 @@
 import { motion } from "framer-motion"
 import {
 	ArrowRight,
+	BadgeCheck,
+	CheckCircle2,
+	ClipboardList,
 	DollarSign,
+	Package,
+	Settings,
 	ShoppingCart,
+	Sparkles,
 	TableIcon,
 	TrendingDown,
 	TrendingUp,
 	Users,
+	X,
 } from "lucide-react"
-import { useLoaderData } from "react-router"
+import { useEffect, useMemo, useState } from "react"
+import { useLoaderData, useNavigate } from "react-router"
+import { toast } from "sonner"
 import { StatusBadge } from "@/components/ui/status-badge"
 import {
 	useDashboardSummary,
 	useRevenueChart,
 	useSalesRanking,
 } from "@/hooks/use-dashboard"
+import { authClient } from "@/lib/client"
+import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { RevenueChart } from "../components/recharts/revenue-chart"
 import { MetricCard } from "../components/ui/metric-card"
+import { dashboardRoutePaths } from "../manifest"
+import {
+	completeDashboardOnboardingStep,
+	countCompletedDashboardOnboardingSteps,
+	type DashboardOnboardingChecklist,
+	type DashboardOnboardingStepKey,
+	dismissDashboardOnboardingChecklist,
+	readDashboardOnboardingChecklistFromMetadata,
+} from "../utils/onboarding-checklist"
+
+const onboardingSteps = [
+	{
+		description:
+			"Adicione os primeiros produtos e categorias para comecar a vender.",
+		icon: Package,
+		label: "Configurar cardapio",
+		step: "menu",
+		to: dashboardRoutePaths.menu,
+	},
+	{
+		description:
+			"Revise dados do estabelecimento e complete informacoes quando precisar.",
+		icon: Settings,
+		label: "Revisar configuracoes",
+		step: "settings",
+		to: dashboardRoutePaths.settings,
+	},
+	{
+		description: "Confira plano, cobranca e os proximos passos comerciais.",
+		icon: BadgeCheck,
+		label: "Ver cobranca",
+		step: "billing",
+		to: dashboardRoutePaths.billing,
+	},
+] as const
 
 export default function DashboardHome() {
 	const loaderData = useLoaderData()
+	const navigate = useNavigate()
+	const [checklistData, setChecklistData] =
+		useState<DashboardOnboardingChecklist | null>(null)
+	const [organizationMetadata, setOrganizationMetadata] = useState<Record<
+		string,
+		unknown
+	> | null>(null)
+	const [checklistActionLoading, setChecklistActionLoading] = useState(false)
 
 	const organizationId = loaderData.orgId
+
+	useEffect(() => {
+		let isMounted = true
+
+		async function loadOrganizationChecklist() {
+			if (!organizationId) {
+				return
+			}
+
+			const { data, error } = await authClient.organization.getFullOrganization(
+				{
+					query: { organizationId },
+				}
+			)
+
+			if (!isMounted) {
+				return
+			}
+
+			if (error) {
+				sentryCaptureException(error)
+				return
+			}
+
+			const metadata =
+				data?.metadata && typeof data.metadata === "object"
+					? (data.metadata as Record<string, unknown>)
+					: {}
+
+			setOrganizationMetadata(metadata)
+			setChecklistData(readDashboardOnboardingChecklistFromMetadata(metadata))
+		}
+
+		loadOrganizationChecklist().catch(sentryCaptureException)
+
+		return () => {
+			isMounted = false
+		}
+	}, [organizationId])
+
+	const completedSteps = useMemo(
+		() =>
+			checklistData ? countCompletedDashboardOnboardingSteps(checklistData) : 0,
+		[checklistData]
+	)
+
+	async function updateChecklistMetadata(
+		nextChecklist: DashboardOnboardingChecklist
+	) {
+		if (!organizationId) {
+			return false
+		}
+
+		setChecklistActionLoading(true)
+
+		try {
+			const nextMetadata = {
+				...(organizationMetadata ?? {}),
+				onboardingChecklist: nextChecklist,
+			}
+
+			const { error } = await authClient.organization.update({
+				data: {
+					metadata: nextMetadata,
+				},
+				organizationId,
+			})
+
+			if (error) {
+				toast.error("Nao foi possivel atualizar seus proximos passos.")
+				sentryCaptureException(error)
+				return false
+			}
+
+			setOrganizationMetadata(nextMetadata)
+			setChecklistData(nextChecklist)
+			return true
+		} catch (error) {
+			toast.error("Nao foi possivel atualizar seus proximos passos.")
+			sentryCaptureException(error)
+			return false
+		} finally {
+			setChecklistActionLoading(false)
+		}
+	}
+
+	async function handleDismissChecklist() {
+		if (!checklistData) {
+			return
+		}
+
+		await updateChecklistMetadata(
+			dismissDashboardOnboardingChecklist(checklistData)
+		)
+	}
+
+	async function handleChecklistNavigation(
+		step: DashboardOnboardingStepKey,
+		to: string
+	) {
+		if (!checklistData) {
+			navigate(to)
+			return
+		}
+
+		const updated = await updateChecklistMetadata(
+			completeDashboardOnboardingStep(checklistData, step)
+		)
+
+		if (updated) {
+			navigate(to)
+		}
+	}
 
 	const { data: dashboardSummary } = useDashboardSummary(organizationId, 10)
 	const { data: revenueChart } = useRevenueChart(organizationId, 30)
@@ -76,6 +243,99 @@ export default function DashboardHome() {
 
 	return (
 		<div className="space-y-6">
+			{checklistData && !checklistData.dismissedAt && (
+				<motion.section
+					animate={{ opacity: 1, y: 0 }}
+					className="relative overflow-hidden rounded-3xl border border-amber-200 bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.18),transparent_35%),linear-gradient(135deg,rgba(255,251,235,1)_0%,rgba(255,255,255,1)_55%,rgba(255,237,213,0.85)_100%)] p-6 shadow-sm"
+					initial={{ opacity: 0, y: 16 }}
+				>
+					<div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-amber-200/30 blur-3xl" />
+					<div className="absolute bottom-0 left-0 h-32 w-32 rounded-full bg-orange-200/20 blur-3xl" />
+					<div className="relative flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+						<div className="max-w-2xl space-y-3">
+							<div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 font-medium text-amber-900 text-xs">
+								<Sparkles className="h-3.5 w-3.5" />
+								Primeiros passos do seu estabelecimento
+							</div>
+							<div>
+								<h2 className="font-semibold text-2xl text-surface-900">
+									Tudo certo, {checklistData.name} foi criado.
+								</h2>
+								<p className="mt-2 max-w-xl text-surface-600">
+									Seu link inicial e `{checklistData.slug}.grupoboa.com.br`.
+									Agora voce pode completar o restante sem pressa.
+								</p>
+							</div>
+							<div className="flex flex-wrap items-center gap-3 text-sm">
+								<div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-surface-700 shadow-sm ring-1 ring-amber-100">
+									<CheckCircle2 className="h-4 w-4 text-emerald-600" />
+									Estabelecimento criado com sucesso
+								</div>
+								<div className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-surface-700 shadow-sm ring-1 ring-amber-100">
+									<ClipboardList className="h-4 w-4 text-amber-700" />
+									{completedSteps}/{completedSteps + onboardingSteps.length}{" "}
+									passos concluidos
+								</div>
+							</div>
+						</div>
+						<button
+							className="inline-flex items-center gap-2 self-start rounded-full border border-surface-200 bg-white px-3 py-2 font-medium text-sm text-surface-600 transition-colors hover:border-surface-300 hover:text-surface-900"
+							disabled={checklistActionLoading}
+							onClick={handleDismissChecklist}
+							type="button"
+						>
+							<X className="h-4 w-4" />
+							Fechar
+						</button>
+					</div>
+
+					<div className="relative mt-6 grid gap-3 lg:grid-cols-3">
+						{onboardingSteps.map((step, index) => {
+							const StepIcon = step.icon
+
+							return (
+								<div
+									className="group rounded-2xl border border-white bg-white/90 p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-amber-200 hover:shadow-md"
+									key={step.label}
+								>
+									<div className="mb-3 flex items-center justify-between">
+										<div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
+											<StepIcon className="h-5 w-5" />
+										</div>
+										<span className="rounded-full bg-surface-100 px-2 py-1 font-medium text-surface-500 text-xs">
+											0{index + 1}
+										</span>
+									</div>
+									<h3 className="font-semibold text-base text-surface-900">
+										{step.label}
+									</h3>
+									<p className="mt-1 text-sm text-surface-600">
+										{step.description}
+									</p>
+									<button
+										className="mt-4 inline-flex items-center gap-2 font-medium text-amber-800 text-sm"
+										disabled={checklistActionLoading}
+										onClick={() =>
+											handleChecklistNavigation(step.step, step.to)
+										}
+										type="button"
+									>
+										Abrir agora
+										<ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+									</button>
+								</div>
+							)
+						})}
+					</div>
+
+					<div className="relative mt-4 flex items-center gap-2 text-emerald-700 text-sm">
+						<CheckCircle2 className="h-4 w-4" />
+						Voce nao precisa completar tudo agora. O importante era entrar na
+						plataforma.
+					</div>
+				</motion.section>
+			)}
+
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
 				initial={{ opacity: 0, y: -20 }}
