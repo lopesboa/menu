@@ -15,6 +15,7 @@ import { authClient } from "@/lib/client"
 import { sentryCaptureException } from "@/lib/sentry"
 import { cn, createOrgSlug } from "@/utils/misc"
 import { dashboardRoutePaths } from "../manifest"
+import { createDashboardOnboardingChecklist } from "../utils/onboarding-checklist"
 import { Operation } from "./components/steps/operation"
 import { StepContent } from "./components/steps/stepper-content"
 import { StepperHeader } from "./components/steps/stepper-header"
@@ -70,6 +71,10 @@ export default function AddOrganization() {
 			}
 
 			const metadata = {
+				onboardingChecklist: createDashboardOnboardingChecklist({
+					name: data.organizationName,
+					slug,
+				}),
 				plan: "free",
 			}
 
@@ -171,10 +176,10 @@ export default function AddOrganization() {
 
 					<Button
 						className="group flex transform cursor-pointer items-center gap-3 rounded-xl bg-slate-900 py-3.5 pr-6 pl-8 font-medium text-sm text-white shadow-slate-900/20 shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/30"
+						form="org-form"
 						fullWidth={false}
 						loading={loading}
-						onClick={() => handleSubmit(onSubmit)()}
-						type="button"
+						type="submit"
 					>
 						<span>Criar estabelecimento</span>
 						<Icon

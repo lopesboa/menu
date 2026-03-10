@@ -61,7 +61,6 @@ export function Operation() {
 									"border-red-500 focus:border-red-500 focus:ring-red-100"
 							)}
 							id="organizationName"
-							// onChange={handleOrganizationNameChange}
 							placeholder="Ex: Trattoria da Nonna"
 							type="text"
 						/>
@@ -94,7 +93,8 @@ export function Operation() {
 						</div>
 					</div>
 					<p className="mt-1 text-slate-400 text-xs">
-						O link e gerado automaticamente com base no nome do estabelecimento.
+						O link e gerado automaticamente com base no nome do estabelecimento
+						e podera ser alterado depois.
 					</p>
 				</div>
 
