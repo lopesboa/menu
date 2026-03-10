@@ -61,6 +61,7 @@ export function Operation() {
 									"border-red-500 focus:border-red-500 focus:ring-red-100"
 							)}
 							id="organizationName"
+							// onChange={handleOrganizationNameChange}
 							placeholder="Ex: Trattoria da Nonna"
 							type="text"
 						/>
