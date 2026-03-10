@@ -23,7 +23,7 @@ export interface CreateProductPayload {
 	categoryId: string
 	name: string
 	description?: string | null
-	price: number
+	price: string
 	imageUrl?: string | null
 	available?: boolean
 	calories?: number | null
@@ -38,7 +38,7 @@ export interface UpdateProductPayload {
 	categoryId?: string
 	name?: string
 	description?: string | null
-	price?: number
+	price?: string
 	imageUrl?: string | null
 	available?: boolean
 	calories?: number | null
