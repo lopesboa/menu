@@ -322,7 +322,7 @@ export function MenuBuilderPage() {
 			categoryId: productForm.categoryId,
 			name: productForm.name.trim(),
 			description: productForm.description.trim() || null,
-			price: parsedPrice,
+			price: productForm.price,
 			imageUrl: productForm.imageUrl.trim() || null,
 			available: productForm.available,
 			prepTime: Math.trunc(parsedPreparationTime),
@@ -393,7 +393,7 @@ export function MenuBuilderPage() {
 				data: {
 					organizationId,
 					name: newCategoryForm.name.trim(),
-					description: newCategoryForm.description.trim() || null,
+					description: newCategoryForm.description.trim(),
 					active: newCategoryForm.active,
 				},
 			})
