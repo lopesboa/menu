@@ -18,3 +18,9 @@ Formatter and linter configured with Biome/Ultracite.
 - Use `as const` assertions (error)
 - Use self-closing elements (error)
 - Sorted CSS classes with clsx/cva/cn functions (warn)
+
+## Biome Workflow
+
+- Prefer refactoring code to satisfy Biome rules instead of adding suppressions
+- Do not introduce `biome-ignore` comments for new work without explicit team approval
+- If a change triggers Biome warnings or errors during development, adjust the implementation and rerun `pnpm check`

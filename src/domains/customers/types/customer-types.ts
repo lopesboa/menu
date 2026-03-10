@@ -11,3 +11,18 @@ export interface Customer {
 	preferences?: string[]
 	avatar?: string
 }
+
+export interface CustomerApi {
+	id: string
+	organizationId: string
+	userId: string | null
+	name: string | null
+	email: string | null
+	phone: string | null
+	totalOrders: number | null
+	totalSpent: number | null
+	loyaltyPoints: number | null
+	lastVisit: string | null
+	preferences: string[] | null
+	avatar: string | null
+}

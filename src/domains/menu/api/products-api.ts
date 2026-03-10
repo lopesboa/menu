@@ -1,12 +1,17 @@
 import { apiFetch } from "@/utils/fetch"
 import type { MenuItem } from "../types/menu.types"
-import type { ProductApi } from "../types/product.types"
+import type {
+	CreateProductPayload,
+	ProductApi,
+	UpdateProductPayload,
+} from "../types/product.types"
 
 const DEFAULT_CATEGORY_NAME = "Sem categoria"
 
 export function mapProductApiToMenuItem(product: ProductApi): MenuItem {
 	return {
 		...product,
+		categoryId: product.categoryId,
 		description: product.description ?? "",
 		category: product.categoryName?.trim() || DEFAULT_CATEGORY_NAME,
 		image: product.imageUrl ?? "",
@@ -33,4 +38,49 @@ export function getProductsByCategory(
 			signal,
 		}
 	)
+}
+
+export function getProductById(
+	organizationId: string,
+	productId: string,
+	signal?: AbortSignal
+): Promise<ProductApi> {
+	return apiFetch<ProductApi>(`/products/${organizationId}/${productId}`, {
+		signal,
+	})
+}
+
+export function createProduct(
+	data: CreateProductPayload,
+	signal?: AbortSignal
+): Promise<ProductApi> {
+	return apiFetch<ProductApi>("/products", {
+		signal,
+		method: "POST",
+		body: JSON.stringify(data),
+	})
+}
+
+export function updateProduct(
+	organizationId: string,
+	productId: string,
+	data: UpdateProductPayload,
+	signal?: AbortSignal
+): Promise<ProductApi> {
+	return apiFetch<ProductApi>(`/products/${organizationId}/${productId}`, {
+		signal,
+		method: "PATCH",
+		body: JSON.stringify(data),
+	})
+}
+
+export function deleteProduct(
+	organizationId: string,
+	productId: string,
+	signal?: AbortSignal
+): Promise<{ success: boolean } | { message: string } | unknown> {
+	return apiFetch(`/products/${organizationId}/${productId}`, {
+		signal,
+		method: "DELETE",
+	})
 }

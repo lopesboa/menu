@@ -17,3 +17,34 @@ export interface ProductApi {
 	createdAt: string
 	updatedAt: string
 }
+
+export interface CreateProductPayload {
+	organizationId: string
+	categoryId: string
+	name: string
+	description?: string | null
+	price: string
+	imageUrl?: string | null
+	available?: boolean
+	calories?: number | null
+	allergens?: string[] | null
+	isNew?: boolean
+	isSignature?: boolean
+	order?: number | null
+	prepTime?: number | null
+}
+
+export interface UpdateProductPayload {
+	categoryId?: string
+	name?: string
+	description?: string | null
+	price?: string
+	imageUrl?: string | null
+	available?: boolean
+	calories?: number | null
+	allergens?: string[] | null
+	isNew?: boolean
+	isSignature?: boolean
+	order?: number | null
+	prepTime?: number | null
+}
