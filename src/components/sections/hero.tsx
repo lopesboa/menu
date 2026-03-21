@@ -88,7 +88,7 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 							Para restaurantes com salão, delivery e balcão no mesmo turno
 						</div>
 
-						<h1 className="mb-6 bg-linear-to-b from-white to-white/65 bg-clip-text font-medium text-4xl text-transparent leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+						<h1 className="mb-6 font-medium text-4xl text-slate-50 leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
 							<div className="reveal-trigger overflow-hidden text-clip-reveal">
 								<span className="pb-2">Controle pedidos, estoque</span>
 							</div>
@@ -99,7 +99,7 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 							</div>
 						</h1>
 
-						<p className="mb-7 max-w-xl animate-reveal text-base text-slate-400 leading-relaxed delay-300 md:mb-8 md:text-lg">
+						<p className="mb-7 max-w-xl animate-reveal text-base text-slate-300 leading-relaxed delay-300 md:mb-8 md:text-lg">
 							Organize salão, delivery e balcão em um sistema que reduz erros no
 							horário de pico, acelera a equipe e dá visibilidade do estoque
 							antes de virar problema.
