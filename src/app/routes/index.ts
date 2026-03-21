@@ -6,9 +6,11 @@ import { authRouteSegments } from "./auth/manifest"
 import { dashboardRouteSegments } from "./dashboard/manifest"
 import { RouteErrorBoundary } from "./error-boundary"
 import { NotFoundPage } from "./error-pages/not-found"
+import { seoRouteSegments } from "./seo/manifest"
 
 const HomeLayout = lazy(() => import("../../components/layout/layout"))
 const HomeContent = lazy(() => import("./home"))
+const AcquisitionPage = lazy(() => import("./seo/acquisition-page"))
 const AuthLayout = lazy(() => import("./auth"))
 const Login = lazy(() => import("./auth/login"))
 const Forgot = lazy(() => import("./auth/forgot"))
@@ -74,6 +76,10 @@ export const router = createBrowserRouter([
 			{
 				index: true,
 				Component: HomeContent,
+			},
+			{
+				path: `${seoRouteSegments.solutions}/:landingSlug`,
+				Component: AcquisitionPage,
 			},
 			{
 				Component: AuthLayout,

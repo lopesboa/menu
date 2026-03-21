@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/react"
+import { Link } from "react-router"
 
 export function Footer() {
 	return (
@@ -14,6 +15,20 @@ export function Footer() {
 				</div>
 				<div className="text-slate-500 text-xs">
 					© 2024 Menu Bão Ltda. Todos os direitos reservados.
+				</div>
+				<div className="flex items-center gap-4 text-slate-400 text-xs">
+					<Link
+						className="hover:text-white"
+						to="/solucoes/sistema-para-restaurante"
+					>
+						Soluções
+					</Link>
+					<Link className="hover:text-white" to="/#integrations">
+						Integrações
+					</Link>
+					<Link className="hover:text-white" to="/#pricing">
+						Preços
+					</Link>
 				</div>
 				<div className="flex gap-4">
 					<a

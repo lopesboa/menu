@@ -10,6 +10,7 @@ import { PricingSection } from "@/components/sections/pricing"
 import { ROISection } from "@/components/sections/roi"
 import { DemoSales } from "@/components/sections/sales"
 import { TestimonialsSection } from "@/components/sections/testimonial"
+import { SEOHead } from "@/components/seo/seo-head"
 import { Button } from "@/components/ui/button"
 import { usePostHogEvent } from "@/hooks/use-posthog"
 import { AnalyticsEvents } from "@/lib/analytics/events"
@@ -258,6 +259,31 @@ export default function Home() {
 
 	return (
 		<main>
+			<SEOHead
+				canonicalPath="/"
+				description="O sistema operacional completo para restaurantes modernos. Centralize iFood, Rappi, Cardápio Digital e Gestão Financeira em uma única tela. Teste grátis!"
+				keywords="sistema para restaurante, sistema pdv, cardápio digital, gestão de delivery, ifood integração, frente de caixa, automação comercial, menu bão"
+				structuredData={{
+					"@context": "https://schema.org",
+					"@type": "SoftwareApplication",
+					name: "Menu Bão",
+					operatingSystem: "Web, Android, iOS",
+					applicationCategory: "BusinessApplication",
+					aggregateRating: {
+						"@type": "AggregateRating",
+						ratingValue: "4.9",
+						ratingCount: "500",
+					},
+					offers: {
+						"@type": "Offer",
+						price: "0",
+						priceCurrency: "BRL",
+					},
+					description:
+						"Sistema operacional completo para gestão de restaurantes, delivery e cardápio digital.",
+				}}
+				title="Menu Bão - Sistema PDV e Gestão para Restaurantes e Delivery"
+			/>
 			<HeroSection
 				onShowDemo={handleOnShowDemo}
 				onStartRegister={handleRegisterClick}
