@@ -1,18 +1,17 @@
 import { Icon } from "@iconify-icon/react"
-import { ROI_ID, SIGN_UP_MODAL_ID } from "@/app/constants"
+import { ROI_ID } from "@/app/constants"
 import { useDialogActions } from "@/app/store/dialog"
 import { ShowROI } from "./show-roi"
 
 export function ROISection() {
-	const { openDialog, toggleDialog } = useDialogActions()
+	const { closeDialog, toggleDialog } = useDialogActions()
 
 	const handleOnToggleROIDemo = () => {
 		toggleDialog(ROI_ID)
 	}
 
 	const handleOnStartNow = () => {
-		toggleDialog(ROI_ID)
-		openDialog(SIGN_UP_MODAL_ID)
+		closeDialog(ROI_ID)
 	}
 
 	return (

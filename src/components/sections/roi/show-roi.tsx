@@ -1,6 +1,17 @@
 import { Icon } from "@iconify-icon/react"
+import { useMemo, useState } from "react"
 import { Link } from "react-router"
 import { Dialog } from "@/components/ui/dialog"
+import { formatCurrency, formatNumber } from "@/utils/helpers"
+
+const ordersMin = 100
+const ordersMax = 10_000
+const hoursMin = 1
+const hoursMax = 60
+
+function normalizeValue(value: number, min: number, max: number) {
+	return (value - min) / (max - min)
+}
 
 export function ShowROI({
 	onCloseDemo,
@@ -9,6 +20,31 @@ export function ShowROI({
 	onStartNow: () => void
 	onCloseDemo: () => void
 }) {
+	const [monthlyRevenue, setMonthlyRevenue] = useState(50_000)
+	const [monthlyOrders, setMonthlyOrders] = useState(1500)
+	const [weeklyHours, setWeeklyHours] = useState(10)
+
+	const roiResult = useMemo(() => {
+		const revenueFactor =
+			0.18 +
+			normalizeValue(monthlyOrders, ordersMin, ordersMax) * 0.08 +
+			normalizeValue(weeklyHours, hoursMin, hoursMax) * 0.06
+		const annualRevenueGain = monthlyRevenue * revenueFactor * 12
+		const weeklyHoursSaved = Math.min(
+			weeklyHours * 0.45 +
+				normalizeValue(monthlyOrders, ordersMin, ordersMax) * 4,
+			weeklyHours * 0.8
+		)
+		const annualHoursSaved = Math.round(weeklyHoursSaved * 52)
+		const equivalentDaysSaved = Math.max(1, Math.round(annualHoursSaved / 8))
+
+		return {
+			annualRevenueGain,
+			annualHoursSaved,
+			equivalentDaysSaved,
+		}
+	}, [monthlyOrders, monthlyRevenue, weeklyHours])
+
 	return (
 		<Dialog id="roi">
 			<div
@@ -54,7 +90,7 @@ export function ShowROI({
 									className="rounded border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 font-mono text-indigo-400 text-sm"
 									id="display-revenue"
 								>
-									R$ 50.000
+									{formatCurrency(monthlyRevenue)}
 								</span>
 							</div>
 							<input
@@ -62,9 +98,12 @@ export function ShowROI({
 								id="input-revenue"
 								max="500000"
 								min="10000"
+								onChange={(event) => {
+									setMonthlyRevenue(Number(event.currentTarget.value))
+								}}
 								step="1000"
 								type="range"
-								value="50000"
+								value={monthlyRevenue}
 							/>
 							<div className="mt-2 flex justify-between font-mono text-[10px] text-slate-500">
 								<span>R$ 10k</span>
@@ -81,7 +120,7 @@ export function ShowROI({
 									className="rounded border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 font-mono text-indigo-400 text-sm"
 									id="display-orders"
 								>
-									1,500
+									{formatNumber(monthlyOrders)}
 								</span>
 							</div>
 							<input
@@ -89,9 +128,12 @@ export function ShowROI({
 								id="input-orders"
 								max="10000"
 								min="100"
+								onChange={(event) => {
+									setMonthlyOrders(Number(event.currentTarget.value))
+								}}
 								step="50"
 								type="range"
-								value="1500"
+								value={monthlyOrders}
 							/>
 							<div className="mt-2 flex justify-between font-mono text-[10px] text-slate-500">
 								<span>100</span>
@@ -108,7 +150,7 @@ export function ShowROI({
 									className="rounded border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 font-mono text-indigo-400 text-sm"
 									id="display-hours"
 								>
-									10h
+									{weeklyHours}h
 								</span>
 							</div>
 							<input
@@ -116,9 +158,12 @@ export function ShowROI({
 								id="input-hours"
 								max="60"
 								min="1"
+								onChange={(event) => {
+									setWeeklyHours(Number(event.currentTarget.value))
+								}}
 								step="1"
 								type="range"
-								value="10"
+								value={weeklyHours}
 							/>
 							<div className="mt-2 flex justify-between font-mono text-[10px] text-slate-500">
 								<span>1h</span>
@@ -147,7 +192,7 @@ export function ShowROI({
 								className="font-semibold text-3xl text-white tabular-nums tracking-tight"
 								id="result-revenue"
 							>
-								R$ 120.000
+								{formatCurrency(roiResult.annualRevenueGain)}
 							</div>
 							<p className="mt-1 text-slate-500 text-xs">
 								Estimativa com base em ganho médio de eficiência operacional
@@ -168,28 +213,26 @@ export function ShowROI({
 								className="font-semibold text-3xl text-white tabular-nums tracking-tight"
 								id="result-hours"
 							>
-								260h
+								{roiResult.annualHoursSaved}h
 							</div>
 							<p className="mt-1 text-slate-500 text-xs">
 								Estimativa equivalente a{" "}
 								<span className="font-medium text-blue-400">
-									32 dias de trabalho
+									{roiResult.equivalentDaysSaved} dias de trabalho
 								</span>
 								.
 							</p>
 						</div>
 
 						<div className="pt-6">
-							<button
-								className="w-full rounded-lg bg-white py-3 font-medium text-black shadow-lg transition-colors hover:bg-slate-200"
-								name="Começar agora"
+							<Link
+								aria-label="Começar agora"
+								className="flex w-full items-center justify-center rounded-lg bg-white py-3 font-medium text-black shadow-lg transition-colors hover:bg-slate-200"
 								onClick={onStartNow}
-								type="button"
+								to="/register"
 							>
-								<Link aria-label="Começar agora" to="/register">
-									Começar agora
-								</Link>
-							</button>
+								Começar agora
+							</Link>
 							<p className="mt-3 text-center text-[10px] text-slate-600">
 								Estimativas com base em dados médios de clientes ativos entre
 								jan/2026 e mar/2026.
