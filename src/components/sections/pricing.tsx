@@ -1,10 +1,64 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import { buildLandingEventProperties } from "@/lib/analytics/landing"
 import { Button } from "../ui/button"
 
-export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
+export function PricingSection({
+	onShowDemo,
+	onStartRegister,
+}: {
+	onShowDemo: (params: { ctaLabel: string; ctaPosition: string }) => void
+	onStartRegister: (params: {
+		ctaLabel: string
+		ctaPosition: string
+		plan?: string
+	}) => void
+}) {
+	const { capture } = usePostHogEvent()
+
+	const handlePlanSelection = ({
+		ctaLabel,
+		ctaPosition,
+		plan,
+	}: {
+		ctaLabel: string
+		ctaPosition: string
+		plan: string
+	}) => {
+		const properties = buildLandingEventProperties({
+			cta_label: ctaLabel,
+			cta_position: ctaPosition,
+			plan,
+		})
+
+		capture(AnalyticsEvents.PRICING_PLAN_SELECTED, properties)
+	}
+
+	const handleRegisterPlan = ({
+		ctaLabel,
+		ctaPosition,
+		plan,
+	}: {
+		ctaLabel: string
+		ctaPosition: string
+		plan: string
+	}) => {
+		handlePlanSelection({ ctaLabel, ctaPosition, plan })
+		onStartRegister({ ctaLabel, ctaPosition, plan })
+	}
+
 	const handleOnTalkWithSales = () => {
-		onShowDemo()
+		handlePlanSelection({
+			ctaLabel: "Falar com especialista",
+			ctaPosition: "pricing_enterprise",
+			plan: "empresarial",
+		})
+		onShowDemo({
+			ctaLabel: "Falar com especialista",
+			ctaPosition: "pricing_enterprise",
+		})
 	}
 
 	return (
@@ -68,6 +122,13 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							<Button variant="secondary">
 								<Link
 									aria-label="Navegar para criar conta grátis"
+									onClick={() => {
+										handleRegisterPlan({
+											ctaLabel: "Criar conta grátis",
+											ctaPosition: "pricing_starter",
+											plan: "inicial",
+										})
+									}}
 									to="/register"
 								>
 									Criar conta grátis
@@ -135,6 +196,13 @@ export function PricingSection({ onShowDemo }: { onShowDemo: () => void }) {
 							<Button>
 								<Link
 									aria-label="Navegar para assinar plano profissional"
+									onClick={() => {
+										handleRegisterPlan({
+											ctaLabel: "Assinar Profissional",
+											ctaPosition: "pricing_professional",
+											plan: "profissional",
+										})
+									}}
 									to="/register"
 								>
 									Assinar Profissional

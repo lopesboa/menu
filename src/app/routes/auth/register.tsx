@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
 import { Field } from "@/components/form"
 import { Button } from "@/components/ui/button"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import { consumeLandingRegisterIntent } from "@/lib/analytics/landing"
 import { authClient } from "@/lib/client"
 import type { SignUpForm } from "@/types/auth"
 import { SignUpFormSchema } from "@/utils/user-validation"
@@ -13,6 +16,7 @@ import { authRoutePaths, sanitizeAuthRedirectPath } from "./manifest"
 
 export default function Register() {
 	const navigate = useNavigate()
+	const { capture } = usePostHogEvent()
 	const [loading, setLoading] = useState(false)
 
 	const {
@@ -50,6 +54,11 @@ export default function Register() {
 				} as never,
 				{
 					onSuccess() {
+						const registerIntent = consumeLandingRegisterIntent()
+						if (registerIntent) {
+							capture(AnalyticsEvents.REGISTER_COMPLETED, registerIntent)
+						}
+
 						navigate(redirectTo, {
 							state: { email: data.email, redirectTo: data.redirectTo },
 						})
