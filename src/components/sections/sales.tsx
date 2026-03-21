@@ -7,6 +7,12 @@ import { z } from "zod/v4"
 import { DEMO_SALES_ID } from "@/app/constants"
 import { useDialog, useDialogActions } from "@/app/store/dialog"
 import { ErrorList, Field } from "@/components/form"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import {
+	buildLandingEventProperties,
+	rememberLandingRegisterIntent,
+} from "@/lib/analytics/landing"
 import {
 	type DemoRequestResult,
 	submitDemoRequest,
@@ -43,7 +49,9 @@ type DemoSalesForm = z.infer<typeof demoSalesSchema>
 export function DemoSales() {
 	const { closeDialog } = useDialogActions()
 	const { dialogs } = useDialog()
+	const { capture } = usePostHogEvent()
 	const [loading, setLoading] = useState(false)
+	const [hasTrackedStart, setHasTrackedStart] = useState(false)
 	const [submitError, setSubmitError] = useState<string | null>(null)
 	const [successTransport, setSuccessTransport] = useState<
 		DemoRequestResult["transport"] | null
@@ -70,19 +78,59 @@ export function DemoSales() {
 	const handleCloseDemoSales = () => {
 		setSubmitError(null)
 		setSuccessTransport(null)
+		setHasTrackedStart(false)
 		reset()
 		closeDialog(DEMO_SALES_ID)
 	}
 
 	const handleGoToRegister = () => {
+		const properties = buildLandingEventProperties({
+			cta_label: "Criar conta grátis",
+			cta_position: "demo_success_primary",
+		})
+
+		capture(AnalyticsEvents.CTA_CLICKED, properties)
+		capture(AnalyticsEvents.REGISTER_STARTED, properties)
+		rememberLandingRegisterIntent(properties)
 		handleCloseDemoSales()
+	}
+
+	const handleDemoStart = () => {
+		if (hasTrackedStart) {
+			return
+		}
+
+		capture(
+			AnalyticsEvents.DEMO_STARTED,
+			buildLandingEventProperties({
+				cta_label: "Quero agendar minha demo",
+				cta_position: "demo_modal",
+			})
+		)
+		setHasTrackedStart(true)
 	}
 
 	const onSubmit: SubmitHandler<DemoSalesForm> = async (data) => {
 		try {
 			setLoading(true)
 			setSubmitError(null)
+			capture(
+				AnalyticsEvents.DEMO_SUBMITTED,
+				buildLandingEventProperties({
+					cta_label: "Quero agendar minha demo",
+					cta_position: "demo_modal",
+					units: data.units,
+				})
+			)
 			const result = await submitDemoRequest(data)
+			capture(
+				AnalyticsEvents.DEMO_SUCCESS,
+				buildLandingEventProperties({
+					cta_label: "Quero agendar minha demo",
+					cta_position: "demo_modal",
+					units: data.units,
+				})
+			)
 			setSuccessTransport(result.transport)
 			reset()
 		} catch (error) {
@@ -164,6 +212,7 @@ export function DemoSales() {
 							inputProps={{
 								autoComplete: "name",
 								iconName: "solar:user-bold-duotone",
+								onFocus: handleDemoStart,
 								placeholder: "Ex.: Ana",
 								type: "text",
 								...register("name"),

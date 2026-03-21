@@ -11,9 +11,17 @@ import { ROISection } from "@/components/sections/roi"
 import { DemoSales } from "@/components/sections/sales"
 import { TestimonialsSection } from "@/components/sections/testimonial"
 import { Button } from "@/components/ui/button"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import {
+	buildLandingEventProperties,
+	persistLandingAttribution,
+	rememberLandingRegisterIntent,
+} from "@/lib/analytics/landing"
 
 export default function Home() {
 	const { openDialog } = useDialogActions()
+	const { capture } = usePostHogEvent()
 
 	useEffect(() => {
 		let currentCard = 1
@@ -139,18 +147,68 @@ export default function Home() {
 		}
 	}, [])
 
-	const handleOnShowDemo = () => {
+	useEffect(() => {
+		persistLandingAttribution()
+		capture(
+			AnalyticsEvents.PAGE_VIEWED,
+			buildLandingEventProperties({
+				cta_label: "page_view",
+				cta_position: "home",
+			})
+		)
+	}, [capture])
+
+	const handleOnShowDemo = ({
+		ctaLabel,
+		ctaPosition,
+	}: {
+		ctaLabel: string
+		ctaPosition: string
+	}) => {
+		const properties = buildLandingEventProperties({
+			cta_label: ctaLabel,
+			cta_position: ctaPosition,
+		})
+
+		capture(AnalyticsEvents.CTA_CLICKED, properties)
+		capture(AnalyticsEvents.DEMO_OPENED, properties)
 		openDialog(DEMO_SALES_ID)
+	}
+
+	const handleRegisterClick = ({
+		ctaLabel,
+		ctaPosition,
+		plan,
+	}: {
+		ctaLabel: string
+		ctaPosition: string
+		plan?: string
+	}) => {
+		const properties = buildLandingEventProperties({
+			cta_label: ctaLabel,
+			cta_position: ctaPosition,
+			plan,
+		})
+
+		capture(AnalyticsEvents.CTA_CLICKED, properties)
+		capture(AnalyticsEvents.REGISTER_STARTED, properties)
+		rememberLandingRegisterIntent(properties)
 	}
 
 	return (
 		<main>
-			<HeroSection onShowDemo={handleOnShowDemo} />
+			<HeroSection
+				onShowDemo={handleOnShowDemo}
+				onStartRegister={handleRegisterClick}
+			/>
 			<LogoSection />
 			<IntegrationSection />
 			<FeaturesSection />
 			<ROISection />
-			<PricingSection onShowDemo={handleOnShowDemo} />
+			<PricingSection
+				onShowDemo={handleOnShowDemo}
+				onStartRegister={handleRegisterClick}
+			/>
 			<TestimonialsSection />
 			<section className="relative flex items-center justify-center overflow-hidden py-32">
 				<div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-indigo-500/10 via-[#030712] to-[#030712]" />
@@ -167,13 +225,27 @@ export default function Home() {
 					</p>
 					<div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
 						<Button className="rounded-full px-8 py-4 shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:bg-slate-200 sm:w-auto">
-							<Link aria-label="Navegar para criar conta grátis" to="/register">
+							<Link
+								aria-label="Navegar para criar conta grátis"
+								onClick={() => {
+									handleRegisterClick({
+										ctaLabel: "Criar conta grátis",
+										ctaPosition: "bottom_primary",
+									})
+								}}
+								to="/register"
+							>
 								Criar conta grátis
 							</Link>
 						</Button>
 						<Button
 							className="rounded-full px-8 py-4 sm:w-auto"
-							onClick={handleOnShowDemo}
+							onClick={() => {
+								handleOnShowDemo({
+									ctaLabel: "Falar com especialista",
+									ctaPosition: "bottom_secondary",
+								})
+							}}
 							variant="secondary"
 						>
 							Falar com especialista
