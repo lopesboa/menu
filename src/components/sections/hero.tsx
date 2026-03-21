@@ -3,10 +3,11 @@ import { useEffect, useRef } from "react"
 import { Link } from "react-router"
 
 interface HeroSectionProps {
-	onShowDemo: () => void
+	onShowDemo: (params: { ctaLabel: string; ctaPosition: string }) => void
+	onStartRegister: (params: { ctaLabel: string; ctaPosition: string }) => void
 }
 
-export function HeroSection({ onShowDemo }: HeroSectionProps) {
+export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 	const sectionRef = useRef<HTMLElement>(null)
 
 	useEffect(() => {
@@ -110,6 +111,12 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 							<Link
 								aria-label="Navegar para criar conta grátis"
 								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
+								onClick={() => {
+									onStartRegister({
+										ctaLabel: "Criar conta grátis",
+										ctaPosition: "hero_primary",
+									})
+								}}
 								to="/register"
 							>
 								Criar conta grátis
@@ -122,7 +129,12 @@ export function HeroSection({ onShowDemo }: HeroSectionProps) {
 					<button
 						className="rounded-full border border-white/10 bg-white/5 px-8 py-3 font-medium text-slate-300 text-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
 						name="Ver demonstração"
-						onClick={onShowDemo}
+						onClick={() => {
+							onShowDemo({
+								ctaLabel: "Ver demonstração",
+								ctaPosition: "hero_secondary",
+							})
+						}}
 						type="button"
 					>
 						Ver demonstração

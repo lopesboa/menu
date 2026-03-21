@@ -1,16 +1,31 @@
 import { Icon } from "@iconify-icon/react"
 import { ROI_ID } from "@/app/constants"
 import { useDialogActions } from "@/app/store/dialog"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import {
+	buildLandingEventProperties,
+	rememberLandingRegisterIntent,
+} from "@/lib/analytics/landing"
 import { ShowROI } from "./show-roi"
 
 export function ROISection() {
 	const { closeDialog, toggleDialog } = useDialogActions()
+	const { capture } = usePostHogEvent()
 
 	const handleOnToggleROIDemo = () => {
 		toggleDialog(ROI_ID)
 	}
 
 	const handleOnStartNow = () => {
+		const properties = buildLandingEventProperties({
+			cta_label: "Começar agora",
+			cta_position: "roi_modal_primary",
+		})
+
+		capture(AnalyticsEvents.CTA_CLICKED, properties)
+		capture(AnalyticsEvents.REGISTER_STARTED, properties)
+		rememberLandingRegisterIntent(properties)
 		closeDialog(ROI_ID)
 	}
 

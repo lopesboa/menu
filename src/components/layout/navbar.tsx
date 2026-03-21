@@ -1,8 +1,32 @@
 import { Icon } from "@iconify-icon/react"
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
 import { authRoutePaths } from "@/app/routes/auth/manifest"
+import { usePostHogEvent } from "@/hooks/use-posthog"
+import { AnalyticsEvents } from "@/lib/analytics/events"
+import {
+	buildLandingEventProperties,
+	rememberLandingRegisterIntent,
+} from "@/lib/analytics/landing"
 
 export function Navbar() {
+	const location = useLocation()
+	const { capture } = usePostHogEvent()
+
+	const handleLandingRegisterClick = () => {
+		if (location.pathname !== "/") {
+			return
+		}
+
+		const properties = buildLandingEventProperties({
+			cta_label: "Criar Conta",
+			cta_position: "navbar_primary",
+		})
+
+		capture(AnalyticsEvents.CTA_CLICKED, properties)
+		capture(AnalyticsEvents.REGISTER_STARTED, properties)
+		rememberLandingRegisterIntent(properties)
+	}
+
 	return (
 		<nav className="fixed top-0 z-50 w-full border-white/5 border-b bg-black/50 backdrop-blur-xl">
 			<div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-6">
@@ -54,6 +78,7 @@ export function Navbar() {
 					<Link
 						aria-label="Navegar para criar conta"
 						className="group relative cursor-pointer overflow-hidden rounded-full bg-white/10 px-3 py-1.5 font-medium text-white text-xs transition-all hover:bg-white/15"
+						onClick={handleLandingRegisterClick}
 						to={authRoutePaths.register}
 					>
 						<span className="relative z-10">Criar Conta</span>
