@@ -18,7 +18,7 @@ export function Navbar() {
 		}
 
 		const properties = buildLandingEventProperties({
-			cta_label: "Criar Conta",
+			cta_label: "Criar conta grátis",
 			cta_position: "navbar_primary",
 		})
 
@@ -81,7 +81,7 @@ export function Navbar() {
 						onClick={handleLandingRegisterClick}
 						to={authRoutePaths.register}
 					>
-						<span className="relative z-10">Criar Conta</span>
+						<span className="relative z-10">Criar conta grátis</span>
 						<div className="border-beam opacity-0 transition-opacity group-hover:opacity-100" />
 					</Link>
 				</div>
