@@ -16,21 +16,11 @@ export interface DemoRequestResult {
 const demoWhatsapp = sanitizePhone(
 	import.meta.env.VITE_PUBLIC_DEMO_WHATSAPP?.trim() ?? ""
 )
-const apiBaseUrl = import.meta.env.VITE_APP_SERVER_URL?.trim()
 
 interface DemoRequestApiResponse {
 	message: "Pedido recebido"
 	ok: true
 	requestId: string
-}
-
-interface DemoRequestApiError {
-	detail: string
-	errorCode: string
-	requestId?: string
-	status: number
-	title: string
-	type: string
 }
 
 export async function submitDemoRequest(
