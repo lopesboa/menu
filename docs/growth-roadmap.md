@@ -52,6 +52,8 @@ Registrar as descobertas recentes de growth para a landing e transformar os prox
 ### Sprint 4 - SEO escalavel
 
 - Objetivo: expandir aquisicao organica alem da home.
+- Status atual:
+  - `MEB-149` publicado com template SEO reutilizavel, rota publica `/solucoes/:landingSlug`, metadata dedicada por landing e interlinking inicial;
 - Entregaveis:
   - template reutilizavel para paginas SEO;
   - paginas iniciais por segmento, integracao e caso de uso;

@@ -45,6 +45,13 @@ export function Navbar() {
 					</Link>
 				</header>
 				<div className="hidden items-center gap-6 font-medium text-slate-400 text-xs md:flex">
+					<Link
+						aria-label="Navegar para soluções de aquisição"
+						className="transition-colors hover:text-white"
+						to="/solucoes/sistema-para-restaurante"
+					>
+						Soluções
+					</Link>
 					<a
 						aria-label="Navegar para Funcionalidades"
 						className="transition-colors hover:text-white"
