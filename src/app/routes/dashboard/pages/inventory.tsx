@@ -42,7 +42,7 @@ export function InventoryPage() {
 		limit: PAGE_SIZE,
 		offset,
 		search: searchQuery.trim() || undefined,
-		category: selectedCategory !== "all" ? selectedCategory : undefined,
+		category: selectedCategory === "all" ? undefined : selectedCategory,
 	})
 	const {
 		data: lowStockData,
