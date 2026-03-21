@@ -24,126 +24,187 @@ export default function Home() {
 	const { capture } = usePostHogEvent()
 
 	useEffect(() => {
-		let currentCard = 1
-		const totalCards = 3
-		let autoRotateInterval: NodeJS.Timeout
-
-		// Flashlight effect handler
-		const handleMouseMove = (e: MouseEvent) => {
-			const cards = document.querySelectorAll(".flashlight-card")
-			for (const card of cards) {
-				const rect = card.getBoundingClientRect()
-				const x = e.clientX - rect.left
-				const y = e.clientY - rect.top
-				;(card as HTMLElement).style.setProperty("--mouse-x", `${x}px`)
-				;(card as HTMLElement).style.setProperty("--mouse-y", `${y}px`)
-			}
+		const featuresSection = document.getElementById("features")
+		if (!featuresSection) {
+			return
 		}
 
-		const showCard = (index: number) => {
-			const featureCard = document.querySelectorAll(".feature-card")
+		let teardownFeatureInteractions: (() => void) | null = null
 
-			for (const c of featureCard) {
-				c.classList.remove("active")
+		const setupFeatureInteractions = () => {
+			let currentCard = 1
+			const totalCards = 3
+			let autoRotateInterval: ReturnType<typeof setInterval> | null = null
+			let animationFrame: number | null = null
+			let pointerX = 0
+			let pointerY = 0
+
+			const flashlightContainer = document.querySelector<HTMLElement>(
+				".flashlight-container"
+			)
+
+			const updateFlashlightPosition = () => {
+				const cards = document.querySelectorAll<HTMLElement>(".flashlight-card")
+				for (const card of cards) {
+					const rect = card.getBoundingClientRect()
+					const x = pointerX - rect.left
+					const y = pointerY - rect.top
+					card.style.setProperty("--mouse-x", `${x}px`)
+					card.style.setProperty("--mouse-y", `${y}px`)
+				}
+
+				animationFrame = null
 			}
 
-			const targetCard = document.getElementById(`card-${index}`)
-			if (targetCard) {
-				targetCard.classList.add("active")
-			}
+			const handlePointerMove = (event: PointerEvent) => {
+				pointerX = event.clientX
+				pointerY = event.clientY
 
-			const featureNavBtn = document.querySelectorAll(".feature-nav-btn")
-			for (const b of featureNavBtn) {
-				b.classList.remove("bg-white/5", "active")
-				const btn = b as HTMLElement
-				if (btn.dataset.target === `card-${index}`) {
-					b.classList.add("bg-white/5", "active")
+				if (animationFrame === null) {
+					animationFrame = requestAnimationFrame(updateFlashlightPosition)
 				}
 			}
 
-			currentCard = index
-		}
+			const showCard = (index: number) => {
+				const featureCard = document.querySelectorAll(".feature-card")
 
-		const nextCard = () => {
-			let next = currentCard + 1
-			if (next > totalCards) {
-				next = 1
+				for (const c of featureCard) {
+					c.classList.remove("active")
+				}
+
+				const targetCard = document.getElementById(`card-${index}`)
+				if (targetCard) {
+					targetCard.classList.add("active")
+				}
+
+				const featureNavBtn = document.querySelectorAll(".feature-nav-btn")
+				for (const b of featureNavBtn) {
+					b.classList.remove("bg-white/5", "active")
+					const btn = b as HTMLElement
+					if (btn.dataset.target === `card-${index}`) {
+						b.classList.add("bg-white/5", "active")
+					}
+				}
+
+				currentCard = index
 			}
-			showCard(next)
-		}
 
-		const prevCard = () => {
-			let prev = currentCard - 1
-			if (prev < 1) {
-				prev = totalCards
+			const nextCard = () => {
+				let next = currentCard + 1
+				if (next > totalCards) {
+					next = 1
+				}
+				showCard(next)
 			}
-			showCard(prev)
-		}
 
-		const startRotation = () => {
-			autoRotateInterval = setInterval(nextCard, 5000)
-		}
+			const prevCard = () => {
+				let prev = currentCard - 1
+				if (prev < 1) {
+					prev = totalCards
+				}
+				showCard(prev)
+			}
 
-		const resetRotation = () => {
-			clearInterval(autoRotateInterval)
-			startRotation()
-		}
+			const startRotation = () => {
+				autoRotateInterval = setInterval(nextCard, 5000)
+			}
 
-		// Event Listeners
-		const nextBtn = document.getElementById("next-card")
-		const prevBtn = document.getElementById("prev-card")
+			const resetRotation = () => {
+				if (autoRotateInterval) {
+					clearInterval(autoRotateInterval)
+				}
+				startRotation()
+			}
 
-		const handleNextClick = () => {
-			nextCard()
-			resetRotation()
-		}
+			const nextBtn = document.getElementById("next-card")
+			const prevBtn = document.getElementById("prev-card")
 
-		const handlePrevClick = () => {
-			prevCard()
-			resetRotation()
-		}
-
-		if (nextBtn) {
-			nextBtn.addEventListener("click", handleNextClick)
-		}
-
-		if (prevBtn) {
-			prevBtn.addEventListener("click", handlePrevClick)
-		}
-
-		const navButtons = document.querySelectorAll(".feature-nav-btn")
-		const handleNavClick = (e: Event) => {
-			const target = e.currentTarget as HTMLElement
-			const targetId = target.dataset.target?.split("-")[1]
-			if (targetId) {
-				showCard(Number.parseInt(targetId, 10))
+			const handleNextClick = () => {
+				nextCard()
 				resetRotation()
 			}
-		}
 
-		for (const btn of navButtons) {
-			btn.addEventListener("click", handleNavClick)
-		}
-
-		document.addEventListener("mousemove", handleMouseMove)
-		startRotation()
-
-		// Cleanup
-		return () => {
-			clearInterval(autoRotateInterval)
-			document.removeEventListener("mousemove", handleMouseMove)
+			const handlePrevClick = () => {
+				prevCard()
+				resetRotation()
+			}
 
 			if (nextBtn) {
-				nextBtn.removeEventListener("click", handleNextClick)
+				nextBtn.addEventListener("click", handleNextClick)
 			}
 
 			if (prevBtn) {
-				prevBtn.removeEventListener("click", handlePrevClick)
+				prevBtn.addEventListener("click", handlePrevClick)
+			}
+
+			const navButtons = document.querySelectorAll(".feature-nav-btn")
+			const handleNavClick = (event: Event) => {
+				const target = event.currentTarget as HTMLElement
+				const targetId = target.dataset.target?.split("-")[1]
+				if (targetId) {
+					showCard(Number.parseInt(targetId, 10))
+					resetRotation()
+				}
 			}
 
 			for (const btn of navButtons) {
-				btn.removeEventListener("click", handleNavClick)
+				btn.addEventListener("click", handleNavClick)
 			}
+
+			flashlightContainer?.addEventListener("pointermove", handlePointerMove, {
+				passive: true,
+			})
+			startRotation()
+
+			return () => {
+				if (autoRotateInterval) {
+					clearInterval(autoRotateInterval)
+				}
+
+				if (animationFrame !== null) {
+					cancelAnimationFrame(animationFrame)
+				}
+
+				flashlightContainer?.removeEventListener(
+					"pointermove",
+					handlePointerMove
+				)
+
+				if (nextBtn) {
+					nextBtn.removeEventListener("click", handleNextClick)
+				}
+
+				if (prevBtn) {
+					prevBtn.removeEventListener("click", handlePrevClick)
+				}
+
+				for (const btn of navButtons) {
+					btn.removeEventListener("click", handleNavClick)
+				}
+			}
+		}
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (entry.isIntersecting) {
+						teardownFeatureInteractions = setupFeatureInteractions()
+						observer.disconnect()
+						break
+					}
+				}
+			},
+			{
+				threshold: 0.1,
+				rootMargin: "200px 0px",
+			}
+		)
+
+		observer.observe(featuresSection)
+
+		return () => {
+			observer.disconnect()
+			teardownFeatureInteractions?.()
 		}
 	}, [])
 
