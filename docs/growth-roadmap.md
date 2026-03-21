@@ -36,6 +36,10 @@ Registrar as descobertas recentes de growth para a landing e transformar os prox
 ### Sprint 3 - Hero, prova e performance
 
 - Objetivo: aumentar clareza da oferta e confianca sem degradar velocidade.
+- Status atual:
+  - `MEB-146` publicado com hero mais orientada a ICP, ganho operacional e CTA principal unico;
+  - CTA de cadastro padronizado como `Criar conta gratis` na hero e na navbar;
+  - contexto inicial acima da dobra adicionado sem depender de mock generico como elemento principal.
 - Entregaveis:
   - hero revisada com CTA principal claro;
   - prova verificavel acima da dobra;

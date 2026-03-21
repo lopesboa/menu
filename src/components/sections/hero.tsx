@@ -59,7 +59,7 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 
 	return (
 		<section
-			className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-20"
+			className="relative overflow-hidden pt-20 pb-10 md:min-h-screen md:pt-28 md:pb-16"
 			ref={sectionRef}
 		>
 			<div className="pointer-events-none absolute inset-0 z-0 mx-auto grid max-w-7xl grid-cols-6 gap-0 border-white/5 border-x px-6 opacity-40 md:grid-cols-12">
@@ -77,40 +77,38 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 				<div className="animate-clip bg-grid-col delay-100" />
 			</div>
 
-			<div className="relative z-10 mx-auto mt-10 max-w-4xl px-6 text-center">
-				<div className="mb-6 inline-flex animate-reveal items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 font-medium text-indigo-300 text-xs delay-100">
-					<span className="relative flex h-2 w-2">
-						<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
-						<span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
-					</span>
-					Feito para restaurantes que querem operar sem caos
-				</div>
+			<div className="relative z-10 mx-auto max-w-7xl px-6">
+				<div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:gap-12">
+					<div className="max-w-2xl text-left">
+						<div className="mb-6 inline-flex animate-reveal items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 font-medium text-indigo-300 text-xs delay-100">
+							<span className="relative flex h-2 w-2">
+								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
+								<span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
+							</span>
+							Para restaurantes com salão, delivery e balcão no mesmo turno
+						</div>
 
-				<h1 className="mb-6 bg-linear-to-b from-white to-white/60 bg-clip-text font-medium text-5xl text-transparent leading-[1.1] tracking-tight md:text-7xl">
-					<div className="reveal-trigger overflow-hidden text-clip-reveal">
-						<span className="pb-2">Pedidos, estoque e atendimento</span>
-					</div>
-					<div className="reveal-trigger overflow-hidden text-clip-reveal delay-100">
-						<span className="pb-2">no controle em um só sistema</span>
-					</div>
-				</h1>
+						<h1 className="mb-6 bg-linear-to-b from-white to-white/65 bg-clip-text font-medium text-4xl text-transparent leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+							<div className="reveal-trigger overflow-hidden text-clip-reveal">
+								<span className="pb-2">Controle pedidos, estoque</span>
+							</div>
+							<div className="reveal-trigger overflow-hidden text-clip-reveal delay-100">
+								<span className="pb-2">
+									e atendimento sem travar a operação
+								</span>
+							</div>
+						</h1>
 
-				<p className="mx-auto mb-10 max-w-xl animate-reveal text-base text-slate-400 leading-relaxed delay-300 md:text-lg">
-					Centralize salão, delivery e balcão para reduzir erros, ganhar
-					agilidade e vender melhor todos os dias.
-				</p>
+						<p className="mb-7 max-w-xl animate-reveal text-base text-slate-400 leading-relaxed delay-300 md:mb-8 md:text-lg">
+							Organize salão, delivery e balcão em um sistema que reduz erros no
+							horário de pico, acelera a equipe e dá visibilidade do estoque
+							antes de virar problema.
+						</p>
 
-				<div className="flex animate-reveal flex-col items-center justify-center gap-4 delay-500 md:flex-row">
-					<button
-						className="group relative cursor-pointer"
-						name="Criar conta grátis"
-						type="button"
-					>
-						<div className="absolute -inset-0.5 rounded-full bg-linear-to-r from-indigo-500 to-purple-600 opacity-50 blur transition duration-200 group-hover:opacity-100" />
-						<div className="relative flex items-center divide-x divide-slate-600 rounded-full bg-black px-8 py-3 leading-none">
+						<div className="flex animate-reveal flex-col items-stretch gap-2.5 delay-500 sm:flex-row sm:items-center sm:gap-3">
 							<Link
 								aria-label="Navegar para criar conta grátis"
-								className="flex items-center gap-2 pr-4 font-medium text-slate-100 text-sm transition-colors group-hover:text-white"
+								className="group relative inline-flex min-h-12 items-center justify-center overflow-hidden rounded-full bg-white px-6 py-3 font-medium text-black text-sm shadow-[0_10px_30px_rgba(255,255,255,0.14)] transition-all hover:bg-slate-200 hover:shadow-[0_12px_36px_rgba(255,255,255,0.2)] sm:min-w-56"
 								onClick={() => {
 									onStartRegister({
 										ctaLabel: "Criar conta grátis",
@@ -119,47 +117,176 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 								}}
 								to="/register"
 							>
-								Criar conta grátis
+								<span className="flex items-center gap-2">
+									Criar conta grátis
+									<Icon
+										className="transition-transform group-hover:translate-x-0.5"
+										icon="solar:arrow-right-bold-duotone"
+									/>
+								</span>
 							</Link>
-							<span className="pl-4 text-slate-400 text-sm transition-colors group-hover:text-slate-200">
-								<Icon icon="solar:arrow-right-bold-duotone" />
-							</span>
+							<button
+								className="inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 font-medium text-slate-300 text-sm transition-colors hover:text-white sm:min-w-44 sm:border sm:border-white/10 sm:bg-white/5 sm:px-6 sm:py-3 sm:hover:border-white/20 sm:hover:bg-white/10"
+								name="Ver demonstração"
+								onClick={() => {
+									onShowDemo({
+										ctaLabel: "Ver demonstração",
+										ctaPosition: "hero_secondary",
+									})
+								}}
+								type="button"
+							>
+								Ver demonstração
+							</button>
 						</div>
-					</button>
-					<button
-						className="rounded-full border border-white/10 bg-white/5 px-8 py-3 font-medium text-slate-300 text-sm transition-colors hover:border-white/20 hover:bg-white/10 hover:text-white"
-						name="Ver demonstração"
-						onClick={() => {
-							onShowDemo({
-								ctaLabel: "Ver demonstração",
-								ctaPosition: "hero_secondary",
-							})
-						}}
-						type="button"
-					>
-						Ver demonstração
-					</button>
-				</div>
-			</div>
 
-			<div className="relative mt-20 w-full max-w-5xl animate-reveal px-4 delay-700">
-				<div className="absolute inset-0 z-10 h-full w-full bg-linear-to-t from-[#030712] via-transparent to-transparent" />
-				<div className="relative aspect-video overflow-hidden rounded-t-xl border border-white/10 bg-[#0f111a] shadow-2xl md:aspect-21/9">
-					<div className="flex h-10 items-center gap-2 border-white/5 border-b px-4">
-						<div className="flex gap-1.5">
-							<div className="h-2.5 w-2.5 rounded-full border border-red-500/50 bg-red-500/20" />
-							<div className="h-2.5 w-2.5 rounded-full border border-yellow-500/50 bg-yellow-500/20" />
-							<div className="h-2.5 w-2.5 rounded-full border border-green-500/50 bg-green-500/20" />
+						<div className="mt-4 animate-reveal text-slate-500 text-sm delay-700 md:mt-5">
+							Sem cartão de crédito para começar.
 						</div>
-						<div className="mx-auto font-mono text-[10px] text-slate-500">
-							dashboard.menubao.com.br
+
+						<div className="mt-6 grid animate-reveal gap-2.5 delay-700 sm:mt-8 sm:grid-cols-3 sm:gap-3">
+							<div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4 backdrop-blur-sm">
+								<p className="font-medium text-slate-100 text-sm">
+									Feito para horário de pico
+								</p>
+								<p className="mt-1 text-slate-400 text-sm">
+									Organize pedidos de canais diferentes sem perder prioridade
+									nem contexto.
+								</p>
+							</div>
+							<div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4 backdrop-blur-sm">
+								<p className="font-medium text-slate-100 text-sm">
+									Um fluxo para a operação
+								</p>
+								<p className="mt-1 text-slate-400 text-sm">
+									Salão, delivery e balcão no mesmo painel para a equipe agir
+									mais rápido.
+								</p>
+							</div>
+							<div className="rounded-2xl border border-white/8 bg-white/4 px-4 py-4 backdrop-blur-sm">
+								<p className="font-medium text-slate-100 text-sm">
+									Contexto antes da decisão
+								</p>
+								<p className="mt-1 text-slate-400 text-sm">
+									Logo abaixo, você vê os tipos de operação que já usam o Menu
+									Bão no dia a dia.
+								</p>
+							</div>
 						</div>
 					</div>
-					<div className="grid grid-cols-4 gap-4 p-6 opacity-50">
-						<div className="col-span-1 h-32 rounded bg-white/5" />
-						<div className="col-span-1 h-32 rounded bg-white/5" />
-						<div className="col-span-2 h-32 rounded bg-white/5" />
-						<div className="col-span-4 h-48 rounded bg-white/5" />
+
+					<div className="relative animate-reveal delay-500 lg:pl-2">
+						<div className="absolute inset-0 rounded-[28px] bg-linear-to-br from-indigo-500/15 via-transparent to-cyan-500/10 blur-3xl" />
+						<div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-[#0f111a]/95 shadow-2xl">
+							<div className="flex items-center justify-between border-white/5 border-b px-5 py-4">
+								<div>
+									<p className="font-medium text-slate-100 text-sm">
+										Resumo do turno
+									</p>
+									<p className="text-slate-500 text-xs">
+										Painel operacional em tempo real
+									</p>
+								</div>
+								<div className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-3 py-1 font-medium text-emerald-300 text-xs">
+									Equipe online
+								</div>
+							</div>
+							<div className="space-y-4 p-5">
+								<div className="grid gap-3 sm:grid-cols-3">
+									<div className="rounded-2xl border border-white/8 bg-white/4 p-4">
+										<p className="text-slate-500 text-xs">Pedidos em preparo</p>
+										<p className="mt-2 font-medium text-2xl text-white">18</p>
+										<p className="mt-1 text-emerald-300 text-xs">
+											Fila organizada por prioridade
+										</p>
+									</div>
+									<div className="rounded-2xl border border-white/8 bg-white/4 p-4">
+										<p className="text-slate-500 text-xs">
+											Itens com estoque baixo
+										</p>
+										<p className="mt-2 font-medium text-2xl text-white">3</p>
+										<p className="mt-1 text-amber-300 text-xs">
+											Alertas antes da ruptura
+										</p>
+									</div>
+									<div className="rounded-2xl border border-white/8 bg-white/4 p-4">
+										<p className="text-slate-500 text-xs">
+											Tempo médio do pedido
+										</p>
+										<p className="mt-2 font-medium text-2xl text-white">
+											12 min
+										</p>
+										<p className="mt-1 text-sky-300 text-xs">
+											Visão por canal e etapa
+										</p>
+									</div>
+								</div>
+								<div className="rounded-3xl border border-white/8 bg-black/30 p-4">
+									<div className="mb-4 flex items-center justify-between">
+										<div>
+											<p className="font-medium text-slate-100 text-sm">
+												Fluxo do atendimento
+											</p>
+											<p className="text-slate-500 text-xs">
+												Pedidos centralizados por canal
+											</p>
+										</div>
+										<div className="flex gap-2 text-[11px]">
+											<span className="rounded-full bg-white/6 px-2 py-1 text-slate-400">
+												Salão
+											</span>
+											<span className="rounded-full bg-white/6 px-2 py-1 text-slate-400">
+												Delivery
+											</span>
+											<span className="rounded-full bg-white/6 px-2 py-1 text-slate-400">
+												Balcão
+											</span>
+										</div>
+									</div>
+									<div className="space-y-3">
+										<div className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/4 px-4 py-3">
+											<div>
+												<p className="font-medium text-slate-100 text-sm">
+													Pedido #2841
+												</p>
+												<p className="text-slate-500 text-xs">
+													iFood • 3 itens • pago
+												</p>
+											</div>
+											<span className="rounded-full bg-indigo-500/15 px-2.5 py-1 font-medium text-indigo-300 text-xs">
+												Em preparo
+											</span>
+										</div>
+										<div className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/4 px-4 py-3">
+											<div>
+												<p className="font-medium text-slate-100 text-sm">
+													Mesa 07
+												</p>
+												<p className="text-slate-500 text-xs">
+													Salão • aguardando fechamento
+												</p>
+											</div>
+											<span className="rounded-full bg-amber-500/15 px-2.5 py-1 font-medium text-amber-300 text-xs">
+												Atenção
+											</span>
+										</div>
+										<div className="flex items-center justify-between rounded-2xl border border-white/6 bg-white/4 px-4 py-3">
+											<div>
+												<p className="font-medium text-slate-100 text-sm">
+													Retirada 192
+												</p>
+												<p className="text-slate-500 text-xs">
+													Balcão • pronto para entrega
+												</p>
+											</div>
+											<span className="rounded-full bg-emerald-500/15 px-2.5 py-1 font-medium text-emerald-300 text-xs">
+												Pronto
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
