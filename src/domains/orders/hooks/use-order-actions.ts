@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
 import { updateOrderApproval, updateOrderStatus } from "../api/orders-api"
 import type { OrderStatus } from "../types/order.types"
@@ -20,6 +21,7 @@ export function useOrderActions(organizationId: string | null) {
 			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
 		},
 		onError: (error, variables) => {
+			toast.error("Não foi possível atualizar o status do pedido")
 			sentryCaptureException(error, {
 				context: "orders_update_status",
 				organizationId,
@@ -49,6 +51,7 @@ export function useOrderActions(organizationId: string | null) {
 			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
 		},
 		onError: (error, variables) => {
+			toast.error("Não foi possível atualizar a aprovação do pedido")
 			sentryCaptureException(error, {
 				context: "orders_update_approval",
 				organizationId,
@@ -60,6 +63,7 @@ export function useOrderActions(organizationId: string | null) {
 
 	const updateStatus = (orderId: string, status: OrderStatus) => {
 		if (!organizationId) {
+			toast.error("Organização não identificada para executar esta ação")
 			return
 		}
 
@@ -68,6 +72,7 @@ export function useOrderActions(organizationId: string | null) {
 
 	const approveOrder = (orderId: string, approvedBy: string) => {
 		if (!organizationId) {
+			toast.error("Organização não identificada para executar esta ação")
 			return
 		}
 
@@ -76,6 +81,7 @@ export function useOrderActions(organizationId: string | null) {
 
 	const rejectOrder = (orderId: string, approvedBy: string, _notes: string) => {
 		if (!organizationId) {
+			toast.error("Organização não identificada para executar esta ação")
 			return
 		}
 

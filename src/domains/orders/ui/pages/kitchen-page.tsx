@@ -5,7 +5,11 @@ import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { cn } from "@/utils/misc"
 import { useOrderActions } from "../../hooks/use-order-actions"
 import { useOrders } from "../../hooks/use-orders"
-import type { OrderStatus } from "../../types/order.types"
+import {
+	type OperationalOrderStatus,
+	toApiOrderStatus,
+	toOperationalOrderStatus,
+} from "../../model/order-operational-status"
 
 export function KitchenPage() {
 	const { organizationId } = useOrganizationCheck()
@@ -18,8 +22,12 @@ export function KitchenPage() {
 	const [currentTime, setCurrentTime] = useState(new Date())
 	const [soundEnabled, setSoundEnabled] = useState(true)
 
-	const pendingOrders = orders.filter((o) => o.status === "confirmed")
-	const preparingOrders = orders.filter((o) => o.status === "preparing")
+	const pendingOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "aceito"
+	)
+	const preparingOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "em_preparo"
+	)
 
 	useEffect(() => {
 		const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -48,8 +56,11 @@ export function KitchenPage() {
 		return "text-red-600 bg-red-100"
 	}
 
-	const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
-		updateStatus(orderId, newStatus)
+	const handleStatusChange = (
+		orderId: string,
+		nextStatus: OperationalOrderStatus
+	) => {
+		updateStatus(orderId, toApiOrderStatus(nextStatus))
 	}
 
 	return (
@@ -143,7 +154,7 @@ export function KitchenPage() {
 									</div>
 									<button
 										className="rounded-lg bg-yellow-500 px-4 py-2 font-medium text-white transition-colors hover:bg-yellow-600"
-										onClick={() => handleStatusChange(order.id, "preparing")}
+										onClick={() => handleStatusChange(order.id, "em_preparo")}
 										type="button"
 									>
 										Iniciar
@@ -222,7 +233,7 @@ export function KitchenPage() {
 									</div>
 									<button
 										className="rounded-lg bg-orange-500 px-4 py-2 font-medium text-white transition-colors hover:bg-orange-600"
-										onClick={() => handleStatusChange(order.id, "ready")}
+										onClick={() => handleStatusChange(order.id, "pronto")}
 										type="button"
 									>
 										Pronto
@@ -287,13 +298,22 @@ export function KitchenPage() {
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{orders.filter((o) => o.status === "ready").length}
+							{
+								orders.filter(
+									(order) => toOperationalOrderStatus(order.status) === "pronto"
+								).length
+							}
 						</p>
 						<p className="text-sm text-surface-500">Prontos</p>
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{orders.filter((o) => o.status === "delivered").length}
+							{
+								orders.filter(
+									(order) =>
+										toOperationalOrderStatus(order.status) === "finalizado"
+								).length
+							}
 						</p>
 						<p className="text-sm text-surface-500">Entregues Hoje</p>
 					</div>

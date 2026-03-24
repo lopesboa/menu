@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { cn } from "@/utils/misc"
 import { useOrders } from "../../hooks/use-orders"
+import { toOperationalOrderStatus } from "../../model/order-operational-status"
 
 export function DeliveryPage() {
 	const { organizationId } = useOrganizationCheck()
@@ -18,10 +19,20 @@ export function DeliveryPage() {
 		count: 100,
 	})
 
-	const pendingOrders = orders.filter((o) => o.status === "ready")
-	const pickingUpOrders = orders.filter((o) => o.status === "preparing")
-	const deliveringOrders = orders.filter((o) => o.status === "delivered")
-	const completedOrders = orders.filter((o) => o.status === "delivered")
+	const pendingOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "pronto"
+	)
+	const pickingUpOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "em_preparo"
+	)
+	const deliveringOrders = orders.filter(
+		(order) =>
+			toOperationalOrderStatus(order.status) ===
+			"aguardando_retirada_ou_entrega"
+	)
+	const completedOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "finalizado"
+	)
 
 	if (isLoading) {
 		return (
