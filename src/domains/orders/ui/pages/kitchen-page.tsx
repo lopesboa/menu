@@ -2,6 +2,7 @@ import { motion } from "framer-motion"
 import { CheckCircle, ChefHat, Clock, Volume2, VolumeX } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { cn } from "@/utils/misc"
 import { useOrderActions } from "../../hooks/use-order-actions"
 import { useOrders } from "../../hooks/use-orders"
@@ -13,10 +14,12 @@ import {
 
 export function KitchenPage() {
 	const { organizationId } = useOrganizationCheck()
+	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("kds")
 	const { data: orders = [] } = useOrders({
 		organizationId,
 		page: 0,
 		count: 100,
+		refetchInterval: fallbackRefetchInterval,
 	})
 	const { updateStatus } = useOrderActions(organizationId)
 	const [currentTime, setCurrentTime] = useState(new Date())

@@ -2,12 +2,14 @@ import { motion } from "framer-motion"
 import { RefreshCw, Star } from "lucide-react"
 import { useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { cn } from "@/utils/misc"
 import { useOrders } from "../../hooks/use-orders"
 import { toOperationalOrderStatus } from "../../model/order-operational-status"
 
 export function DeliveryPage() {
 	const { organizationId } = useOrganizationCheck()
+	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("delivery")
 	const [activeTab, setActiveTab] = useState<
 		"confirmed" | "preparing" | "ready" | "completed"
 	>("confirmed")
@@ -17,6 +19,7 @@ export function DeliveryPage() {
 		filters: { channel: "delivery" },
 		page: 0,
 		count: 100,
+		refetchInterval: fallbackRefetchInterval,
 	})
 
 	const pendingOrders = orders.filter(

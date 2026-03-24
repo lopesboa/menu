@@ -14,6 +14,7 @@ import { toast } from "sonner"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { useCurrentUserRole } from "@/hooks/use-current-user-role"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { formatCurrency, formatDateTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { useOrderActions } from "../../hooks/use-order-actions"
@@ -79,10 +80,12 @@ const statusConfig: Record<
 export default function OrdersPage() {
 	const { organizationId } = useOrganizationCheck()
 	const { role } = useCurrentUserRole()
+	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("orders")
 	const { data: orders = [] } = useOrders({
 		organizationId,
 		page: 0,
 		count: 50,
+		refetchInterval: fallbackRefetchInterval,
 	})
 	const { updateStatus } = useOrderActions(organizationId)
 	const { selectOrder, setFilter } = useOrderStoreActions()
