@@ -1,4 +1,4 @@
-import { useMemo, useSyncExternalStore } from "react"
+import { useSyncExternalStore } from "react"
 import type {
 	OpsRealtimeConnectionStatus,
 	OpsRealtimeDomain,
@@ -37,16 +37,14 @@ function useOpsRealtimeHealthState() {
 export function useOpsRealtimeFallbackPolling(domain: OpsRealtimeDomain) {
 	const healthState = useOpsRealtimeHealthState()
 
-	return useMemo(() => {
-		if (
-			!shouldUseFallbackPolling(
-				healthState.status,
-				healthState.lastDisconnectedAt
-			)
-		) {
-			return false
-		}
+	if (
+		!shouldUseFallbackPolling(
+			healthState.status,
+			healthState.lastDisconnectedAt
+		)
+	) {
+		return false
+	}
 
-		return OPS_REALTIME_FALLBACK_POLLING_INTERVAL_BY_DOMAIN[domain]
-	}, [domain, healthState.lastDisconnectedAt, healthState.status])
+	return OPS_REALTIME_FALLBACK_POLLING_INTERVAL_BY_DOMAIN[domain]
 }
