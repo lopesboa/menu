@@ -3,6 +3,7 @@ import { sentryCaptureException } from "@/lib/sentry"
 
 export const OpsRealtimeTelemetryEvents = {
 	connectionStateChanged: "ops_realtime_connection_state_changed",
+	domainRefreshRequested: "ops_realtime_domain_refresh_requested",
 	orderStatusFallbackToRest: "ops_realtime_order_status_fallback_to_rest",
 	orderStatusNoop: "ops_realtime_order_status_noop",
 } as const
