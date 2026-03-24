@@ -59,11 +59,6 @@ const statusConfig: Record<
 		icon: Truck,
 		color: "bg-green-100 text-green-700",
 	},
-	aguardando_retirada_ou_entrega: {
-		label: "Aguardando retirada/entrega",
-		icon: Truck,
-		color: "bg-purple-100 text-purple-700",
-	},
 	finalizado: {
 		label: "Finalizado",
 		icon: CheckCircle,
@@ -74,10 +69,10 @@ const statusConfig: Record<
 		icon: XCircle,
 		color: "bg-red-100 text-red-700",
 	},
-	excecao: {
-		label: "Exceção",
+	desconhecido: {
+		label: "Desconhecido",
 		icon: XCircle,
-		color: "bg-red-100 text-red-700",
+		color: "bg-surface-200 text-surface-700",
 	},
 }
 
@@ -123,6 +118,7 @@ export default function OrdersPage() {
 		{ key: "pronto", label: getOperationalStatusLabel("pronto") },
 		{ key: "finalizado", label: getOperationalStatusLabel("finalizado") },
 		{ key: "cancelado", label: getOperationalStatusLabel("cancelado") },
+		{ key: "desconhecido", label: getOperationalStatusLabel("desconhecido") },
 	]
 
 	const handleStatusChange = (
@@ -219,7 +215,6 @@ export default function OrdersPage() {
 						const operationalStatus = toOperationalOrderStatus(order.status)
 						const StatusIcon = statusConfig[operationalStatus]?.icon || Clock
 						const canCancel = canExecuteCriticalOrderAction(role, "cancelar")
-						const canReopen = canExecuteCriticalOrderAction(role, "reabrir")
 						const canRelease = canExecuteCriticalOrderAction(role, "liberar")
 
 						return (
@@ -268,10 +263,7 @@ export default function OrdersPage() {
 												{order.orderItems.length > 1 ? "itens" : "item"}{" "}
 											</p>
 										</div>
-										<StatusBadge
-											size="md"
-											status={toApiOrderStatus(operationalStatus)}
-										/>
+										<StatusBadge size="md" status={order.status} />
 									</div>
 								</div>
 								{selectedOrder?.id === order.id && (
@@ -386,23 +378,6 @@ export default function OrdersPage() {
 													type="button"
 												>
 													Cancelar pedido
-												</button>
-											)}
-											{operationalStatus === "cancelado" && (
-												<button
-													className="btn-secondary text-sm"
-													disabled={!canReopen}
-													onClick={(e) => {
-														e.stopPropagation()
-														if (!validateCriticalPermission("reabrir")) {
-															return
-														}
-
-														handleStatusChange(order.id, order.status, "novo")
-													}}
-													type="button"
-												>
-													Reabrir pedido
 												</button>
 											)}
 										</div>

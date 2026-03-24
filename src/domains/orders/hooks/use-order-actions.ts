@@ -1,9 +1,29 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
+import { ApiRequestError } from "@/utils/fetch"
 import { updateOrderApproval, updateOrderStatus } from "../api/orders-api"
 import type { OrderStatus } from "../types/order.types"
 import { invalidateOrdersCache, ordersQueryKeys } from "./orders-query-keys"
+
+function getStatusErrorMessage(error: unknown): string {
+	if (error instanceof ApiRequestError) {
+		switch (error.errorCode) {
+			case "ORDER_NOT_FOUND":
+				return "Pedido não encontrado para atualização"
+			case "ORDER_INVALID_TRANSITION":
+				return "Transição de status inválida para este pedido"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para atualizar o pedido"
+			default:
+				return "Não foi possível atualizar o status do pedido"
+		}
+	}
+
+	return "Não foi possível atualizar o status do pedido"
+}
 
 export function useOrderActions(organizationId: string | null) {
 	const queryClient = useQueryClient()
@@ -21,7 +41,7 @@ export function useOrderActions(organizationId: string | null) {
 			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
 		},
 		onError: (error, variables) => {
-			toast.error("Não foi possível atualizar o status do pedido")
+			toast.error(getStatusErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "orders_update_status",
 				organizationId,

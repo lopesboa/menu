@@ -5,10 +5,9 @@ export type OperationalOrderStatus =
 	| "aceito"
 	| "em_preparo"
 	| "pronto"
-	| "aguardando_retirada_ou_entrega"
 	| "finalizado"
 	| "cancelado"
-	| "excecao"
+	| "desconhecido"
 
 const OPERATIONAL_FROM_API_STATUS: Record<OrderStatus, OperationalOrderStatus> =
 	{
@@ -18,7 +17,8 @@ const OPERATIONAL_FROM_API_STATUS: Record<OrderStatus, OperationalOrderStatus> =
 		ready: "pronto",
 		delivered: "finalizado",
 		cancelled: "cancelado",
-		rejected: "excecao",
+		rejected: "cancelado",
+		unknown: "desconhecido",
 	}
 
 const API_FROM_OPERATIONAL_STATUS: Partial<
@@ -30,7 +30,6 @@ const API_FROM_OPERATIONAL_STATUS: Partial<
 	pronto: "ready",
 	finalizado: "delivered",
 	cancelado: "cancelled",
-	excecao: "rejected",
 }
 
 const DIRECT_OPERATIONAL_ALIASES: Partial<
@@ -40,10 +39,9 @@ const DIRECT_OPERATIONAL_ALIASES: Partial<
 	aceito: "aceito",
 	em_preparo: "em_preparo",
 	pronto: "pronto",
-	aguardando_retirada_ou_entrega: "aguardando_retirada_ou_entrega",
 	finalizado: "finalizado",
 	cancelado: "cancelado",
-	excecao: "excecao",
+	desconhecido: "desconhecido",
 }
 
 export const OPERATIONAL_STATUS_LABELS: Record<OperationalOrderStatus, string> =
@@ -52,10 +50,9 @@ export const OPERATIONAL_STATUS_LABELS: Record<OperationalOrderStatus, string> =
 		aceito: "Aceito",
 		em_preparo: "Em preparo",
 		pronto: "Pronto",
-		aguardando_retirada_ou_entrega: "Aguardando retirada/entrega",
 		finalizado: "Finalizado",
 		cancelado: "Cancelado",
-		excecao: "Exceção",
+		desconhecido: "Desconhecido",
 	}
 
 export const OPERATIONAL_STATUS_TRANSITIONS: Record<
@@ -65,11 +62,10 @@ export const OPERATIONAL_STATUS_TRANSITIONS: Record<
 	novo: ["aceito", "cancelado"],
 	aceito: ["em_preparo", "cancelado"],
 	em_preparo: ["pronto", "cancelado"],
-	pronto: ["aguardando_retirada_ou_entrega", "finalizado", "cancelado"],
-	aguardando_retirada_ou_entrega: ["finalizado", "cancelado"],
+	pronto: ["finalizado", "cancelado"],
 	finalizado: [],
-	cancelado: ["novo"],
-	excecao: ["novo", "cancelado"],
+	cancelado: [],
+	desconhecido: [],
 }
 
 export function toOperationalOrderStatus(
@@ -83,11 +79,17 @@ export function toOperationalOrderStatus(
 		return OPERATIONAL_FROM_API_STATUS[status as OrderStatus]
 	}
 
-	return "excecao"
+	return "desconhecido"
 }
 
 export function toApiOrderStatus(status: OperationalOrderStatus): OrderStatus {
-	return API_FROM_OPERATIONAL_STATUS[status] ?? "pending"
+	const apiStatus = API_FROM_OPERATIONAL_STATUS[status]
+
+	if (!apiStatus) {
+		throw new Error("Status operacional desconhecido para atualização")
+	}
+
+	return apiStatus
 }
 
 export function getOperationalStatusLabel(status: string): string {

@@ -9,26 +9,24 @@ import { toOperationalOrderStatus } from "../../model/order-operational-status"
 export function DeliveryPage() {
 	const { organizationId } = useOrganizationCheck()
 	const [activeTab, setActiveTab] = useState<
-		"pending" | "picking_up" | "delivering" | "completed"
-	>("pending")
+		"confirmed" | "preparing" | "ready" | "completed"
+	>("confirmed")
 
 	const { data: orders = [], isLoading } = useOrders({
 		organizationId,
-		filters: { orderType: "delivery" },
+		filters: { channel: "delivery" },
 		page: 0,
 		count: 100,
 	})
 
 	const pendingOrders = orders.filter(
-		(order) => toOperationalOrderStatus(order.status) === "pronto"
+		(order) => toOperationalOrderStatus(order.status) === "aceito"
 	)
 	const pickingUpOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "em_preparo"
 	)
 	const deliveringOrders = orders.filter(
-		(order) =>
-			toOperationalOrderStatus(order.status) ===
-			"aguardando_retirada_ou_entrega"
+		(order) => toOperationalOrderStatus(order.status) === "pronto"
 	)
 	const completedOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "finalizado"
@@ -62,20 +60,20 @@ export function DeliveryPage() {
 			<div className="grid grid-cols-4 gap-4">
 				{[
 					{
-						key: "pending" as const,
-						label: "Aguardando",
+						key: "confirmed" as const,
+						label: "Aceitos",
 						count: pendingOrders.length,
 						color: "bg-yellow-50 border-yellow-200",
 					},
 					{
-						key: "picking_up" as const,
-						label: "Retirada",
+						key: "preparing" as const,
+						label: "Em preparo",
 						count: pickingUpOrders.length,
 						color: "bg-blue-50 border-blue-200",
 					},
 					{
-						key: "delivering" as const,
-						label: "Em Rota",
+						key: "ready" as const,
+						label: "Prontos",
 						count: deliveringOrders.length,
 						color: "bg-purple-50 border-purple-200",
 					},
