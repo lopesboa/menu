@@ -1,5 +1,7 @@
 import { Navigate, Outlet, useLocation } from "react-router"
 import "./styles.css"
+import { useOpsRealtimeQueryAdapter } from "@/app/realtime/use-ops-realtime-query-adapter"
+import { useOpsRealtimeSession } from "@/domains/ops/realtime/use-ops-realtime-session"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { cn } from "@/utils/misc"
 import { ProtectedRoute } from "../protected-routes"
@@ -9,8 +11,14 @@ import { TopBar } from "./components/layout/top-bar"
 import { dashboardRoutePaths } from "./manifest"
 
 export default function Dashboard() {
-	const { hasOrganization, isLoading } = useOrganizationCheck()
+	const { hasOrganization, isLoading, organizationId } = useOrganizationCheck()
 	const location = useLocation()
+
+	useOpsRealtimeSession({
+		enabled: hasOrganization && !isLoading,
+		organizationId,
+	})
+	useOpsRealtimeQueryAdapter({ organizationId })
 
 	if (isLoading) {
 		return (
