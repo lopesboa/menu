@@ -2,24 +2,35 @@ import { motion } from "framer-motion"
 import { CheckCircle, ChefHat, Clock, Volume2, VolumeX } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { cn } from "@/utils/misc"
 import { useOrderActions } from "../../hooks/use-order-actions"
 import { useOrders } from "../../hooks/use-orders"
-import type { OrderStatus } from "../../types/order.types"
+import {
+	type OperationalOrderStatus,
+	toApiOrderStatus,
+	toOperationalOrderStatus,
+} from "../../model/order-operational-status"
 
 export function KitchenPage() {
 	const { organizationId } = useOrganizationCheck()
+	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("kds")
 	const { data: orders = [] } = useOrders({
 		organizationId,
 		page: 0,
 		count: 100,
+		refetchInterval: fallbackRefetchInterval,
 	})
 	const { updateStatus } = useOrderActions(organizationId)
 	const [currentTime, setCurrentTime] = useState(new Date())
 	const [soundEnabled, setSoundEnabled] = useState(true)
 
-	const pendingOrders = orders.filter((o) => o.status === "confirmed")
-	const preparingOrders = orders.filter((o) => o.status === "preparing")
+	const pendingOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "aceito"
+	)
+	const preparingOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "em_preparo"
+	)
 
 	useEffect(() => {
 		const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -48,8 +59,11 @@ export function KitchenPage() {
 		return "text-red-600 bg-red-100"
 	}
 
-	const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
-		updateStatus(orderId, newStatus)
+	const handleStatusChange = (
+		orderId: string,
+		nextStatus: OperationalOrderStatus
+	) => {
+		updateStatus(orderId, toApiOrderStatus(nextStatus))
 	}
 
 	return (
@@ -62,7 +76,7 @@ export function KitchenPage() {
 				<div>
 					<h1 className="font-bold text-2xl text-surface-900">Cozinha</h1>
 					<p className="mt-1 text-surface-500">
-						Visualização em tempo real para a equipe da cozinha
+						Visualizacao em tempo real para a equipe da cozinha
 					</p>
 				</div>
 				<div className="flex items-center gap-4">
@@ -111,7 +125,7 @@ export function KitchenPage() {
 						<div className="flex items-center gap-3">
 							<Clock className="h-6 w-6 text-yellow-600" />
 							<h2 className="font-bold text-xl text-yellow-900">
-								Aguardando Preparo
+								Aguardando preparo
 							</h2>
 						</div>
 						<span className="rounded-full bg-yellow-200 px-3 py-1 font-medium text-yellow-800">
@@ -143,7 +157,7 @@ export function KitchenPage() {
 									</div>
 									<button
 										className="rounded-lg bg-yellow-500 px-4 py-2 font-medium text-white transition-colors hover:bg-yellow-600"
-										onClick={() => handleStatusChange(order.id, "preparing")}
+										onClick={() => handleStatusChange(order.id, "em_preparo")}
 										type="button"
 									>
 										Iniciar
@@ -159,27 +173,27 @@ export function KitchenPage() {
 												{item.quantity}x
 											</span>
 											<span className="text-surface-700">{item.name}</span>
-											{item.notes && (
+											{item.notes ? (
 												<span className="text-orange-600 text-xs italic">
 													({item.notes})
 												</span>
-											)}
+											) : null}
 										</div>
 									))}
 								</div>
-								{order.tableId && (
+								{order.tableId ? (
 									<div className="mt-2 text-surface-500 text-xs">
 										Mesa {order.tableId.replace("t", "")}
 									</div>
-								)}
+								) : null}
 							</motion.div>
 						))}
-						{pendingOrders.length === 0 && (
+						{pendingOrders.length === 0 ? (
 							<div className="py-8 text-center text-yellow-700">
 								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
 								<p>Nenhum pedido aguardando</p>
 							</div>
-						)}
+						) : null}
 					</div>
 				</motion.div>
 
@@ -191,7 +205,7 @@ export function KitchenPage() {
 					<div className="mb-4 flex items-center justify-between">
 						<div className="flex items-center gap-3">
 							<ChefHat className="h-6 w-6 text-orange-600" />
-							<h2 className="font-bold text-orange-900 text-xl">Em Preparo</h2>
+							<h2 className="font-bold text-orange-900 text-xl">Em preparo</h2>
 						</div>
 						<span className="rounded-full bg-orange-200 px-3 py-1 font-medium text-orange-800">
 							{preparingOrders.length}
@@ -222,7 +236,7 @@ export function KitchenPage() {
 									</div>
 									<button
 										className="rounded-lg bg-orange-500 px-4 py-2 font-medium text-white transition-colors hover:bg-orange-600"
-										onClick={() => handleStatusChange(order.id, "ready")}
+										onClick={() => handleStatusChange(order.id, "pronto")}
 										type="button"
 									>
 										Pronto
@@ -238,27 +252,27 @@ export function KitchenPage() {
 												{item.quantity}x
 											</span>
 											<span className="text-surface-700">{item.name}</span>
-											{item.notes && (
+											{item.notes ? (
 												<span className="text-orange-600 text-xs italic">
 													({item.notes})
 												</span>
-											)}
+											) : null}
 										</div>
 									))}
 								</div>
-								{order.tableId && (
+								{order.tableId ? (
 									<div className="mt-2 text-surface-500 text-xs">
 										Mesa {order.tableId.replace("t", "")}
 									</div>
-								)}
+								) : null}
 							</motion.div>
 						))}
-						{preparingOrders.length === 0 && (
+						{preparingOrders.length === 0 ? (
 							<div className="py-8 text-center text-orange-700">
 								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
 								<p>Nenhum pedido em preparo</p>
 							</div>
-						)}
+						) : null}
 					</div>
 				</motion.div>
 			</div>
@@ -270,7 +284,7 @@ export function KitchenPage() {
 				transition={{ delay: 0.3 }}
 			>
 				<h2 className="mb-4 font-semibold text-lg text-surface-900">
-					Resumo da Cozinha
+					Resumo da cozinha
 				</h2>
 				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
@@ -283,19 +297,28 @@ export function KitchenPage() {
 						<p className="font-bold text-3xl text-surface-900">
 							{preparingOrders.length}
 						</p>
-						<p className="text-sm text-surface-500">Em Preparo</p>
+						<p className="text-sm text-surface-500">Em preparo</p>
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{orders.filter((o) => o.status === "ready").length}
+							{
+								orders.filter(
+									(order) => toOperationalOrderStatus(order.status) === "pronto"
+								).length
+							}
 						</p>
 						<p className="text-sm text-surface-500">Prontos</p>
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{orders.filter((o) => o.status === "delivered").length}
+							{
+								orders.filter(
+									(order) =>
+										toOperationalOrderStatus(order.status) === "finalizado"
+								).length
+							}
 						</p>
-						<p className="text-sm text-surface-500">Entregues Hoje</p>
+						<p className="text-sm text-surface-500">Finalizados</p>
 					</div>
 				</div>
 			</motion.div>

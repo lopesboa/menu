@@ -10,71 +10,97 @@ import {
 } from "lucide-react"
 import type React from "react"
 import { useState } from "react"
+import { toast } from "sonner"
 import { StatusBadge } from "@/components/ui/status-badge"
+import { useCurrentUserRole } from "@/hooks/use-current-user-role"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { formatCurrency, formatDateTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { useOrderActions } from "../../hooks/use-order-actions"
 import { useOrders } from "../../hooks/use-orders"
 import {
+	canTransitionOrderStatus,
+	getOperationalStatusLabel,
+	type OperationalOrderStatus,
+	toApiOrderStatus,
+	toOperationalOrderStatus,
+} from "../../model/order-operational-status"
+import {
+	type CriticalOrderAction,
+	canExecuteCriticalOrderAction,
+	getCriticalOrderPermissionMessage,
+} from "../../model/order-permissions"
+import {
 	useOrderSelectors,
 	useOrderActions as useOrderStoreActions,
 } from "../../model/order-store"
-import type { OrderStatus } from "../../types/order.types"
 
 const statusConfig: Record<
-	OrderStatus,
+	OperationalOrderStatus,
 	{ label: string; icon: React.ElementType; color: string }
 > = {
-	pending: {
-		label: "Pendente",
+	novo: {
+		label: "Novo",
 		icon: Clock,
 		color: "bg-yellow-100 text-yellow-700",
 	},
-	confirmed: {
-		label: "Confirmado",
+	aceito: {
+		label: "Aceito",
 		icon: CheckCircle,
 		color: "bg-blue-100 text-blue-700",
 	},
-	preparing: {
-		label: "Preparando",
+	em_preparo: {
+		label: "Em preparo",
 		icon: ChefHat,
 		color: "bg-orange-100 text-orange-700",
 	},
-	ready: { label: "Pronto", icon: Truck, color: "bg-green-100 text-green-700" },
-	delivered: {
-		label: "Entregue",
+	pronto: {
+		label: "Pronto",
+		icon: Truck,
+		color: "bg-green-100 text-green-700",
+	},
+	finalizado: {
+		label: "Finalizado",
 		icon: CheckCircle,
 		color: "bg-gray-100 text-gray-700",
 	},
-	cancelled: {
+	cancelado: {
 		label: "Cancelado",
 		icon: XCircle,
 		color: "bg-red-100 text-red-700",
 	},
-	rejected: {
-		label: "Rejeitado",
+	desconhecido: {
+		label: "Desconhecido",
 		icon: XCircle,
-		color: "bg-red-100 text-red-700",
+		color: "bg-surface-200 text-surface-700",
 	},
 }
 
 export default function OrdersPage() {
 	const { organizationId } = useOrganizationCheck()
+	const { role } = useCurrentUserRole()
+	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("orders")
 	const { data: orders = [] } = useOrders({
 		organizationId,
 		page: 0,
 		count: 50,
+		refetchInterval: fallbackRefetchInterval,
 	})
 	const { updateStatus } = useOrderActions(organizationId)
 	const { selectOrder, setFilter } = useOrderStoreActions()
 	const { selectedOrder, filter } = useOrderSelectors()
-	const [activeTab, setActiveTab] = useState<OrderStatus | "all">("all")
+	const [activeTab, setActiveTab] = useState<OperationalOrderStatus | "all">(
+		"all"
+	)
 
 	const filteredOrders = orders.filter((order) => {
-		if (activeTab !== "all" && order.status !== activeTab) {
+		const operationalStatus = toOperationalOrderStatus(order.status)
+
+		if (activeTab !== "all" && operationalStatus !== activeTab) {
 			return false
 		}
+
 		if (filter.search) {
 			const search = filter.search.toLowerCase()
 			return (
@@ -83,20 +109,42 @@ export default function OrdersPage() {
 				order.orderNumber?.toString().toLowerCase().includes(search)
 			)
 		}
+
 		return true
 	})
 
-	const tabs: { key: OrderStatus | "all"; label: string }[] = [
+	const tabs: { key: OperationalOrderStatus | "all"; label: string }[] = [
 		{ key: "all", label: "Todos" },
-		{ key: "pending", label: "Pendente" },
-		{ key: "confirmed", label: "Confirmado" },
-		{ key: "preparing", label: "Preparando" },
-		{ key: "ready", label: "Pronto" },
-		{ key: "delivered", label: "Entregue" },
+		{ key: "novo", label: getOperationalStatusLabel("novo") },
+		{ key: "aceito", label: getOperationalStatusLabel("aceito") },
+		{ key: "em_preparo", label: getOperationalStatusLabel("em_preparo") },
+		{ key: "pronto", label: getOperationalStatusLabel("pronto") },
+		{ key: "finalizado", label: getOperationalStatusLabel("finalizado") },
+		{ key: "cancelado", label: getOperationalStatusLabel("cancelado") },
+		{ key: "desconhecido", label: getOperationalStatusLabel("desconhecido") },
 	]
 
-	const handleStatusChange = (orderId: string, newStatus: OrderStatus) => {
-		updateStatus(orderId, newStatus)
+	const handleStatusChange = (
+		orderId: string,
+		currentStatus: string,
+		nextStatus: OperationalOrderStatus
+	) => {
+		if (!canTransitionOrderStatus(currentStatus, nextStatus)) {
+			toast.error("Transição de status inválida para o fluxo operacional")
+			return
+		}
+
+		updateStatus(orderId, toApiOrderStatus(nextStatus))
+	}
+
+	const validateCriticalPermission = (action: CriticalOrderAction) => {
+		const canExecute = canExecuteCriticalOrderAction(role, action)
+		if (canExecute) {
+			return true
+		}
+
+		toast.error(getCriticalOrderPermissionMessage(action))
+		return false
 	}
 
 	return (
@@ -153,7 +201,12 @@ export default function OrdersPage() {
 							{tab.label}
 							{tab.key !== "all" && (
 								<span className="ml-2 rounded-full bg-surface-100 px-2 py-0.5 text-xs">
-									{orders.filter((o) => o.status === tab.key).length}
+									{
+										orders.filter(
+											(order) =>
+												toOperationalOrderStatus(order.status) === tab.key
+										).length
+									}
 								</span>
 							)}
 						</button>
@@ -162,7 +215,11 @@ export default function OrdersPage() {
 
 				<div className="max-h-165 divide-y divide-surface-100 overflow-y-auto">
 					{filteredOrders.map((order, index) => {
-						const StatusIcon = statusConfig[order.status]?.icon || Clock
+						const operationalStatus = toOperationalOrderStatus(order.status)
+						const StatusIcon = statusConfig[operationalStatus]?.icon || Clock
+						const canCancel = canExecuteCriticalOrderAction(role, "cancelar")
+						const canRelease = canExecuteCriticalOrderAction(role, "liberar")
+
 						return (
 							<motion.div
 								animate={{ opacity: 1, x: 0 }}
@@ -177,7 +234,7 @@ export default function OrdersPage() {
 										<div
 											className={cn(
 												"flex h-10 w-10 items-center justify-center rounded-xl",
-												statusConfig[order.status]?.color
+												statusConfig[operationalStatus]?.color
 											)}
 										>
 											<StatusIcon className="h-5 w-5" />
@@ -241,53 +298,89 @@ export default function OrdersPage() {
 												Observação: {order.notes}
 											</p>
 										)}
-										<div className="mt-4 flex gap-2">
-											{order.status === "pending" && (
+										<div className="mt-4 flex flex-wrap gap-2">
+											{operationalStatus === "novo" && (
 												<button
 													className="btn-primary text-sm"
 													onClick={(e) => {
 														e.stopPropagation()
-														handleStatusChange(order.id, "confirmed")
+														handleStatusChange(order.id, order.status, "aceito")
 													}}
 													type="button"
 												>
-													Confirmar
+													Aceitar
 												</button>
 											)}
-											{order.status === "confirmed" && (
+											{operationalStatus === "aceito" && (
 												<button
 													className="btn-primary text-sm"
 													onClick={(e) => {
 														e.stopPropagation()
-														handleStatusChange(order.id, "preparing")
+														handleStatusChange(
+															order.id,
+															order.status,
+															"em_preparo"
+														)
 													}}
 													type="button"
 												>
-													Iniciar Preparo
+													Iniciar preparo
 												</button>
 											)}
-											{order.status === "preparing" && (
+											{operationalStatus === "em_preparo" && (
 												<button
 													className="btn-primary text-sm"
 													onClick={(e) => {
 														e.stopPropagation()
-														handleStatusChange(order.id, "ready")
+														handleStatusChange(order.id, order.status, "pronto")
 													}}
 													type="button"
 												>
-													Marcar Pronto
+													Marcar pronto
 												</button>
 											)}
-											{order.status === "ready" && (
+											{operationalStatus === "pronto" && (
 												<button
 													className="btn-primary text-sm"
+													disabled={!canRelease}
 													onClick={(e) => {
 														e.stopPropagation()
-														handleStatusChange(order.id, "delivered")
+														if (!validateCriticalPermission("liberar")) {
+															return
+														}
+
+														handleStatusChange(
+															order.id,
+															order.status,
+															"finalizado"
+														)
 													}}
 													type="button"
 												>
-													Entregar
+													Liberar pedido
+												</button>
+											)}
+											{["novo", "aceito", "em_preparo", "pronto"].includes(
+												operationalStatus
+											) && (
+												<button
+													className="btn-secondary text-red-600 text-sm"
+													disabled={!canCancel}
+													onClick={(e) => {
+														e.stopPropagation()
+														if (!validateCriticalPermission("cancelar")) {
+															return
+														}
+
+														handleStatusChange(
+															order.id,
+															order.status,
+															"cancelado"
+														)
+													}}
+													type="button"
+												>
+													Cancelar pedido
 												</button>
 											)}
 										</div>
