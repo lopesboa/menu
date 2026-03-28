@@ -1,5 +1,7 @@
+import type { QueryClient } from "@tanstack/react-query"
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
+import { invalidateKdsCache } from "@/domains/kds/hooks/kds-query-keys"
 import {
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
@@ -37,13 +39,32 @@ function getDomainFromEventName(eventName: string): OpsRealtimeDomain | null {
 	return null
 }
 
-function shouldInvalidateOrdersCache(domain: OpsRealtimeDomain) {
+function shouldInvalidateKnownCaches(domain: OpsRealtimeDomain) {
 	return (
 		domain === "orders" ||
 		domain === "kds" ||
 		domain === "delivery" ||
 		domain === "ops"
 	)
+}
+
+function invalidateCacheForDomain(
+	queryClient: QueryClient,
+	organizationId: string,
+	domain: OpsRealtimeDomain,
+	payload: OpsRealtimeDomainEventPayload
+) {
+	if (domain === "kds") {
+		invalidateKdsCache(queryClient, organizationId)
+		return
+	}
+
+	invalidateOrdersCache(queryClient, organizationId, payload.orderId)
+
+	if (domain === "ops") {
+		invalidateOpsEventsCache(queryClient, organizationId)
+		invalidateOpsSummaryCache(queryClient, organizationId)
+	}
 }
 
 export function useOpsRealtimeQueryAdapter({
@@ -63,7 +84,7 @@ export function useOpsRealtimeQueryAdapter({
 					const eventDomain = getDomainFromEventName(eventName)
 					const domain = payload.domain ?? eventDomain
 
-					if (!(domain && shouldInvalidateOrdersCache(domain))) {
+					if (!(domain && shouldInvalidateKnownCaches(domain))) {
 						return
 					}
 
@@ -74,12 +95,7 @@ export function useOpsRealtimeQueryAdapter({
 						return
 					}
 
-					invalidateOrdersCache(queryClient, organizationId, payload.orderId)
-
-					if (domain === "ops") {
-						invalidateOpsEventsCache(queryClient, organizationId)
-						invalidateOpsSummaryCache(queryClient, organizationId)
-					}
+					invalidateCacheForDomain(queryClient, organizationId, domain, payload)
 				} catch (error) {
 					sentryCaptureException(error, {
 						context: "ops_realtime_query_adapter",

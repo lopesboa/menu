@@ -30,13 +30,16 @@ export interface OrderStatusChangeAck {
 
 export interface OpsRealtimeDomainEventPayload {
 	changed?: boolean
+	data?: Record<string, unknown>
 	delta?: Record<string, unknown>
 	domain?: OpsRealtimeDomain
 	entityId?: string
 	organizationId?: string
 	orderId?: string
+	successCode?: string
 	snapshot?: Record<string, unknown>
 	timestamp?: string
+	type?: string
 }
 
 export interface OpsRealtimeHealthState {

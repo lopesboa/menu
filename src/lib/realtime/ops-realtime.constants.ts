@@ -18,8 +18,12 @@ export const OPS_REALTIME_EVENTS = {
 export const OPS_REALTIME_DOMAIN_EVENT_NAMES = [
 	"orders.snapshot",
 	"orders.delta",
+	"kds.item.updated",
+	"kds.queue.snapshot",
 	"kds.snapshot",
 	"kds.delta",
+	"delivery.inbox.updated",
+	"delivery.sync.updated",
 	"delivery.snapshot",
 	"delivery.delta",
 	"ops.snapshot",

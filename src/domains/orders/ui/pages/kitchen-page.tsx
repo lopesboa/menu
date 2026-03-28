@@ -76,7 +76,7 @@ export function KitchenPage() {
 				<div>
 					<h1 className="font-bold text-2xl text-surface-900">Cozinha</h1>
 					<p className="mt-1 text-surface-500">
-						Visualização em tempo real para a equipe da cozinha
+						Visualizacao em tempo real para a equipe da cozinha
 					</p>
 				</div>
 				<div className="flex items-center gap-4">
@@ -125,7 +125,7 @@ export function KitchenPage() {
 						<div className="flex items-center gap-3">
 							<Clock className="h-6 w-6 text-yellow-600" />
 							<h2 className="font-bold text-xl text-yellow-900">
-								Aguardando Preparo
+								Aguardando preparo
 							</h2>
 						</div>
 						<span className="rounded-full bg-yellow-200 px-3 py-1 font-medium text-yellow-800">
@@ -173,27 +173,27 @@ export function KitchenPage() {
 												{item.quantity}x
 											</span>
 											<span className="text-surface-700">{item.name}</span>
-											{item.notes && (
+											{item.notes ? (
 												<span className="text-orange-600 text-xs italic">
 													({item.notes})
 												</span>
-											)}
+											) : null}
 										</div>
 									))}
 								</div>
-								{order.tableId && (
+								{order.tableId ? (
 									<div className="mt-2 text-surface-500 text-xs">
 										Mesa {order.tableId.replace("t", "")}
 									</div>
-								)}
+								) : null}
 							</motion.div>
 						))}
-						{pendingOrders.length === 0 && (
+						{pendingOrders.length === 0 ? (
 							<div className="py-8 text-center text-yellow-700">
 								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
 								<p>Nenhum pedido aguardando</p>
 							</div>
-						)}
+						) : null}
 					</div>
 				</motion.div>
 
@@ -205,7 +205,7 @@ export function KitchenPage() {
 					<div className="mb-4 flex items-center justify-between">
 						<div className="flex items-center gap-3">
 							<ChefHat className="h-6 w-6 text-orange-600" />
-							<h2 className="font-bold text-orange-900 text-xl">Em Preparo</h2>
+							<h2 className="font-bold text-orange-900 text-xl">Em preparo</h2>
 						</div>
 						<span className="rounded-full bg-orange-200 px-3 py-1 font-medium text-orange-800">
 							{preparingOrders.length}
@@ -252,27 +252,27 @@ export function KitchenPage() {
 												{item.quantity}x
 											</span>
 											<span className="text-surface-700">{item.name}</span>
-											{item.notes && (
+											{item.notes ? (
 												<span className="text-orange-600 text-xs italic">
 													({item.notes})
 												</span>
-											)}
+											) : null}
 										</div>
 									))}
 								</div>
-								{order.tableId && (
+								{order.tableId ? (
 									<div className="mt-2 text-surface-500 text-xs">
 										Mesa {order.tableId.replace("t", "")}
 									</div>
-								)}
+								) : null}
 							</motion.div>
 						))}
-						{preparingOrders.length === 0 && (
+						{preparingOrders.length === 0 ? (
 							<div className="py-8 text-center text-orange-700">
 								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
 								<p>Nenhum pedido em preparo</p>
 							</div>
-						)}
+						) : null}
 					</div>
 				</motion.div>
 			</div>
@@ -284,7 +284,7 @@ export function KitchenPage() {
 				transition={{ delay: 0.3 }}
 			>
 				<h2 className="mb-4 font-semibold text-lg text-surface-900">
-					Resumo da Cozinha
+					Resumo da cozinha
 				</h2>
 				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
@@ -297,7 +297,7 @@ export function KitchenPage() {
 						<p className="font-bold text-3xl text-surface-900">
 							{preparingOrders.length}
 						</p>
-						<p className="text-sm text-surface-500">Em Preparo</p>
+						<p className="text-sm text-surface-500">Em preparo</p>
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
@@ -318,7 +318,7 @@ export function KitchenPage() {
 								).length
 							}
 						</p>
-						<p className="text-sm text-surface-500">Entregues Hoje</p>
+						<p className="text-sm text-surface-500">Finalizados</p>
 					</div>
 				</div>
 			</motion.div>

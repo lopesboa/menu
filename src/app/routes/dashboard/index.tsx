@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Navigate, Outlet, useLocation } from "react-router"
 import "./styles.css"
 import { useOpsRealtimeQueryAdapter } from "@/app/realtime/use-ops-realtime-query-adapter"
+import { invalidateKdsCache } from "@/domains/kds/hooks/kds-query-keys"
 import {
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
@@ -50,6 +51,11 @@ export default function Dashboard() {
 		if (domain === "ops") {
 			invalidateOpsEventsCache(queryClient, organizationId)
 			invalidateOpsSummaryCache(queryClient, organizationId)
+			return
+		}
+
+		if (domain === "kds") {
+			invalidateKdsCache(queryClient, organizationId)
 			return
 		}
 

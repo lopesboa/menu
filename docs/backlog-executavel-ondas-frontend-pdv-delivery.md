@@ -1,7 +1,7 @@
 # Backlog executável — Frontend PDV + Delivery
 
-Última atualização: 2026-03-24  
-Base contratual: Frontend Contract Freeze - Wave 1 (Backend)
+Última atualização: 2026-03-27  
+Base contratual: Frontend Contract Freeze - Wave 1 (Backend) + Frontend Contract Handoff - Wave 3 and Wave 4
 
 ## Objetivo
 
@@ -29,6 +29,31 @@ Manter um plano único de execução frontend alinhado ao contrato congelado do 
 ### Onda 2 — Continuação operacional (após 1A/1B/1C)
 - UX de pico, responsividade avançada, testes e observabilidade.
 - Fechamento de lacunas do fluxo PDV fora do escopo estrito do freeze operacional.
+
+### Onda 3A — Fundação contratual (nova prioridade imediata)
+- Tipar contratos REST e realtime de KDS por estação.
+- Tipar contratos REST e realtime de delivery exceptions, reprocess e sync.
+- Ajustar query keys, invalidação e tratamento de erro para as novas ações operacionais.
+
+### Onda 3B — KDS por estação (mais crítico)
+- Listar estações ativas e carregar fila por `stationId`.
+- Filtrar snapshots `kds.queue.snapshot` no frontend usando `stationId` como fonte de verdade.
+- Atualizar status de item via `PATCH /kds/:organizationId/items/:itemId/status` com reconciliação via realtime.
+
+Decisão registrada:
+- Manter **duas experiências** em paralelo: `Cozinha` e `KDS`.
+- `Cozinha` continua como visão operacional simplificada para operações sem estrutura completa por estação.
+- `KDS` atende operações com estações/praças e fluxo por item conforme o contrato Wave 3/4.
+- A migração não substitui automaticamente a tela `Cozinha`; a convivência entre as duas visões é intencional.
+
+### Onda 4A — Delivery exceptions e ações operacionais
+- Listar `delivery-exceptions` com filtros e paginação.
+- Implementar `reprocess` de inbox event.
+- Implementar `sync` manual de delivery run.
+
+### Onda 4B — Hardening operacional
+- Refinar loading, vazio, erro, estados concorrentes e telemetria.
+- Validar reconciliação entre REST e websocket nas telas operacionais.
 
 ---
 
@@ -148,6 +173,80 @@ Legenda de status:
     - Prints/vídeo:
     - Observações:
 
+### Onda 3A — Fundação contratual
+- [x] **FE-15**: Tipos, adapters e query keys para contratos REST/realtime de KDS por estação.
+  - Dependências: `GET /kds/:organizationId/stations`, `GET /kds/:organizationId/queue`, `kds.item.updated`, `kds.queue.snapshot`.
+  - Evidências:
+    - PR/commit: alterações locais atuais
+    - Prints/vídeo:
+    - Observações: Base `domains/kds` criada com tipos, normalização REST, query keys por `stationId` e invalidação dedicada para eventos realtime de KDS.
+
+- [ ] **FE-16**: Tipos, adapters e mutations para delivery exceptions, `reprocess` e `sync` manual.
+  - Dependências: `GET /ops/:organizationId/delivery-exceptions`, `POST /ops/:organizationId/inbox-events/:eventId/reprocess`, `POST /ops/:organizationId/delivery-runs/:runId/sync`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: manter error handling por `errorCode` e refresh obrigatório pós-sucesso.
+
+### Onda 3B — KDS por estação
+- [~] **FE-17**: Listagem de estações KDS e seletor de estação ativa.
+  - Dependências: `GET /kds/:organizationId/stations`.
+  - Evidências:
+    - PR/commit: alterações locais atuais
+    - Prints/vídeo:
+    - Observações: Página de KDS já consome `stations` e define estação ativa no frontend; falta hardening de estados de erro e UX final.
+
+- [~] **FE-18**: Fila KDS por estação com paginação REST e fallback consistente.
+  - Dependências: `GET /kds/:organizationId/queue?stationId=...&limit=...&offset=...`.
+  - Evidências:
+    - PR/commit: alterações locais atuais
+    - Prints/vídeo:
+    - Observações: Queue REST por estação já integrada com fallback polling e filtro defensivo local por `stationId`; faltam paginação visível na UI e reconciliação final com snapshots/item update.
+
+- [ ] **FE-19**: Atualização de status de item KDS com reconciliação via realtime.
+  - Dependências: `PATCH /kds/:organizationId/items/:itemId/status`, `kds.item.updated`, `kds.queue.snapshot`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: pending UI só até REST `200`; estado final confirmado por evento/refetch.
+
+### Onda 4A — Delivery exceptions e sync
+- [ ] **FE-20**: Tela/lista de delivery exceptions com filtros por status, source e período.
+  - Dependências: `GET /ops/:organizationId/delivery-exceptions`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: servidor é a fonte de verdade da ordenação paginada.
+
+- [ ] **FE-21**: Ação de `reprocess` em inbox event com refresh obrigatório de listas.
+  - Dependências: `POST /ops/:organizationId/inbox-events/:eventId/reprocess`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: invalidar exceptions + inbox/DLQ + summary após sucesso mesmo com socket conectado.
+
+- [ ] **FE-22**: Ação de `sync` manual de delivery run com feedback operacional.
+  - Dependências: `POST /ops/:organizationId/delivery-runs/:runId/sync`, `delivery.sync.updated`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: tratar `sync requested` como sucesso assíncrono; evitar double submit.
+
+- [ ] **FE-23**: Realtime de delivery exceptions e sync com patch granular/refetch seguro.
+  - Dependências: `delivery.inbox.updated`, `delivery.sync.updated`.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações: aplicar patch por identificador; usar refetch quando payload não bastar.
+
+### Onda 4B — Hardening operacional
+- [ ] **FE-24**: Hardening de UX operacional (loading, vazio, erro, concorrência e telemetria).
+  - Dependências: FE-17..FE-23.
+  - Evidências:
+    - PR/commit:
+    - Prints/vídeo:
+    - Observações:
+
 ---
 
 ## Dependências consolidadas (atualizadas)
@@ -157,6 +256,25 @@ Legenda de status:
 3. Error shape estável com `errorCode` para UX de erro consistente.
 4. Eventos websocket de snapshot e delta por domínio para sincronização em tempo real.
 5. Regras de fallback polling e refresh pós-ação definidas no freeze.
+6. Contrato Wave 3/4 para KDS por estação (`/kds/*`) e delivery ops exceptions/sync.
+7. `stationId` é a fonte de verdade para telas KDS; snapshots devem ser filtrados no frontend antes de substituir estado local.
+8. Para delivery exceptions, a ordenação paginada do servidor é a fonte de verdade; websocket deve complementar e não reordenar arbitrariamente a lista.
+9. A aplicação manterá `Cozinha` e `KDS` em paralelo para suportar operações com e sem estrutura de estação.
+
+---
+
+## Prioridade atual
+
+1. **FE-15** — fundação contratual para KDS por estação
+2. **FE-17** — listagem de estações e seleção da estação ativa
+3. **FE-18** — fila KDS por estação com paginação/fallback
+4. **FE-19** — mutation de status de item KDS com reconciliação via realtime
+5. **FE-16** — camada de delivery exceptions + actions (`reprocess`/`sync`)
+6. **FE-20** — tela de delivery exceptions
+7. **FE-21** — reprocess de inbox event
+8. **FE-22** — sync manual de delivery run
+9. **FE-23** — realtime de delivery exceptions
+10. **FE-24** — hardening operacional final
 
 ---
 
