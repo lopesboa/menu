@@ -1,6 +1,9 @@
 import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
-import { invalidateOpsSummaryCache } from "@/domains/ops/hooks/ops-query-keys"
+import {
+	invalidateOpsEventsCache,
+	invalidateOpsSummaryCache,
+} from "@/domains/ops/hooks/ops-query-keys"
 import { invalidateOrdersCache } from "@/domains/orders/hooks/orders-query-keys"
 import { OPS_REALTIME_DOMAIN_EVENT_NAMES } from "@/lib/realtime/ops-realtime.constants"
 import type {
@@ -74,6 +77,7 @@ export function useOpsRealtimeQueryAdapter({
 					invalidateOrdersCache(queryClient, organizationId, payload.orderId)
 
 					if (domain === "ops") {
+						invalidateOpsEventsCache(queryClient, organizationId)
 						invalidateOpsSummaryCache(queryClient, organizationId)
 					}
 				} catch (error) {

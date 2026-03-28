@@ -66,6 +66,11 @@ const Billing = lazy(() =>
 		default: module.BillingPage,
 	}))
 )
+const Operations = lazy(() =>
+	import("./dashboard/pages/operations").then((module) => ({
+		default: module.OperationsPage,
+	}))
+)
 
 export const router = createBrowserRouter([
 	{
@@ -120,6 +125,7 @@ export const router = createBrowserRouter([
 			{ path: dashboardRouteSegments.kitchen, Component: Kitchen },
 			{ path: dashboardRouteSegments.delivery, Component: Delivery },
 			{ path: dashboardRouteSegments.customers, Component: Customers },
+			{ path: dashboardRouteSegments.operations, Component: Operations },
 			{ path: dashboardRouteSegments.menu, Component: MenuBuilder },
 			{ path: dashboardRouteSegments.billing, Component: Billing },
 			{ path: "*", Component: NotFoundPage },

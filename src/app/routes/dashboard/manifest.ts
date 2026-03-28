@@ -1,4 +1,5 @@
 import {
+	Activity,
 	BarChart3,
 	ChefHat,
 	LayoutDashboard,
@@ -25,6 +26,7 @@ type DashboardRouteKey =
 	| "delivery"
 	| "menu"
 	| "customers"
+	| "operations"
 	| "reports"
 	| "settings"
 	| "account"
@@ -134,6 +136,15 @@ const DASHBOARD_ROUTES: DashboardRouteManifestItem[] = [
 		icon: Users,
 	},
 	{
+		key: "operations",
+		label: "Operacoes",
+		fullPath: "/dashboard/operations",
+		segment: "operations",
+		showInSidebar: true,
+		showInBottomNav: false,
+		icon: Activity,
+	},
+	{
 		key: "reports",
 		label: "Relatórios",
 		fullPath: "/dashboard/reports",
@@ -188,6 +199,7 @@ export const dashboardRoutePaths = {
 	delivery: "/dashboard/delivery",
 	menu: "/dashboard/menu",
 	customers: "/dashboard/customers",
+	operations: "/dashboard/operations",
 	reports: "/dashboard/reports",
 	settings: "/dashboard/settings",
 	account: "/dashboard/account",
@@ -205,6 +217,7 @@ export const dashboardRouteSegments = {
 	delivery: "delivery",
 	menu: "menu",
 	customers: "customers",
+	operations: "operations",
 	reports: "reports",
 	settings: "settings",
 	account: "account",

@@ -104,19 +104,19 @@ Legenda de status:
     - Prints/vídeo:
     - Observações:
 
-- [ ] **FE-11**: Lista de inbox (`GET /ops/:organizationId/inbox-events`) com paginação/filtros.
+- [x] **FE-11**: Lista de inbox (`GET /ops/:organizationId/inbox-events`) com paginação/filtros.
   - Dependências: contrato de inbox events.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Lista de inbox integrada ao dashboard com busca, filtro por canal/status, paginação, estados de loading/erro/vazio e fallback polling no domínio `ops`.
 
-- [ ] **FE-12**: Lista de DLQ (`GET /ops/:organizationId/dead-letter-events`) com paginação.
+- [x] **FE-12**: Lista de DLQ (`GET /ops/:organizationId/dead-letter-events`) com paginação.
   - Dependências: contrato de dead-letter events.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Lista de DLQ integrada ao dashboard com filtro por canal/status, paginação, detalhe resumido do erro e invalidação via realtime para manter sincronismo operacional.
 
 - [ ] **FE-13**: Ações de `reprocess` e `retry` com refresh das listas após sucesso.
   - Regras: após sucesso, atualizar inbox + DLQ mesmo com socket conectado.
