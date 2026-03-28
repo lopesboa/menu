@@ -46,6 +46,11 @@ const Kitchen = lazy(() =>
 		default: module.KitchenPage,
 	}))
 )
+const KDS = lazy(() =>
+	import("@/domains/kds/ui/pages/kds-page").then((module) => ({
+		default: module.KdsPage,
+	}))
+)
 const Delivery = lazy(() =>
 	import("@/domains/orders/ui/pages/delivery-page").then((module) => ({
 		default: module.DeliveryPage,
@@ -123,6 +128,7 @@ export const router = createBrowserRouter([
 			{ path: dashboardRouteSegments.reports, Component: Reports },
 			{ path: dashboardRouteSegments.inventory, Component: Inventory },
 			{ path: dashboardRouteSegments.kitchen, Component: Kitchen },
+			{ path: dashboardRouteSegments.kds, Component: KDS },
 			{ path: dashboardRouteSegments.delivery, Component: Delivery },
 			{ path: dashboardRouteSegments.customers, Component: Customers },
 			{ path: dashboardRouteSegments.operations, Component: Operations },

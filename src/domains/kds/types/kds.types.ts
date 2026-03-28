@@ -35,6 +35,11 @@ export interface KdsQueueResult {
 	}
 }
 
+export interface KdsItemStatusUpdateResult {
+	success: boolean
+	item: KdsQueueItem
+}
+
 export interface KdsQueueSnapshotEvent {
 	items: KdsQueueItem[]
 	serverTime: string

@@ -1,5 +1,7 @@
 import { apiFetch } from "@/utils/fetch"
 import type {
+	KdsItemStatus,
+	KdsItemStatusUpdateResult,
 	KdsQueueItem,
 	KdsQueueResult,
 	KdsStation,
@@ -11,6 +13,13 @@ interface GetKdsQueueParams {
 	limit?: number
 	offset?: number
 	signal?: AbortSignal
+}
+
+interface RawKdsItemStatusUpdateResult {
+	success?: boolean
+	item?: Partial<KdsQueueItem> & {
+		status?: KdsItemStatus
+	}
 }
 
 function normalizeStation(rawStation: Partial<KdsStation>): KdsStation {
@@ -86,6 +95,30 @@ export async function getKdsQueue({
 			offset,
 			total: items.length,
 		},
+	}
+}
+
+export async function updateKdsItemStatus(
+	organizationId: string,
+	itemId: string,
+	status: KdsItemStatus,
+	signal?: AbortSignal
+): Promise<KdsItemStatusUpdateResult> {
+	const response = await apiFetch<RawKdsItemStatusUpdateResult>(
+		`/kds/${organizationId}/items/${itemId}/status`,
+		{
+			method: "PATCH",
+			body: JSON.stringify({ status }),
+			signal,
+		}
+	)
+
+	return {
+		success: response.success === true,
+		item: normalizeKdsQueueItem({
+			...response.item,
+			itemStatus: response.item?.status,
+		}),
 	}
 }
 

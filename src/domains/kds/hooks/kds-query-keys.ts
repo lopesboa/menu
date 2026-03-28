@@ -16,6 +16,10 @@ export const kdsQueryKeys = {
 			...kdsQueryKeys.queues(organizationId),
 			{ stationId, limit, offset },
 		] as const,
+	mutations: {
+		status: (organizationId: string | null) =>
+			[...kdsQueryKeys.all, "mutation", "status", organizationId] as const,
+	},
 }
 
 export function invalidateKdsCache(

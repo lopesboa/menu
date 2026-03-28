@@ -1,11 +1,20 @@
 import { motion } from "framer-motion"
-import { ChefHat, Clock3, Layers3, UtensilsCrossed } from "lucide-react"
+import {
+	ArrowRight,
+	CheckCircle2,
+	ChefHat,
+	Clock3,
+	Layers3,
+	UtensilsCrossed,
+	XCircle,
+} from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { formatDateTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { useKdsQueue, useKdsStations } from "../../hooks/use-kds"
+import { useKdsActions } from "../../hooks/use-kds-actions"
 import type { KdsItemStatus, KdsQueueItem } from "../../types/kds.types"
 
 const PAGE_SIZE = 50
@@ -75,13 +84,40 @@ function getElapsedTimeClasses(createdAt: string | null, currentTime: Date) {
 	return "bg-red-100 text-red-700"
 }
 
+function getNextAction(status: KdsItemStatus) {
+	switch (status) {
+		case "pending":
+			return {
+				label: "Iniciar preparo",
+				nextStatus: "preparing" as const,
+				icon: ArrowRight,
+				className: "bg-yellow-500 hover:bg-yellow-600",
+			}
+		case "preparing":
+			return {
+				label: "Marcar como pronto",
+				nextStatus: "ready" as const,
+				icon: CheckCircle2,
+				className: "bg-green-600 hover:bg-green-700",
+			}
+		default:
+			return null
+	}
+}
+
 function KdsItemCard({
 	item,
 	currentTime,
+	isUpdating,
+	onUpdateStatus,
 }: {
 	item: KdsQueueItem
 	currentTime: Date
+	isUpdating: boolean
+	onUpdateStatus: (itemId: string, status: KdsItemStatus) => void
 }) {
+	const nextAction = getNextAction(item.itemStatus)
+
 	return (
 		<div className="rounded-2xl border border-surface-100 bg-white p-4 shadow-sm">
 			<div className="flex flex-wrap items-start justify-between gap-3">
@@ -137,6 +173,28 @@ function KdsItemCard({
 				<span>Pedido {item.orderId}</span>
 				{item.createdAt ? <span>{formatDateTime(item.createdAt)}</span> : null}
 			</div>
+
+			<div className="mt-4 flex flex-wrap items-center gap-2">
+				{nextAction ? (
+					<button
+						className={cn(
+							"inline-flex items-center gap-2 rounded-xl px-4 py-2 font-medium text-sm text-white transition-colors disabled:cursor-not-allowed disabled:opacity-60",
+							nextAction.className
+						)}
+						disabled={isUpdating}
+						onClick={() => onUpdateStatus(item.itemId, nextAction.nextStatus)}
+						type="button"
+					>
+						<nextAction.icon className="h-4 w-4" />
+						{isUpdating ? "Atualizando..." : nextAction.label}
+					</button>
+				) : (
+					<span className="inline-flex items-center gap-2 rounded-xl bg-surface-100 px-3 py-2 text-sm text-surface-500">
+						<XCircle className="h-4 w-4" />
+						Sem ação disponível
+					</span>
+				)}
+			</div>
 		</div>
 	)
 }
@@ -145,6 +203,7 @@ function KdsItemCard({
 export function KdsPage() {
 	const { organizationId } = useOrganizationCheck()
 	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("kds")
+	const { isItemUpdating, updateItemStatus } = useKdsActions(organizationId)
 	const [currentTime, setCurrentTime] = useState(new Date())
 	const [selectedStationId, setSelectedStationId] = useState<string | null>(
 		null
@@ -214,6 +273,10 @@ export function KdsPage() {
 		(station) => station.id === selectedStationId
 	)
 	const hasOperationalError = isStationsError || isQueueError
+
+	const handleUpdateItemStatus = (itemId: string, status: KdsItemStatus) => {
+		updateItemStatus(itemId, status)
+	}
 
 	return (
 		<div className="space-y-6">
@@ -363,8 +426,10 @@ export function KdsPage() {
 						{pendingItems.map((item) => (
 							<KdsItemCard
 								currentTime={currentTime}
+								isUpdating={isItemUpdating(item.itemId)}
 								item={item}
 								key={item.itemId}
+								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
 						{pendingItems.length === 0 && !isQueueLoading ? (
@@ -391,8 +456,10 @@ export function KdsPage() {
 						{preparingItems.map((item) => (
 							<KdsItemCard
 								currentTime={currentTime}
+								isUpdating={isItemUpdating(item.itemId)}
 								item={item}
 								key={item.itemId}
+								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
 						{preparingItems.length === 0 && !isQueueLoading ? (
@@ -419,8 +486,10 @@ export function KdsPage() {
 						{readyItems.map((item) => (
 							<KdsItemCard
 								currentTime={currentTime}
+								isUpdating={isItemUpdating(item.itemId)}
 								item={item}
 								key={item.itemId}
+								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
 						{readyItems.length === 0 && !isQueueLoading ? (

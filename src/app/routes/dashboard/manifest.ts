@@ -23,6 +23,7 @@ type DashboardRouteKey =
 	| "inventory"
 	| "orders"
 	| "kitchen"
+	| "kds"
 	| "delivery"
 	| "menu"
 	| "customers"
@@ -107,6 +108,15 @@ const DASHBOARD_ROUTES: DashboardRouteManifestItem[] = [
 		showInSidebar: true,
 		showInBottomNav: true,
 		icon: ChefHat,
+	},
+	{
+		key: "kds",
+		label: "KDS",
+		fullPath: "/dashboard/kds",
+		segment: "kds",
+		showInSidebar: true,
+		showInBottomNav: false,
+		icon: UtensilsCrossed,
 	},
 	{
 		key: "delivery",
@@ -196,6 +206,7 @@ export const dashboardRoutePaths = {
 	inventory: "/dashboard/inventory",
 	orders: "/dashboard/orders",
 	kitchen: "/dashboard/kitchen",
+	kds: "/dashboard/kds",
 	delivery: "/dashboard/delivery",
 	menu: "/dashboard/menu",
 	customers: "/dashboard/customers",
@@ -214,6 +225,7 @@ export const dashboardRouteSegments = {
 	inventory: "inventory",
 	orders: "orders",
 	kitchen: "kitchen",
+	kds: "kds",
 	delivery: "delivery",
 	menu: "menu",
 	customers: "customers",

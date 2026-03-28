@@ -203,12 +203,12 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Queue REST por estação já integrada com fallback polling e filtro defensivo local por `stationId`; faltam paginação visível na UI e reconciliação final com snapshots/item update.
 
-- [ ] **FE-19**: Atualização de status de item KDS com reconciliação via realtime.
+- [~] **FE-19**: Atualização de status de item KDS com reconciliação via realtime.
   - Dependências: `PATCH /kds/:organizationId/items/:itemId/status`, `kds.item.updated`, `kds.queue.snapshot`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: pending UI só até REST `200`; estado final confirmado por evento/refetch.
+    - Observações: Mutation de status por item já integrada ao KDS com loading por linha e refetch pós-sucesso; falta hardening da reconciliação fina entre `item.updated` e `queue.snapshot` para evitar refetch total em todos os casos.
 
 ### Onda 4A — Delivery exceptions e sync
 - [ ] **FE-20**: Tela/lista de delivery exceptions com filtros por status, source e período.
