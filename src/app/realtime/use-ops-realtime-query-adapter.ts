@@ -11,6 +11,7 @@ import type {
 	KdsQueueResult,
 } from "@/domains/kds/types/kds.types"
 import {
+	invalidateOpsDeliveryExceptionsCache,
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
 } from "@/domains/ops/hooks/ops-query-keys"
@@ -251,6 +252,10 @@ function invalidateCacheForDomain(
 	}
 
 	invalidateOrdersCache(queryClient, organizationId, payload.orderId)
+
+	if (domain === "delivery") {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+	}
 
 	if (domain === "ops") {
 		invalidateOpsEventsCache(queryClient, organizationId)

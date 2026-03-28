@@ -30,6 +30,20 @@ export const opsQueryKeys = {
 			"dlq",
 			{ organizationId, limit, offset, search, status, channel },
 		] as const,
+	deliveryExceptions: (
+		organizationId: string | null,
+		limit: number,
+		offset: number,
+		status?: string,
+		source?: string,
+		from?: string,
+		to?: string
+	) =>
+		[
+			...opsQueryKeys.all,
+			"delivery-exceptions",
+			{ organizationId, limit, offset, status, source, from, to },
+		] as const,
 }
 
 export function invalidateOpsSummaryCache(
@@ -57,7 +71,30 @@ export function invalidateOpsEventsCache(
 				return false
 			}
 
-			if (!(key === "inbox" || key === "dlq")) {
+			if (
+				!(key === "inbox" || key === "dlq" || key === "delivery-exceptions")
+			) {
+				return false
+			}
+
+			return params?.organizationId === organizationId
+		},
+	})
+}
+
+export function invalidateOpsDeliveryExceptionsCache(
+	queryClient: QueryClient,
+	organizationId: string | null
+) {
+	queryClient.invalidateQueries({
+		predicate: (query) => {
+			const [scope, key, params] = query.queryKey as [
+				string,
+				string,
+				{ organizationId?: string | null } | undefined,
+			]
+
+			if (scope !== "ops" || key !== "delivery-exceptions") {
 				return false
 			}
 

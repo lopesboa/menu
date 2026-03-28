@@ -181,12 +181,12 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Base `domains/kds` criada com tipos, normalização REST, query keys por `stationId` e invalidação dedicada para eventos realtime de KDS.
 
-- [ ] **FE-16**: Tipos, adapters e mutations para delivery exceptions, `reprocess` e `sync` manual.
+- [~] **FE-16**: Tipos, adapters e mutations para delivery exceptions, `reprocess` e `sync` manual.
   - Dependências: `GET /ops/:organizationId/delivery-exceptions`, `POST /ops/:organizationId/inbox-events/:eventId/reprocess`, `POST /ops/:organizationId/delivery-runs/:runId/sync`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: manter error handling por `errorCode` e refresh obrigatório pós-sucesso.
+    - Observações: Tipos, adapters, query keys e hook de `delivery-exceptions` implementados; faltam as mutations de `reprocess` e `sync` manual.
 
 ### Onda 3B — KDS por estação
 - [~] **FE-17**: Listagem de estações KDS e seletor de estação ativa.
@@ -211,12 +211,12 @@ Legenda de status:
     - Observações: Mutation de status por item integrada ao KDS com loading concorrente por linha e reconciliação fina para `kds.item.updated` e `kds.queue.snapshot`, preservando o filtro por `stationId` no cache.
 
 ### Onda 4A — Delivery exceptions e sync
-- [ ] **FE-20**: Tela/lista de delivery exceptions com filtros por status, source e período.
+- [x] **FE-20**: Tela/lista de delivery exceptions com filtros por status, source e período.
   - Dependências: `GET /ops/:organizationId/delivery-exceptions`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: servidor é a fonte de verdade da ordenação paginada.
+    - Observações: Painel integrado na página `Operacoes` com filtros por status, source e período, paginação, estados de loading/erro/vazio e invalidação via eventos realtime de delivery.
 
 - [ ] **FE-21**: Ação de `reprocess` em inbox event com refresh obrigatório de listas.
   - Dependências: `POST /ops/:organizationId/inbox-events/:eventId/reprocess`.

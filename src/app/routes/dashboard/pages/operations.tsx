@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Activity, ArrowRightLeft } from "lucide-react"
+import { OpsDeliveryExceptionsPanel } from "@/domains/ops/components/ops-delivery-exceptions-panel"
 import { OpsEventsPanel } from "@/domains/ops/components/ops-events-panel"
 import { OpsSummarySection } from "@/domains/ops/components/ops-summary-section"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
@@ -46,6 +47,7 @@ export function OperationsPage() {
 			</motion.div>
 
 			<OpsSummarySection organizationId={organizationId} />
+			<OpsDeliveryExceptionsPanel organizationId={organizationId} />
 			<OpsEventsPanel organizationId={organizationId} />
 		</div>
 	)
