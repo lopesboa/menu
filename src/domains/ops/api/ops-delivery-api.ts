@@ -2,6 +2,8 @@ import { apiFetch } from "@/utils/fetch"
 import type {
 	OpsDeliveryException,
 	OpsDeliveryExceptionsResult,
+	OpsDeliveryReprocessResult,
+	OpsDeliverySyncResult,
 } from "../types/ops-delivery.types"
 
 interface DeliveryExceptionsQueryParams {
@@ -47,6 +49,21 @@ interface RawDeliveryExceptionsResponse {
 			total?: number
 		}
 	}
+}
+
+interface RawDeliveryReprocessResponse {
+	message?: string
+	eventId?: string
+}
+
+interface RawDeliverySyncResponse {
+	message?: string
+	runId?: string
+	orderId?: string | null
+	status?: string
+	lastEventType?: string | null
+	lastEventAt?: string | null
+	syncedAt?: string | null
 }
 
 function toSafeString(value: unknown, fallback: string) {
@@ -155,5 +172,48 @@ export async function getDeliveryExceptions(
 			offset: toSafeNumber(pagination?.offset, params.offset ?? 0),
 			total: toSafeNumber(pagination?.total, items.length),
 		},
+	}
+}
+
+export async function reprocessDeliveryInboxEvent(
+	organizationId: string,
+	eventId: string,
+	signal?: AbortSignal
+): Promise<OpsDeliveryReprocessResult> {
+	const response = await apiFetch<RawDeliveryReprocessResponse>(
+		`/ops/${organizationId}/inbox-events/${eventId}/reprocess`,
+		{
+			method: "POST",
+			signal,
+		}
+	)
+
+	return {
+		message: toSafeString(response.message, "Inbox event reprocessed"),
+		eventId: toSafeString(response.eventId, eventId),
+	}
+}
+
+export async function syncDeliveryRun(
+	organizationId: string,
+	runId: string,
+	signal?: AbortSignal
+): Promise<OpsDeliverySyncResult> {
+	const response = await apiFetch<RawDeliverySyncResponse>(
+		`/ops/${organizationId}/delivery-runs/${runId}/sync`,
+		{
+			method: "POST",
+			signal,
+		}
+	)
+
+	return {
+		message: toSafeString(response.message, "Delivery run sync requested"),
+		runId: toSafeString(response.runId, runId),
+		orderId: toSafeNullableString(response.orderId),
+		status: toSafeString(response.status, "unknown"),
+		lastEventType: toSafeNullableString(response.lastEventType),
+		lastEventAt: toSafeNullableString(response.lastEventAt),
+		syncedAt: toSafeNullableString(response.syncedAt),
 	}
 }

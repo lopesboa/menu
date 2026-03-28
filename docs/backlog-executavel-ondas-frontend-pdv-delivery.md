@@ -218,19 +218,19 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Painel integrado na página `Operacoes` com filtros por status, source e período, paginação, estados de loading/erro/vazio e invalidação via eventos realtime de delivery.
 
-- [ ] **FE-21**: Ação de `reprocess` em inbox event com refresh obrigatório de listas.
+- [x] **FE-21**: Ação de `reprocess` em inbox event com refresh obrigatório de listas.
   - Dependências: `POST /ops/:organizationId/inbox-events/:eventId/reprocess`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: invalidar exceptions + inbox/DLQ + summary após sucesso mesmo com socket conectado.
+    - Observações: Reprocessar disponível para itens `inbox` na lista de delivery exceptions, com refresh obrigatório de exceptions + inbox/DLQ + summary após sucesso.
 
-- [ ] **FE-22**: Ação de `sync` manual de delivery run com feedback operacional.
+- [x] **FE-22**: Ação de `sync` manual de delivery run com feedback operacional.
   - Dependências: `POST /ops/:organizationId/delivery-runs/:runId/sync`, `delivery.sync.updated`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: tratar `sync requested` como sucesso assíncrono; evitar double submit.
+    - Observações: Sincronização manual disponível para itens `run`, com toast de sucesso assíncrono, bloqueio contra double submit e refresh obrigatório dos painéis relacionados.
 
 - [ ] **FE-23**: Realtime de delivery exceptions e sync com patch granular/refetch seguro.
   - Dependências: `delivery.inbox.updated`, `delivery.sync.updated`.

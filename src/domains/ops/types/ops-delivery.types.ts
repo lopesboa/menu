@@ -26,3 +26,18 @@ export interface OpsDeliveryExceptionsResult {
 		total: number
 	}
 }
+
+export interface OpsDeliveryReprocessResult {
+	message: string
+	eventId: string
+}
+
+export interface OpsDeliverySyncResult {
+	message: string
+	runId: string
+	orderId: string | null
+	status: string
+	lastEventType: string | null
+	lastEventAt: string | null
+	syncedAt: string | null
+}
