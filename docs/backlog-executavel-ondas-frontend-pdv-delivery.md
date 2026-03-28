@@ -72,29 +72,29 @@ Legenda de status:
     - Observações: Aplicado pattern de `ApiRequestError` com `errorCode` em todas as operações de mutation (orders, categories, products, address, checkout). Cada domínio agora extrai o `errorCode` do payload e exibe mensagem contextualizada ao usuário via toast, além do capture no Sentry.
 
 ### Onda 1B — Realtime + fallback
-- [ ] **FE-07**: Cliente websocket `/ops` com `rt.subscribe|unsubscribe|refresh.request` por domínio.
+- [x] **FE-07**: Cliente websocket `/ops` com `rt.subscribe|unsubscribe|refresh.request` por domínio.
   - Dependências: namespace e eventos de snapshot/delta.
   - Evidências:
-    - PR/commit:
+    - PR/commit: `6d64807`, `f807a79`, alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Cliente realtime central, health state, subscribe/unsubscribe/refresh por domínio, resubscribe em reconexão, widget de saúde e adapter de invalidação de cache implementados. Eventos alinhados ao contrato `rt.*`.
 
-- [ ] **FE-08**: Quick actions com `order.status.change.request` + fallback REST (`PATCH /orders/:organizationId/:orderId/status`).
+- [x] **FE-08**: Quick actions com `order.status.change.request` + fallback REST (`PATCH /orders/:organizationId/:orderId/status`).
   - Dependências: ack de comando e política de timeout.
   - Evidências:
-    - PR/commit:
+    - PR/commit: `6d64807`, alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Atualização de status tenta realtime primeiro, trata `changed=false` como sucesso/no-op, faz fallback REST em timeout/erro de transporte e registra telemetria específica para fallback.
 
-- [ ] **FE-09**: Polling fallback por tela durante desconexão/reconexão.
+- [x] **FE-09**: Polling fallback por tela durante desconexão/reconexão.
   - Regras:
     - Queue/KDS/Delivery: 5-10s
     - Ops: 10-15s
   - Dependências: estado de conexão socket.
   - Evidências:
-    - PR/commit:
+    - PR/commit: `f807a79`, alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Fallback polling aplicado em orders, kitchen, delivery e summary operacional (`ops`) com intervalos por domínio durante `disconnected`, `degraded` e reconexão após perda de sessão.
 
 ### Onda 1C — Ops monitoring
 - [ ] **FE-10**: Tela de resumo operacional (`GET /ops/:organizationId/summary`).

@@ -26,6 +26,7 @@ import {
 	useSalesRanking,
 } from "@/hooks/use-dashboard"
 import { authClient } from "@/lib/client"
+import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { sentryCaptureException } from "@/lib/sentry"
 import { formatCurrency, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
@@ -196,7 +197,10 @@ export default function DashboardHome() {
 	const { data: dashboardSummary } = useDashboardSummary(organizationId, 10)
 	const { data: revenueChart } = useRevenueChart(organizationId, 30)
 	const { data: salesRanking } = useSalesRanking(organizationId, 30, 1, 5)
-	const { data: opsSummary } = useOpsSummary(organizationId)
+	const opsFallbackRefetchInterval = useOpsRealtimeFallbackPolling("ops")
+	const { data: opsSummary } = useOpsSummary(organizationId, {
+		refetchInterval: opsFallbackRefetchInterval,
+	})
 	const isRevenueNegative =
 		revenueChart?.summary.percentageChange &&
 		revenueChart?.summary.percentageChange < 0

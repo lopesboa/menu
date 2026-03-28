@@ -9,9 +9,9 @@ export const OPS_REALTIME_DOMAINS = [
 ] as const
 
 export const OPS_REALTIME_EVENTS = {
-	subscribe: "ops.subscribe",
-	unsubscribe: "ops.unsubscribe",
-	refresh: "ops.refresh",
+	subscribe: "rt.subscribe",
+	unsubscribe: "rt.unsubscribe",
+	refresh: "rt.refresh.request",
 	orderStatusChangeRequest: "order.status.change.request",
 } as const
 
