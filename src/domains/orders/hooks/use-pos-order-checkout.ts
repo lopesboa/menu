@@ -2,11 +2,40 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
 import type { PaymentMethod } from "@/shared/types/commerce-types"
+import { ApiRequestError } from "@/utils/fetch"
 import { createOrder, updateOrderStatus } from "../api/orders-api"
 import { toApiOrderStatus } from "../model/order-operational-status"
 import { invalidateOrdersCache } from "./orders-query-keys"
 
 const HTTP_STATUS_REGEX = /status:\s*(\d+)/i
+
+function getErrorCode(error: unknown): string | undefined {
+	if (error instanceof ApiRequestError) {
+		return error.errorCode
+	}
+	return undefined
+}
+
+function getCheckoutErrorMessage(error: unknown): string {
+	const errorCode = getErrorCode(error)
+
+	if (errorCode) {
+		switch (errorCode) {
+			case "ORDER_ALREADY_EXISTS":
+				return "Já existe um pedido em andamento para esta mesa"
+			case "TABLE_NOT_FOUND":
+				return "Mesa não encontrada"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para criar o pedido"
+			default:
+				return "Não foi possível finalizar o pedido"
+		}
+	}
+
+	return "Não foi possível finalizar o pedido"
+}
 
 interface CheckoutCartItem {
 	menuItem: {
@@ -172,7 +201,7 @@ export function usePosOrderCheckout(organizationId: string | null) {
 			)
 		},
 		onError: (error) => {
-			toast.error("Não foi possível finalizar o pedido")
+			toast.error(getCheckoutErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "pos_checkout_order",
 				organizationId,

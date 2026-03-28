@@ -72,6 +72,25 @@ function getStatusErrorMessage(error: unknown): string {
 	return "Não foi possível atualizar o status do pedido"
 }
 
+function getApprovalErrorMessage(error: unknown): string {
+	const errorCode = getErrorCode(error)
+
+	if (errorCode) {
+		switch (errorCode) {
+			case "ORDER_NOT_FOUND":
+				return "Pedido não encontrado para atualização"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para atualizar a aprovação"
+			default:
+				return "Não foi possível atualizar a aprovação do pedido"
+		}
+	}
+
+	return "Não foi possível atualizar a aprovação do pedido"
+}
+
 export function useOrderActions(organizationId: string | null) {
 	const queryClient = useQueryClient()
 
@@ -183,7 +202,7 @@ export function useOrderActions(organizationId: string | null) {
 			invalidateOrdersCache(queryClient, organizationId, variables.orderId)
 		},
 		onError: (error, variables) => {
-			toast.error("Não foi possível atualizar a aprovação do pedido")
+			toast.error(getApprovalErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "orders_update_approval",
 				organizationId,

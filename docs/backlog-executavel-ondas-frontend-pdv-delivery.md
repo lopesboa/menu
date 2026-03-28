@@ -64,12 +64,12 @@ Legenda de status:
     - Prints/vídeo:
     - Observações:
 
-- [~] **FE-06**: Tratamento de erro padronizado por shape (`type/title/status/errorCode/details`).
+- [x] **FE-06**: Tratamento de erro padronizado por shape (`type/title/status/errorCode/details`).
   - Dependências: payload de erro estável Wave 1.
   - Evidências:
     - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Aplicado pattern de `ApiRequestError` com `errorCode` em todas as operações de mutation (orders, categories, products, address, checkout). Cada domínio agora extrai o `errorCode` do payload e exibe mensagem contextualizada ao usuário via toast, além do capture no Sentry.
 
 ### Onda 1B — Realtime + fallback
 - [ ] **FE-07**: Cliente websocket `/ops` com `rt.subscribe|unsubscribe|refresh.request` por domínio.
