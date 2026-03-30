@@ -15,6 +15,10 @@ import {
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
 } from "@/domains/ops/hooks/ops-query-keys"
+import type {
+	OpsDeliveryException,
+	OpsDeliveryExceptionsResult,
+} from "@/domains/ops/types/ops-delivery.types"
 import { invalidateOrdersCache } from "@/domains/orders/hooks/orders-query-keys"
 import { OPS_REALTIME_DOMAIN_EVENT_NAMES } from "@/lib/realtime/ops-realtime.constants"
 import type {
@@ -59,6 +63,30 @@ function shouldInvalidateKnownCaches(domain: OpsRealtimeDomain) {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === "object" && value !== null
+}
+
+function toNullableString(value: unknown) {
+	if (typeof value === "string" && value.trim()) {
+		return value.trim()
+	}
+
+	return null
+}
+
+function toSafeString(value: unknown, fallback: string) {
+	if (typeof value === "string" && value.trim()) {
+		return value.trim()
+	}
+
+	return fallback
+}
+
+function toSafeNumber(value: unknown, fallback = 0) {
+	if (typeof value === "number" && Number.isFinite(value)) {
+		return value
+	}
+
+	return fallback
 }
 
 function patchKdsItemInQueue(
@@ -136,6 +164,286 @@ function forEachKdsQueueQuery(
 
 		callback(queryKey, params ?? {})
 	}
+}
+
+function forEachDeliveryExceptionsQuery(
+	queryClient: QueryClient,
+	organizationId: string,
+	callback: (
+		queryKey: readonly unknown[],
+		params: {
+			status?: string
+			source?: string
+			from?: string
+			to?: string
+			limit?: number
+			offset?: number
+		}
+	) => void
+) {
+	const queries = queryClient.getQueryCache().findAll({
+		predicate: (query) => {
+			const [scope, key, params] = query.queryKey as [
+				string,
+				string,
+				{ organizationId?: string | null } | undefined,
+			]
+
+			if (scope !== "ops" || key !== "delivery-exceptions") {
+				return false
+			}
+
+			return params?.organizationId === organizationId
+		},
+	})
+
+	for (const query of queries) {
+		const queryKey = query.queryKey
+		const params = queryKey[2] as
+			| {
+					status?: string
+					source?: string
+					from?: string
+					to?: string
+					limit?: number
+					offset?: number
+			  }
+			| undefined
+
+		callback(queryKey, params ?? {})
+	}
+}
+
+function matchesDeliveryExceptionsFilter(
+	item: OpsDeliveryException,
+	params: {
+		status?: string
+		source?: string
+		from?: string
+		to?: string
+	}
+) {
+	if (params.status && item.status !== params.status) {
+		return false
+	}
+
+	if (params.source && item.source !== params.source) {
+		return false
+	}
+
+	if (params.from && item.occurredAt && item.occurredAt < params.from) {
+		return false
+	}
+
+	if (
+		params.to &&
+		item.occurredAt &&
+		item.occurredAt > `${params.to}T23:59:59.999Z`
+	) {
+		return false
+	}
+
+	return true
+}
+
+function patchDeliveryExceptionInList(
+	current: OpsDeliveryExceptionsResult | undefined,
+	matcher: (item: OpsDeliveryException) => boolean,
+	patch: Partial<OpsDeliveryException>,
+	params: {
+		status?: string
+		source?: string
+		from?: string
+		to?: string
+	},
+	canInsert: boolean
+) {
+	if (!current) {
+		return { next: current, shouldInvalidate: true }
+	}
+
+	const existingIndex = current.items.findIndex(matcher)
+	if (existingIndex === -1) {
+		return {
+			next: current,
+			shouldInvalidate: canInsert,
+		}
+	}
+
+	const updatedItem = {
+		...current.items[existingIndex],
+		...patch,
+	}
+
+	if (!matchesDeliveryExceptionsFilter(updatedItem, params)) {
+		const items = current.items.filter((_, index) => index !== existingIndex)
+		return {
+			next: {
+				...current,
+				items,
+				pagination: {
+					...current.pagination,
+					total: Math.max(0, current.pagination.total - 1),
+				},
+			},
+			shouldInvalidate: true,
+		}
+	}
+
+	const items = [...current.items]
+	items[existingIndex] = updatedItem
+
+	return {
+		next: {
+			...current,
+			items,
+		},
+		shouldInvalidate: true,
+	}
+}
+
+function normalizeDeliveryInboxEventPayload(
+	data: Record<string, unknown>
+): OpsDeliveryException | null {
+	const id = toNullableString(data.eventId)
+	if (!id) {
+		return null
+	}
+
+	return {
+		id,
+		kind: "inbox",
+		organizationId: null,
+		source: toSafeString(data.source, "delivery"),
+		eventType: toSafeString(data.eventType, "Evento de delivery"),
+		externalEventId: toNullableString(data.externalEventId),
+		runId: null,
+		orderId: toNullableString(data.orderId),
+		status: toSafeString(data.status, "unknown"),
+		attempts: toSafeNumber(data.attempts),
+		errorCode: toNullableString(data.errorCode),
+		errorDetails: toNullableString(data.errorDetails),
+		hasDeadLetter: data.hasDeadLetter === true,
+		occurredAt: null,
+		updatedAt: toNullableString(data.updatedAt),
+	}
+}
+
+function applyDeliveryInboxUpdatedEvent(
+	queryClient: QueryClient,
+	organizationId: string,
+	payload: OpsRealtimeDomainEventPayload
+) {
+	if (!isRecord(payload.data)) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+		return
+	}
+
+	const item = normalizeDeliveryInboxEventPayload(payload.data)
+	if (!item) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+		return
+	}
+
+	let shouldInvalidate = false
+
+	forEachDeliveryExceptionsQuery(
+		queryClient,
+		organizationId,
+		(queryKey, params) => {
+			queryClient.setQueryData(
+				queryKey,
+				(current: OpsDeliveryExceptionsResult | undefined) => {
+					const result = patchDeliveryExceptionInList(
+						current,
+						(currentItem) => currentItem.id === item.id,
+						item,
+						params,
+						true
+					)
+
+					shouldInvalidate ||= result.shouldInvalidate
+					return result.next
+				}
+			)
+		}
+	)
+
+	if (shouldInvalidate) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+	}
+}
+
+function applyDeliverySyncUpdatedEvent(
+	queryClient: QueryClient,
+	organizationId: string,
+	payload: OpsRealtimeDomainEventPayload
+) {
+	if (!isRecord(payload.data)) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+		return
+	}
+
+	const runId = toNullableString(payload.data.runId)
+	if (!runId) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+		return
+	}
+
+	let shouldInvalidate = false
+
+	forEachDeliveryExceptionsQuery(
+		queryClient,
+		organizationId,
+		(queryKey, params) => {
+			queryClient.setQueryData(
+				queryKey,
+				(current: OpsDeliveryExceptionsResult | undefined) => {
+					const result = patchDeliveryExceptionInList(
+						current,
+						(item) => item.runId === runId,
+						{
+							kind: "run",
+							runId,
+							orderId: toNullableString(payload.data?.orderId),
+							status: toSafeString(payload.data?.status, "unknown"),
+							eventType:
+								toNullableString(payload.data?.lastEventType) ?? undefined,
+							updatedAt: toNullableString(payload.data?.syncedAt),
+						},
+						params,
+						true
+					)
+
+					shouldInvalidate ||= result.shouldInvalidate
+					return result.next
+				}
+			)
+		}
+	)
+
+	if (shouldInvalidate) {
+		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
+	}
+}
+
+function reconcileDeliveryRealtimeEvent(
+	queryClient: QueryClient,
+	organizationId: string,
+	eventName: string,
+	payload: OpsRealtimeDomainEventPayload
+) {
+	if (eventName === "delivery.inbox.updated") {
+		applyDeliveryInboxUpdatedEvent(queryClient, organizationId, payload)
+		return true
+	}
+
+	if (eventName === "delivery.sync.updated") {
+		applyDeliverySyncUpdatedEvent(queryClient, organizationId, payload)
+		return true
+	}
+
+	return false
 }
 
 function applyKdsItemUpdatedEvent(
@@ -254,6 +562,17 @@ function invalidateCacheForDomain(
 	invalidateOrdersCache(queryClient, organizationId, payload.orderId)
 
 	if (domain === "delivery") {
+		if (
+			reconcileDeliveryRealtimeEvent(
+				queryClient,
+				organizationId,
+				eventName,
+				payload
+			)
+		) {
+			return
+		}
+
 		invalidateOpsDeliveryExceptionsCache(queryClient, organizationId)
 	}
 
