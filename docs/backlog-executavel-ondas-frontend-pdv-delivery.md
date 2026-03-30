@@ -232,12 +232,12 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Sincronização manual disponível para itens `run`, com toast de sucesso assíncrono, bloqueio contra double submit e refresh obrigatório dos painéis relacionados.
 
-- [ ] **FE-23**: Realtime de delivery exceptions e sync com patch granular/refetch seguro.
+- [x] **FE-23**: Realtime de delivery exceptions e sync com patch granular/refetch seguro.
   - Dependências: `delivery.inbox.updated`, `delivery.sync.updated`.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: aplicar patch por identificador; usar refetch quando payload não bastar.
+    - Observações: Eventos `delivery.inbox.updated` e `delivery.sync.updated` agora aplicam patch por identificador nas queries de delivery exceptions; quando o payload não basta para inserir/reordenar com segurança, o frontend invalida e refaz a lista.
 
 ### Onda 4B — Hardening operacional
 - [ ] **FE-24**: Hardening de UX operacional (loading, vazio, erro, concorrência e telemetria).
