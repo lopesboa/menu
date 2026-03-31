@@ -1,5 +1,12 @@
 import { motion } from "framer-motion"
-import { CheckCircle, ChefHat, Clock, Volume2, VolumeX } from "lucide-react"
+import {
+	Check,
+	CheckCircle,
+	ChefHat,
+	Clock,
+	Volume2,
+	VolumeX,
+} from "lucide-react"
 import { useEffect, useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
@@ -30,6 +37,9 @@ export function KitchenPage() {
 	)
 	const preparingOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "em_preparo"
+	)
+	const readyOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "pronto"
 	)
 
 	useEffect(() => {
@@ -316,6 +326,85 @@ export function KitchenPage() {
 							<div className="py-8 text-center text-orange-700">
 								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
 								<p>Nenhum pedido em preparo</p>
+							</div>
+						) : null}
+					</div>
+				</motion.div>
+
+				<motion.div
+					animate={{ opacity: 1, x: 0 }}
+					className="rounded-2xl border-2 border-green-200 bg-green-50 p-6"
+					initial={{ opacity: 0, x: 20 }}
+				>
+					<div className="mb-4 flex items-center justify-between">
+						<div className="flex items-center gap-3">
+							<Check className="h-6 w-6 text-green-600" />
+							<h2 className="font-bold text-green-900 text-xl">Pronto</h2>
+						</div>
+						<span className="rounded-full bg-green-200 px-3 py-1 font-medium text-green-800">
+							{readyOrders.length}
+						</span>
+					</div>
+					<div className="space-y-3">
+						{readyOrders.slice(0, 6).map((order, index) => (
+							<motion.div
+								animate={{ opacity: 1, y: 0 }}
+								className="rounded-xl border border-green-100 bg-white p-4 shadow-sm"
+								initial={{ opacity: 0, y: 20 }}
+								key={order.id}
+								transition={{ delay: index * 0.1 }}
+							>
+								<div className="mb-3 flex items-center justify-between">
+									<div className="flex items-center gap-3">
+										<span className="font-bold text-lg text-surface-900">
+											#{order.orderNumber}
+										</span>
+										<span
+											className={cn(
+												"rounded-lg px-2 py-1 font-medium text-sm",
+												getTimeColor(order.createdAt)
+											)}
+										>
+											{getOrderTime(order.createdAt)}
+										</span>
+									</div>
+									<button
+										className="rounded-lg bg-green-500 px-4 py-2 font-medium text-white transition-colors hover:bg-green-600"
+										onClick={() => handleStatusChange(order.id, "finalizado")}
+										type="button"
+									>
+										Finalizar
+									</button>
+								</div>
+								<div className="space-y-1">
+									{order.orderItems.map((item) => (
+										<div
+											className="flex items-center gap-2 text-sm"
+											key={item.id}
+										>
+											<span className="font-medium text-surface-900">
+												{item.quantity}x
+											</span>
+											<span className="text-surface-700">{item.name}</span>
+											{item.notes ? (
+												<span className="text-orange-600 text-xs italic">
+													({item.notes})
+												</span>
+											) : null}
+										</div>
+									))}
+								</div>
+								{order.tableId ? (
+									<div className="mt-2 text-surface-500 text-xs">
+										Mesa {order.tableId.replace("t", "")}
+									</div>
+								) : null}
+							</motion.div>
+						))}
+						{readyOrders.length === 0 ? (
+							<div className="py-8 text-center text-green-700">
+								<CheckCircle className="mx-auto mb-2 h-12 w-12 opacity-50" />
+								<p>Nenhum pedido pronto</p>
 							</div>
 						) : null}
 					</div>
