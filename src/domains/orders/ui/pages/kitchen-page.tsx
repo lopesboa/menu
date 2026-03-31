@@ -70,6 +70,51 @@ export function KitchenPage() {
 		<div className="space-y-6">
 			<motion.div
 				animate={{ opacity: 1, y: 0 }}
+				className="rounded-2xl border border-surface-100 bg-white p-6"
+				initial={{ opacity: 0, y: 20 }}
+				transition={{ delay: 0.3 }}
+			>
+				<h2 className="mb-4 font-semibold text-lg text-surface-900">
+					Resumo da cozinha
+				</h2>
+				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+					<div className="rounded-xl bg-surface-50 p-4 text-center">
+						<p className="font-bold text-3xl text-surface-900">
+							{pendingOrders.length}
+						</p>
+						<p className="text-sm text-surface-500">Aguardando</p>
+					</div>
+					<div className="rounded-xl bg-surface-50 p-4 text-center">
+						<p className="font-bold text-3xl text-surface-900">
+							{preparingOrders.length}
+						</p>
+						<p className="text-sm text-surface-500">Em preparo</p>
+					</div>
+					<div className="rounded-xl bg-surface-50 p-4 text-center">
+						<p className="font-bold text-3xl text-surface-900">
+							{
+								orders.filter(
+									(order) => toOperationalOrderStatus(order.status) === "pronto"
+								).length
+							}
+						</p>
+						<p className="text-sm text-surface-500">Prontos</p>
+					</div>
+					<div className="rounded-xl bg-surface-50 p-4 text-center">
+						<p className="font-bold text-3xl text-surface-900">
+							{
+								orders.filter(
+									(order) =>
+										toOperationalOrderStatus(order.status) === "finalizado"
+								).length
+							}
+						</p>
+						<p className="text-sm text-surface-500">Finalizados</p>
+					</div>
+				</div>
+			</motion.div>
+			<motion.div
+				animate={{ opacity: 1, y: 0 }}
 				className="flex items-center justify-between"
 				initial={{ opacity: 0, y: -20 }}
 			>
@@ -144,7 +189,7 @@ export function KitchenPage() {
 								<div className="mb-3 flex items-center justify-between">
 									<div className="flex items-center gap-3">
 										<span className="font-bold text-lg text-surface-900">
-											#{order.id.replace("o", "")}
+											#{order.orderNumber}
 										</span>
 										<span
 											className={cn(
@@ -223,7 +268,7 @@ export function KitchenPage() {
 								<div className="mb-3 flex items-center justify-between">
 									<div className="flex items-center gap-3">
 										<span className="font-bold text-lg text-surface-900">
-											#{order.id.replace("o", "")}
+											#{order.orderNumber}
 										</span>
 										<span
 											className={cn(
@@ -276,52 +321,6 @@ export function KitchenPage() {
 					</div>
 				</motion.div>
 			</div>
-
-			<motion.div
-				animate={{ opacity: 1, y: 0 }}
-				className="rounded-2xl border border-surface-100 bg-white p-6"
-				initial={{ opacity: 0, y: 20 }}
-				transition={{ delay: 0.3 }}
-			>
-				<h2 className="mb-4 font-semibold text-lg text-surface-900">
-					Resumo da cozinha
-				</h2>
-				<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-					<div className="rounded-xl bg-surface-50 p-4 text-center">
-						<p className="font-bold text-3xl text-surface-900">
-							{pendingOrders.length}
-						</p>
-						<p className="text-sm text-surface-500">Aguardando</p>
-					</div>
-					<div className="rounded-xl bg-surface-50 p-4 text-center">
-						<p className="font-bold text-3xl text-surface-900">
-							{preparingOrders.length}
-						</p>
-						<p className="text-sm text-surface-500">Em preparo</p>
-					</div>
-					<div className="rounded-xl bg-surface-50 p-4 text-center">
-						<p className="font-bold text-3xl text-surface-900">
-							{
-								orders.filter(
-									(order) => toOperationalOrderStatus(order.status) === "pronto"
-								).length
-							}
-						</p>
-						<p className="text-sm text-surface-500">Prontos</p>
-					</div>
-					<div className="rounded-xl bg-surface-50 p-4 text-center">
-						<p className="font-bold text-3xl text-surface-900">
-							{
-								orders.filter(
-									(order) =>
-										toOperationalOrderStatus(order.status) === "finalizado"
-								).length
-							}
-						</p>
-						<p className="text-sm text-surface-500">Finalizados</p>
-					</div>
-				</div>
-			</motion.div>
 		</div>
 	)
 }
