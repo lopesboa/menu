@@ -5,6 +5,8 @@ import {
 	ChefHat,
 	Clock3,
 	Layers3,
+	LoaderCircle,
+	RefreshCcw,
 	UtensilsCrossed,
 	XCircle,
 } from "lucide-react"
@@ -15,7 +17,7 @@ import { formatDateTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { useKdsQueue, useKdsStations } from "../../hooks/use-kds"
 import { useKdsActions } from "../../hooks/use-kds-actions"
-import type { KdsItemStatus, KdsQueueItem } from "../../types/kds.types"
+import type { KdsItemStatus, KdsQueueItem } from "../../types/kds-types"
 
 const PAGE_SIZE = 50
 
@@ -205,6 +207,7 @@ export function KdsPage() {
 	const fallbackRefetchInterval = useOpsRealtimeFallbackPolling("kds")
 	const { isItemUpdating, updateItemStatus } = useKdsActions(organizationId)
 	const [currentTime, setCurrentTime] = useState(new Date())
+	const [offset, setOffset] = useState(0)
 	const [selectedStationId, setSelectedStationId] = useState<string | null>(
 		null
 	)
@@ -215,6 +218,7 @@ export function KdsPage() {
 		isError: isStationsError,
 		isLoading: isStationsLoading,
 		isFetching: isStationsFetching,
+		refetch: refetchStations,
 	} = useKdsStations({ organizationId })
 
 	useEffect(() => {
@@ -225,6 +229,7 @@ export function KdsPage() {
 	useEffect(() => {
 		if (stations.length === 0) {
 			setSelectedStationId(null)
+			setOffset(0)
 			return
 		}
 
@@ -238,6 +243,7 @@ export function KdsPage() {
 
 		const nextStation =
 			stations.find((station) => station.active) ?? stations[0]
+		setOffset(0)
 		setSelectedStationId(nextStation.id)
 	}, [selectedStationId, stations])
 
@@ -247,11 +253,12 @@ export function KdsPage() {
 		isError: isQueueError,
 		isLoading: isQueueLoading,
 		isFetching: isQueueFetching,
+		refetch: refetchQueue,
 	} = useKdsQueue({
 		organizationId,
 		stationId: selectedStationId,
 		limit: PAGE_SIZE,
-		offset: 0,
+		offset,
 		refetchInterval: fallbackRefetchInterval,
 	})
 
@@ -272,10 +279,32 @@ export function KdsPage() {
 	const selectedStation = stations.find(
 		(station) => station.id === selectedStationId
 	)
+	const queuePagination = queueData?.pagination
+	const totalItems = queuePagination?.total ?? filteredItems.length
+	const currentPage =
+		Math.floor((queuePagination?.offset ?? offset) / PAGE_SIZE) + 1
+	const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE))
+	const canGoToPreviousPage = offset > 0
+	const canGoToNextPage = offset + PAGE_SIZE < totalItems
+	const showQueueState =
+		Boolean(selectedStationId) && !(isQueueError && !isQueueLoading)
 	const hasOperationalError = isStationsError || isQueueError
+	let syncStatusMessage =
+		"Realtime e fallback ativos para a estacao selecionada."
+	if (fallbackRefetchInterval) {
+		syncStatusMessage = "Fallback de polling ativo para a estacao selecionada."
+	}
+	if (isStationsFetching || isQueueFetching) {
+		syncStatusMessage = "Atualizando dados da estacao..."
+	}
 
 	const handleUpdateItemStatus = (itemId: string, status: KdsItemStatus) => {
 		updateItemStatus(itemId, status)
+	}
+
+	const handleSelectStation = (stationId: string) => {
+		setOffset(0)
+		setSelectedStationId(stationId)
 	}
 
 	return (
@@ -298,11 +327,7 @@ export function KdsPage() {
 						<p className="font-medium text-sm text-surface-900">
 							Sincronizacao
 						</p>
-						<p className="mt-1 text-surface-500 text-xs">
-							{isStationsFetching || isQueueFetching
-								? "Atualizando dados da estacao..."
-								: "Realtime e fallback ativos para a estacao selecionada."}
-						</p>
+						<p className="mt-1 text-surface-500 text-xs">{syncStatusMessage}</p>
 					</div>
 				</div>
 
@@ -329,36 +354,47 @@ export function KdsPage() {
 								</span>
 							) : null}
 							{isStationsError ? (
-								<span className="rounded-full bg-red-50 px-3 py-2 text-red-700 text-sm">
-									Nao foi possivel carregar as estacoes.
-								</span>
+								<div className="flex flex-wrap items-center gap-2">
+									<span className="rounded-full bg-red-50 px-3 py-2 text-red-700 text-sm">
+										Nao foi possivel carregar as estacoes.
+									</span>
+									<button
+										className="btn-secondary"
+										onClick={() => {
+											refetchStations()
+										}}
+										type="button"
+									>
+										Tentar novamente
+									</button>
+								</div>
 							) : null}
 							{!isStationsLoading && stations.length === 0 ? (
 								<span className="rounded-full bg-surface-100 px-3 py-2 text-sm text-surface-500">
 									Nenhuma estacao disponivel
 								</span>
 							) : null}
-							{stations.map((station) => {
-								const isActive = station.id === selectedStationId
+							{stations
+								.filter((station) => station.active)
+								.map((station) => {
+									const isActive = station.id === selectedStationId
 
-								return (
-									<button
-										className={cn(
-											"rounded-full border px-4 py-2 font-medium text-sm transition-colors",
-											isActive
-												? "border-primary-200 bg-primary-50 text-primary-700"
-												: "border-surface-200 bg-white text-surface-700 hover:border-surface-300 hover:bg-surface-50",
-											!station.active && "opacity-60"
-										)}
-										key={station.id}
-										onClick={() => setSelectedStationId(station.id)}
-										type="button"
-									>
-										{station.name}
-										{station.active ? "" : " (inativa)"}
-									</button>
-								)
-							})}
+									return (
+										<button
+											className={cn(
+												"rounded-full border px-4 py-2 font-medium text-sm transition-colors",
+												isActive
+													? "border-primary-200 bg-primary-50 text-primary-700"
+													: "border-surface-200 bg-white text-surface-700 hover:border-surface-300 hover:bg-surface-50"
+											)}
+											key={station.id}
+											onClick={() => handleSelectStation(station.id)}
+											type="button"
+										>
+											{station.name}
+										</button>
+									)
+								})}
 						</div>
 					</div>
 				</div>
@@ -375,9 +411,33 @@ export function KdsPage() {
 							: "Falha ao carregar a fila da estacao selecionada."}
 					</p>
 					{stationsError || queueError ? (
-						<p className="mt-2 text-red-700 text-xs">
-							Verifique a conexao e tente atualizar novamente.
-						</p>
+						<div className="mt-3 flex flex-wrap items-center gap-2">
+							<p className="text-red-700 text-xs">
+								Verifique a conexao e tente atualizar novamente.
+							</p>
+							{isStationsError ? (
+								<button
+									className="btn-secondary"
+									onClick={() => {
+										refetchStations()
+									}}
+									type="button"
+								>
+									Recarregar estacoes
+								</button>
+							) : null}
+							{selectedStationId && isQueueError ? (
+								<button
+									className="btn-secondary"
+									onClick={() => {
+										refetchQueue()
+									}}
+									type="button"
+								>
+									Recarregar fila
+								</button>
+							) : null}
+						</div>
 					) : null}
 				</section>
 			) : null}
@@ -410,6 +470,96 @@ export function KdsPage() {
 			</div>
 
 			<div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+				{selectedStationId ? (
+					<div className="xl:col-span-3">
+						<div className="flex flex-col gap-3 rounded-2xl border border-surface-100 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+							<div>
+								<p className="font-medium text-sm text-surface-900">
+									Fila da estacao
+								</p>
+								<p className="mt-1 text-surface-500 text-xs">
+									Pagina {currentPage} de {totalPages} • {totalItems} itens no
+									total
+								</p>
+							</div>
+							<div className="flex flex-wrap items-center gap-2">
+								<button
+									className="btn-secondary"
+									disabled={!canGoToPreviousPage}
+									onClick={() =>
+										setOffset((currentOffset) =>
+											Math.max(0, currentOffset - PAGE_SIZE)
+										)
+									}
+									type="button"
+								>
+									Anterior
+								</button>
+								<button
+									className="btn-secondary"
+									disabled={!canGoToNextPage}
+									onClick={() =>
+										setOffset((currentOffset) => currentOffset + PAGE_SIZE)
+									}
+									type="button"
+								>
+									Proxima
+								</button>
+								<button
+									className="btn-secondary"
+									disabled={isQueueFetching}
+									onClick={() => {
+										refetchQueue()
+									}}
+									type="button"
+								>
+									{isQueueFetching ? (
+										<LoaderCircle className="h-4 w-4 animate-spin" />
+									) : (
+										<RefreshCcw className="h-4 w-4" />
+									)}
+									Atualizar fila
+								</button>
+							</div>
+						</div>
+					</div>
+				) : null}
+
+				{!(selectedStationId || isStationsLoading) && stations.length > 0 ? (
+					<div className="xl:col-span-3">
+						<section className="rounded-2xl border border-surface-200 bg-white p-6 text-center">
+							<p className="font-medium text-surface-900">
+								Selecione uma estacao para carregar a fila do KDS.
+							</p>
+							<p className="mt-2 text-sm text-surface-500">
+								A exibicao da fila sempre respeita o `stationId` ativo.
+							</p>
+						</section>
+					</div>
+				) : null}
+
+				{showQueueState && isQueueLoading ? (
+					<div className="xl:col-span-3">
+						<section className="rounded-2xl border border-surface-200 bg-white p-6 text-center text-surface-600">
+							Carregando fila da estacao selecionada...
+						</section>
+					</div>
+				) : null}
+
+				{showQueueState && !isQueueLoading && filteredItems.length === 0 ? (
+					<div className="xl:col-span-3">
+						<section className="rounded-2xl border border-surface-200 bg-white p-6 text-center">
+							<p className="font-medium text-surface-900">
+								Nenhum item encontrado nesta estacao.
+							</p>
+							<p className="mt-2 text-sm text-surface-500">
+								Troque a estacao, avance a paginacao ou aguarde novos eventos
+								realtime.
+							</p>
+						</section>
+					</div>
+				) : null}
+
 				<section className="rounded-2xl border border-yellow-200 bg-yellow-50 p-6">
 					<div className="mb-4 flex items-center justify-between">
 						<div className="flex items-center gap-3">
@@ -432,7 +582,9 @@ export function KdsPage() {
 								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
-						{pendingItems.length === 0 && !isQueueLoading ? (
+						{pendingItems.length === 0 &&
+						!isQueueLoading &&
+						filteredItems.length > 0 ? (
 							<p className="py-8 text-center text-yellow-800">
 								Nenhum item pendente nesta estacao.
 							</p>
@@ -462,7 +614,9 @@ export function KdsPage() {
 								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
-						{preparingItems.length === 0 && !isQueueLoading ? (
+						{preparingItems.length === 0 &&
+						!isQueueLoading &&
+						filteredItems.length > 0 ? (
 							<p className="py-8 text-center text-orange-800">
 								Nenhum item em preparo nesta estacao.
 							</p>
@@ -492,7 +646,9 @@ export function KdsPage() {
 								onUpdateStatus={handleUpdateItemStatus}
 							/>
 						))}
-						{readyItems.length === 0 && !isQueueLoading ? (
+						{readyItems.length === 0 &&
+						!isQueueLoading &&
+						filteredItems.length > 0 ? (
 							<p className="py-8 text-center text-green-800">
 								Nenhum item pronto nesta estacao.
 							</p>

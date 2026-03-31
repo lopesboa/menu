@@ -5,7 +5,7 @@ import type {
 	KdsQueueItem,
 	KdsQueueResult,
 	KdsStation,
-} from "../types/kds.types"
+} from "../types/kds-types"
 
 interface GetKdsQueueParams {
 	organizationId: string
@@ -15,11 +15,39 @@ interface GetKdsQueueParams {
 	signal?: AbortSignal
 }
 
+interface RawKdsPagination {
+	limit?: number
+	offset?: number
+	total?: number
+}
+
+interface RawKdsQueueResponse {
+	data?: Partial<KdsQueueItem>[]
+	items?: Partial<KdsQueueItem>[]
+	pagination?: RawKdsPagination
+	meta?: {
+		pagination?: RawKdsPagination
+	}
+}
+
+interface RawKdsStationsResponse {
+	data?: Partial<KdsStation>[]
+	items?: Partial<KdsStation>[]
+}
+
 interface RawKdsItemStatusUpdateResult {
 	success?: boolean
 	item?: Partial<KdsQueueItem> & {
 		status?: KdsItemStatus
 	}
+}
+
+function toSafeNumber(value: unknown, fallback: number) {
+	if (typeof value === "number" && Number.isFinite(value)) {
+		return value
+	}
+
+	return fallback
 }
 
 function normalizeStation(rawStation: Partial<KdsStation>): KdsStation {
@@ -58,12 +86,15 @@ export async function getKdsStations(
 	organizationId: string,
 	signal?: AbortSignal
 ): Promise<KdsStation[]> {
-	const response = await apiFetch<Partial<KdsStation>[]>(
-		`/kds/${organizationId}/stations`,
-		{ signal }
-	)
+	const response = await apiFetch<
+		Partial<KdsStation>[] | RawKdsStationsResponse
+	>(`/kds/${organizationId}/stations`, { signal })
 
-	return response.map(normalizeStation).sort((left, right) => {
+	const items = Array.isArray(response)
+		? response
+		: (response.data ?? response.items ?? [])
+
+	return items.map(normalizeStation).sort((left, right) => {
 		return left.displayOrder - right.displayOrder
 	})
 }
@@ -75,25 +106,32 @@ export async function getKdsQueue({
 	offset = 0,
 	signal,
 }: GetKdsQueueParams): Promise<KdsQueueResult> {
+	const normalizedLimit = Math.min(100, Math.max(1, limit))
+	const normalizedOffset = Math.max(0, offset)
 	const queryParams = new URLSearchParams({
 		stationId,
-		limit: Math.min(100, Math.max(1, limit)).toString(),
-		offset: Math.max(0, offset).toString(),
+		limit: normalizedLimit.toString(),
+		offset: normalizedOffset.toString(),
 	})
 
-	const response = await apiFetch<Partial<KdsQueueItem>[]>(
-		`/kds/${organizationId}/queue?${queryParams.toString()}`,
-		{ signal }
-	)
+	const response = await apiFetch<
+		Partial<KdsQueueItem>[] | RawKdsQueueResponse
+	>(`/kds/${organizationId}/queue?${queryParams.toString()}`, { signal })
 
-	const items = response.map(normalizeKdsQueueItem)
+	const rawItems = Array.isArray(response)
+		? response
+		: (response.data ?? response.items ?? [])
+	const pagination = Array.isArray(response)
+		? undefined
+		: (response.pagination ?? response.meta?.pagination)
+	const items = rawItems.map(normalizeKdsQueueItem)
 
 	return {
 		items,
 		pagination: {
-			limit,
-			offset,
-			total: items.length,
+			limit: toSafeNumber(pagination?.limit, normalizedLimit),
+			offset: toSafeNumber(pagination?.offset, normalizedOffset),
+			total: toSafeNumber(pagination?.total, items.length),
 		},
 	}
 }

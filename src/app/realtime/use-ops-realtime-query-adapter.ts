@@ -5,20 +5,20 @@ import { normalizeKdsQueueItem } from "@/domains/kds/api/kds-api"
 import {
 	invalidateKdsCache,
 	kdsQueryKeys,
-} from "@/domains/kds/hooks/kds-query-keys"
+} from "@/domains/kds/hooks/use-kds-query-keys"
 import type {
 	KdsQueueItem,
 	KdsQueueResult,
-} from "@/domains/kds/types/kds.types"
+} from "@/domains/kds/types/kds-types"
 import {
 	invalidateOpsDeliveryExceptionsCache,
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
-} from "@/domains/ops/hooks/ops-query-keys"
+} from "@/domains/ops/hooks/use-ops-query-keys"
 import type {
 	OpsDeliveryException,
 	OpsDeliveryExceptionsResult,
-} from "@/domains/ops/types/ops-delivery.types"
+} from "@/domains/ops/types/ops-delivery-types"
 import { invalidateOrdersCache } from "@/domains/orders/hooks/orders-query-keys"
 import { OPS_REALTIME_DOMAIN_EVENT_NAMES } from "@/lib/realtime/ops-realtime.constants"
 import type {

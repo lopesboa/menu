@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { getKdsQueue, getKdsStations } from "../api/kds-api"
-import { kdsQueryKeys } from "./kds-query-keys"
+import { kdsQueryKeys } from "./use-kds-query-keys"
 
 interface UseKdsStationsParams {
 	organizationId: string | null

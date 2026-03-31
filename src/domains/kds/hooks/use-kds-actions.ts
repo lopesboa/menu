@@ -4,8 +4,8 @@ import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
 import { ApiRequestError } from "@/utils/fetch"
 import { updateKdsItemStatus } from "../api/kds-api"
-import type { KdsItemStatus } from "../types/kds.types"
-import { invalidateKdsCache, kdsQueryKeys } from "./kds-query-keys"
+import type { KdsItemStatus } from "../types/kds-types"
+import { invalidateKdsCache, kdsQueryKeys } from "./use-kds-query-keys"
 
 function getKdsErrorCode(error: unknown): string | undefined {
 	if (error instanceof ApiRequestError) {
