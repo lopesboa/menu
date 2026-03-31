@@ -7,7 +7,7 @@ import {
 	Volume2,
 	VolumeX,
 } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { useOpsRealtimeFallbackPolling } from "@/lib/realtime/use-ops-realtime-fallback-polling"
 import { cn } from "@/utils/misc"
@@ -18,6 +18,32 @@ import {
 	toApiOrderStatus,
 	toOperationalOrderStatus,
 } from "../../model/order-operational-status"
+
+function playNotificationSound() {
+	if (typeof window === "undefined") {
+		return
+	}
+
+	if (!("Notification" in window)) {
+		return
+	}
+
+	if (Notification.permission === "granted") {
+		new Notification("Novo pedido!", {
+			body: "Há novos pedidos aguardando na cozinha",
+			icon: "/favicon.ico",
+		})
+	} else if (Notification.permission !== "denied") {
+		Notification.requestPermission().then((permission) => {
+			if (permission === "granted") {
+				new Notification("Novo pedido!", {
+					body: "Há novos pedidos aguardando na cozinha",
+					icon: "/favicon.ico",
+				})
+			}
+		})
+	}
+}
 
 export function KitchenPage() {
 	const { organizationId } = useOrganizationCheck()
@@ -31,6 +57,8 @@ export function KitchenPage() {
 	const { updateStatus } = useOrderActions(organizationId)
 	const [currentTime, setCurrentTime] = useState(new Date())
 	const [soundEnabled, setSoundEnabled] = useState(true)
+	const previousPendingCount = useRef(0)
+	const previousPreparingCount = useRef(0)
 
 	const pendingOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "aceito"
@@ -46,6 +74,25 @@ export function KitchenPage() {
 		const timer = setInterval(() => setCurrentTime(new Date()), 1000)
 		return () => clearInterval(timer)
 	}, [])
+
+	useEffect(() => {
+		if (!soundEnabled) {
+			return
+		}
+
+		const newPendingCount = pendingOrders.length
+		const newPreparingCount = preparingOrders.length
+
+		if (
+			newPendingCount > previousPendingCount.current ||
+			newPreparingCount > previousPreparingCount.current
+		) {
+			playNotificationSound()
+		}
+
+		previousPendingCount.current = newPendingCount
+		previousPreparingCount.current = newPreparingCount
+	}, [pendingOrders.length, preparingOrders.length, soundEnabled])
 
 	const getOrderTime = (createdAt: Date) => {
 		const diff = Math.floor(
