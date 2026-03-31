@@ -25,11 +25,21 @@ import {
 	useNotificationActions,
 	useNotificationSelectors,
 } from "@/domains/notifications/store/notification-store"
+import { OpsRealtimeHealthWidget } from "@/domains/ops/realtime/components/ops-realtime-health-widget"
+import type {
+	OpsRealtimeDomain,
+	OpsRealtimeHealthState,
+} from "@/lib/realtime/ops-realtime.types"
 import { cn } from "@/utils/misc"
 import { dashboardRoutePaths } from "../../manifest"
 import { Notifications } from "./dashboard-notification"
 
-export function TopBar() {
+interface TopBarProps {
+	healthState: OpsRealtimeHealthState
+	onRefreshDomain: (domain: OpsRealtimeDomain) => void
+}
+
+export function TopBar({ healthState, onRefreshDomain }: TopBarProps) {
 	const [isSearchOpen, setIsSearchOpen] = useState(false)
 	const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
 	const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
@@ -282,6 +292,12 @@ export function TopBar() {
 							</AnimatePresence>
 						</div>
 					</div>
+				</div>
+				<div className="border-surface-100 border-t px-4 py-3 lg:px-6">
+					<OpsRealtimeHealthWidget
+						healthState={healthState}
+						onRefreshDomain={onRefreshDomain}
+					/>
 				</div>
 			</header>
 

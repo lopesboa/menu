@@ -348,7 +348,7 @@ export function MenuBuilderPage() {
 
 			handleCloseProductModal()
 		} catch {
-			toast.error("Não foi possível salvar o produto")
+			return
 		}
 	}
 
@@ -371,7 +371,7 @@ export function MenuBuilderPage() {
 			setPendingDeleteProduct(null)
 			toast.success("Produto excluído com sucesso")
 		} catch {
-			toast.error("Não foi possível excluir o produto")
+			return
 		}
 	}
 
@@ -400,7 +400,7 @@ export function MenuBuilderPage() {
 			setNewCategoryForm(EMPTY_CATEGORY_FORM)
 			toast.success("Categoria criada com sucesso")
 		} catch {
-			toast.error("Não foi possível criar a categoria")
+			return
 		}
 	}
 
@@ -447,7 +447,7 @@ export function MenuBuilderPage() {
 			handleCancelEditCategory()
 			toast.success("Categoria atualizada com sucesso")
 		} catch {
-			toast.error("Não foi possível atualizar a categoria")
+			return
 		}
 	}
 
@@ -473,7 +473,7 @@ export function MenuBuilderPage() {
 			setPendingDeleteCategory(null)
 			toast.success("Categoria excluída com sucesso")
 		} catch {
-			toast.error("Não foi possível excluir a categoria")
+			return
 		}
 	}
 

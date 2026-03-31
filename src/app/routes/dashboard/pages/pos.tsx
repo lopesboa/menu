@@ -18,6 +18,7 @@ import { toast } from "sonner"
 import { Modal } from "@/components/ui/modal"
 import { useCategories } from "@/domains/categories/hooks/use-categories"
 import { useProducts } from "@/domains/menu/hooks/use-products"
+import { usePosOrderCheckout } from "@/domains/orders/hooks/use-pos-order-checkout"
 import { useCartStore } from "@/domains/pos/store/cart-store"
 import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
@@ -45,6 +46,7 @@ interface LastOrder {
 	total: number
 	paymentMethod: PaymentMethod
 	createdAt: Date
+	syncMode: "api" | "fallback"
 }
 
 const SPLIT_CYCLE = [1, 2, 3, 4]
@@ -96,6 +98,10 @@ function useQueryErrorNotification({
 export default function POSPage() {
 	const {
 		items,
+		customerId,
+		tableId,
+		notes,
+		type,
 		addItem,
 		removeItem,
 		updateQuantity,
@@ -114,8 +120,13 @@ export default function POSPage() {
 	const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pix")
 	const [splitCount, setSplitCountLocal] = useState(1)
 	const [lastOrder, setLastOrder] = useState<LastOrder | null>(null)
+	const [lastSyncMode, setLastSyncMode] = useState<"api" | "fallback" | null>(
+		null
+	)
 	const selectedCategoryFilterId =
 		selectedCategoryId === "all" ? null : selectedCategoryId
+	const { checkoutOrder, isCheckoutPending } =
+		usePosOrderCheckout(organizationId)
 
 	const {
 		data: menuItems = [],
@@ -191,20 +202,43 @@ export default function POSPage() {
 		context: "pos_categories_fetch",
 	})
 
-	const handlePayment = () => {
-		const order: LastOrder = {
-			id: `ORD-${Date.now()}`,
-			items,
-			subtotal: getSubtotal(),
-			tax: getTotal(10) - getSubtotal(),
-			total: getTotal(10),
-			paymentMethod,
-			createdAt: new Date(),
+	const handlePayment = async () => {
+		if (items.length === 0) {
+			toast.error("Adicione ao menos um item antes de finalizar")
+			return
 		}
-		setLastOrder(order)
-		clearCart()
-		setShowPayment(false)
-		setShowReceipt(true)
+
+		try {
+			const checkoutResult = await checkoutOrder({
+				items,
+				type,
+				tableId,
+				customerId,
+				notes,
+				paymentMethod,
+				taxRate,
+				splitCount,
+			})
+
+			const order: LastOrder = {
+				id: checkoutResult.orderId,
+				items,
+				subtotal: getSubtotal(),
+				tax: getTotal(taxRate) - getSubtotal(),
+				total: getTotal(taxRate),
+				paymentMethod,
+				createdAt: checkoutResult.createdAt,
+				syncMode: checkoutResult.syncMode,
+			}
+
+			setLastOrder(order)
+			setLastSyncMode(checkoutResult.syncMode)
+			clearCart()
+			setShowPayment(false)
+			setShowReceipt(true)
+		} catch {
+			// A notificação principal já é tratada no hook de checkout.
+		}
 	}
 
 	const taxRate = activeRestaurant?.settings.taxRate || 10
@@ -216,12 +250,18 @@ export default function POSPage() {
 					<div>
 						<h1 className="font-bold text-2xl text-surface-900">PDV</h1>
 						<p className="text-sm text-surface-500">Ponto de Venda</p>
+						{lastSyncMode === "fallback" && (
+							<p className="mt-1 text-amber-700 text-xs">
+								Modo contingência ativo: pedidos seguem no fluxo sem interromper
+								a operação.
+							</p>
+						)}
 					</div>
 					<div className="flex items-center gap-2">
 						<button
 							className={cn(
 								"rounded-lg px-4 py-2 font-medium text-sm transition-colors",
-								useCartStore.getState().type === "dine_in"
+								type === "dine_in"
 									? "bg-primary-500 text-white"
 									: "bg-surface-100 text-surface-600"
 							)}
@@ -233,7 +273,7 @@ export default function POSPage() {
 						<button
 							className={cn(
 								"rounded-lg px-4 py-2 font-medium text-sm transition-colors",
-								useCartStore.getState().type === "takeaway"
+								type === "takeaway"
 									? "bg-primary-500 text-white"
 									: "bg-surface-100 text-surface-600"
 							)}
@@ -245,7 +285,7 @@ export default function POSPage() {
 						<button
 							className={cn(
 								"rounded-lg px-4 py-2 font-medium text-sm transition-colors",
-								useCartStore.getState().type === "delivery"
+								type === "delivery"
 									? "bg-primary-500 text-white"
 									: "bg-surface-100 text-surface-600"
 							)}
@@ -647,10 +687,11 @@ export default function POSPage() {
 
 					<button
 						className="btn-primary w-full py-3"
+						disabled={isCheckoutPending}
 						onClick={handlePayment}
 						type="button"
 					>
-						Confirmar Pagamento
+						{isCheckoutPending ? "Finalizando..." : "Confirmar Pagamento"}
 					</button>
 				</div>
 			</Modal>
@@ -671,6 +712,10 @@ export default function POSPage() {
 							<p className="text-sm text-surface-500">Pedido #{lastOrder.id}</p>
 							<p className="text-sm text-surface-500">
 								{new Date(lastOrder.createdAt).toLocaleString()}
+							</p>
+							<p className="text-surface-500 text-xs">
+								Sincronização:{" "}
+								{lastOrder.syncMode === "api" ? "online" : "contingência"}
 							</p>
 						</div>
 						<div className="space-y-2">

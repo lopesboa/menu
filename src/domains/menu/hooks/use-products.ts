@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
+import { ApiRequestError } from "@/utils/fetch"
 import {
 	createProduct,
 	deleteProduct,
@@ -19,6 +21,32 @@ import {
 	invalidateProductsCache,
 	productsQueryKeys,
 } from "./products-query-keys"
+
+function getErrorCode(error: unknown): string | undefined {
+	if (error instanceof ApiRequestError) {
+		return error.errorCode
+	}
+	return undefined
+}
+
+function getProductErrorMessage(error: unknown): string {
+	const errorCode = getErrorCode(error)
+
+	if (errorCode) {
+		switch (errorCode) {
+			case "PRODUCT_NOT_FOUND":
+				return "Produto não encontrado"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para o produto"
+			default:
+				return "Não foi possível processar o produto"
+		}
+	}
+
+	return "Não foi possível processar o produto"
+}
 
 export function useProducts(
 	organizationId: string | null | undefined,
@@ -70,6 +98,7 @@ export function useCreateProduct() {
 			invalidateProductsCache(queryClient, variables.data.organizationId)
 		},
 		onError: (error, variables) => {
+			toast.error(getProductErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "products_create",
 				organizationId: variables.data.organizationId,
@@ -102,6 +131,7 @@ export function useUpdateProduct() {
 			)
 		},
 		onError: (error, variables) => {
+			toast.error(getProductErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "products_update",
 				organizationId: variables.organizationId,
@@ -139,6 +169,7 @@ export function useDeleteProduct() {
 			})
 		},
 		onError: (error, variables) => {
+			toast.error(getProductErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "products_delete",
 				organizationId: variables.organizationId,

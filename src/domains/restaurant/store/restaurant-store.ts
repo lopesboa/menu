@@ -1,96 +1,56 @@
 import { create } from "zustand"
-import type { SubscriptionTier } from "@/shared/types/subscription-types"
+import { setActiveOrganization } from "../hooks/use-organization"
 import type { Restaurant } from "../types/restaurant-types"
 
 interface RestaurantState {
 	activeRestaurant: Restaurant | null
+	restaurants: Restaurant[]
+	isLoading: boolean
 	setActiveRestaurant: (restaurant: Restaurant) => void
-	getRestaurants: () => Restaurant[]
+	setRestaurants: (restaurants: Restaurant[]) => void
+	setIsLoading: (isLoading: boolean) => void
+	changeActiveOrganization: (organizationId: string) => Promise<void>
 }
 
-const mockRestaurants: Restaurant[] = [
-	{
-		id: "rest-1",
-		ownerId: "user-1",
-		name: "MenuBao Restaurant",
-		slug: "menubao-restaurant",
-		address: "Av. Paulista, 1000 - São Paulo, SP",
-		phone: "(11) 3333-0000",
-		timezone: "America/Sao_Paulo",
-		currency: "BRL",
-		settings: {
-			requireCashierApproval: false,
-			defaultPaymentMethods: ["cash", "pix", "credit", "debit"],
-			taxRate: 10,
-			invoicePrefix: "MB",
-			theme: "light",
-			timezone: "America/Sao_Paulo",
-		},
-		subscription: {
-			id: "sub-1",
-			organizationId: "rest-1",
-			plan: "pro" as SubscriptionTier,
-			status: "active",
-			currentPeriodStart: new Date("2025-01-01"),
-			currentPeriodEnd: new Date("2026-01-01"),
-			cancelAtPeriodEnd: false,
-		},
-		createdAt: new Date("2024-01-01"),
-		updatedAt: new Date(),
-	},
-	{
-		id: "rest-2",
-		ownerId: "user-1",
-		name: "Sabor do Brasil",
-		slug: "sabor-do-brasil",
-		address: "Av. Rebouças, 500 - São Paulo, SP",
-		phone: "(11) 4444-0000",
-		timezone: "America/Sao_Paulo",
-		currency: "BRL",
-		settings: {
-			requireCashierApproval: true,
-			defaultPaymentMethods: ["cash", "pix", "credit"],
-			taxRate: 8,
-			invoicePrefix: "SB",
-			theme: "dark",
-			timezone: "America/Sao_Paulo",
-		},
-		subscription: {
-			id: "sub-2",
-			organizationId: "rest-2",
-			plan: "free" as SubscriptionTier,
-			status: "active",
-			currentPeriodStart: new Date("2025-01-01"),
-			currentPeriodEnd: new Date("2026-01-01"),
-			cancelAtPeriodEnd: false,
-		},
-		createdAt: new Date("2024-06-01"),
-		updatedAt: new Date(),
-	},
-]
-
 export const useRestaurantStore = create<RestaurantState>((set) => ({
-	activeRestaurant: mockRestaurants[0],
+	activeRestaurant: null,
+	restaurants: [],
+	isLoading: true,
 	setActiveRestaurant: (restaurant) => set({ activeRestaurant: restaurant }),
-	getRestaurants: () => mockRestaurants,
+	setRestaurants: (restaurants) => set({ restaurants }),
+	setIsLoading: (isLoading) => set({ isLoading }),
+	changeActiveOrganization: async (organizationId: string) => {
+		await setActiveOrganization(organizationId)
+	},
 }))
 
 export const useRestaurantSelectors = () => {
 	const activeRestaurant = useRestaurantStore((state) => state.activeRestaurant)
-	const getRestaurants = useRestaurantStore((state) => state.getRestaurants)
+	const restaurants = useRestaurantStore((state) => state.restaurants)
+	const isLoading = useRestaurantStore((state) => state.isLoading)
 
 	return {
 		activeRestaurant,
-		getRestaurants,
+		getRestaurants: () => restaurants,
+		restaurants,
+		isLoading,
 	}
 }
 
 export const useRestaurantActions = () => {
+	const changeActiveOrganization = useRestaurantStore(
+		(state) => state.changeActiveOrganization
+	)
 	const setActiveRestaurant = useRestaurantStore(
 		(state) => state.setActiveRestaurant
 	)
+	const setRestaurants = useRestaurantStore((state) => state.setRestaurants)
+	const setIsLoading = useRestaurantStore((state) => state.setIsLoading)
 
 	return {
+		changeActiveOrganization,
 		setActiveRestaurant,
+		setRestaurants,
+		setIsLoading,
 	}
 }

@@ -3,6 +3,7 @@ import { Bell, Building2, Camera, Save, Shield, User } from "lucide-react"
 import { useState } from "react"
 import { Modal } from "@/components/ui/modal"
 import { useAuthSelectors } from "@/domains/auth/store/auth-store"
+import { useOrganizationList } from "@/domains/restaurant/hooks/use-organization"
 import {
 	useRestaurantActions,
 	useRestaurantSelectors,
@@ -11,15 +12,14 @@ import { cn } from "@/utils/misc"
 
 export default function AccountPage() {
 	const { user } = useAuthSelectors()
-	const { activeRestaurant, getRestaurants } = useRestaurantSelectors()
-	const { setActiveRestaurant } = useRestaurantActions()
+	const { activeRestaurant } = useRestaurantSelectors()
+	const { changeActiveOrganization } = useRestaurantActions()
+	const { organizations: restaurantList } = useOrganizationList()
 
 	const [activeTab, setActiveTab] = useState<
 		"profile" | "notifications" | "security"
 	>("profile")
 	const [showRestaurantSwitcher, setShowRestaurantSwitcher] = useState(false)
-
-	const restaurants = getRestaurants()
 
 	const tabs: Array<{
 		key: "profile" | "notifications" | "security"
@@ -271,7 +271,7 @@ export default function AccountPage() {
 				title="Selecionar Restaurante"
 			>
 				<div className="space-y-3">
-					{restaurants.map((restaurant) => (
+					{restaurantList.map((restaurant) => (
 						<button
 							className={cn(
 								"flex w-full items-center gap-4 rounded-xl border-2 p-4 transition-colors",
@@ -281,7 +281,7 @@ export default function AccountPage() {
 							)}
 							key={restaurant.id}
 							onClick={() => {
-								setActiveRestaurant(restaurant)
+								changeActiveOrganization(restaurant.id)
 								setShowRestaurantSwitcher(false)
 							}}
 							type="button"
@@ -293,7 +293,6 @@ export default function AccountPage() {
 								<p className="font-medium text-surface-900">
 									{restaurant.name}
 								</p>
-								<p className="text-sm text-surface-500">{restaurant.address}</p>
 							</div>
 							{activeRestaurant?.id === restaurant.id && (
 								<span className="rounded-full bg-primary-100 px-3 py-1 font-medium text-primary-700 text-xs">
