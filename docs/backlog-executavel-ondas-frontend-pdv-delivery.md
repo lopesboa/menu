@@ -122,12 +122,12 @@ Legenda de status:
     - Observações: Fallback polling aplicado em orders, kitchen, delivery e summary operacional (`ops`) com intervalos por domínio durante `disconnected`, `degraded` e reconexão após perda de sessão.
 
 ### Onda 1C — Ops monitoring
-- [ ] **FE-10**: Tela de resumo operacional (`GET /ops/:organizationId/summary`).
+- [x] **FE-10**: Tela de resumo operacional (`GET /ops/:organizationId/summary`).
   - Dependências: endpoint de summary.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Resumo operacional integrado na página `Operacoes` com cards de inbox/DLQ, feedback de sincronização, loading, erro com retry e estado vazio quando nao ha eventos monitorados.
 
 - [x] **FE-11**: Lista de inbox (`GET /ops/:organizationId/inbox-events`) com paginação/filtros.
   - Dependências: contrato de inbox events.
@@ -143,13 +143,13 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Lista de DLQ integrada ao dashboard com filtro por canal/status, paginação, detalhe resumido do erro e invalidação via realtime para manter sincronismo operacional.
 
-- [ ] **FE-13**: Ações de `reprocess` e `retry` com refresh das listas após sucesso.
+- [!] **FE-13**: Ações de `reprocess` e `retry` com refresh das listas após sucesso.
   - Regras: após sucesso, atualizar inbox + DLQ mesmo com socket conectado.
   - Dependências: endpoints POST de ação.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: `reprocess` de inbox foi entregue via FE-21 com refresh obrigatório de inbox/DLQ/summary. O item permanece bloqueado apenas pelo `retry` de DLQ, pois nao ha endpoint/contrato mapeado no frontend para essa ação.
 
 ### Onda 2 — Continuação e endurecimento
 - [~] **FE-02**: Fluxo de criação de pedido no PDV com integração real e sem fallback legado desnecessário.
@@ -181,27 +181,27 @@ Legenda de status:
     - Prints/vídeo:
     - Observações: Base `domains/kds` criada com tipos, normalização REST, query keys por `stationId` e invalidação dedicada para eventos realtime de KDS.
 
-- [~] **FE-16**: Tipos, adapters e mutations para delivery exceptions, `reprocess` e `sync` manual.
+- [x] **FE-16**: Tipos, adapters e mutations para delivery exceptions, `reprocess` e `sync` manual.
   - Dependências: `GET /ops/:organizationId/delivery-exceptions`, `POST /ops/:organizationId/inbox-events/:eventId/reprocess`, `POST /ops/:organizationId/delivery-runs/:runId/sync`.
   - Evidências:
     - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: Tipos, adapters, query keys e hook de `delivery-exceptions` implementados; faltam as mutations de `reprocess` e `sync` manual.
+    - Observações: Tipos, adapters, query keys, hook de `delivery-exceptions` e mutations de `reprocess`/`sync` manual implementados. O fluxo funcional foi concluído e desdobrado nos FE-20..FE-23.
 
 ### Onda 3B — KDS por estação
-- [~] **FE-17**: Listagem de estações KDS e seletor de estação ativa.
+- [x] **FE-17**: Listagem de estações KDS e seletor de estação ativa.
   - Dependências: `GET /kds/:organizationId/stations`.
   - Evidências:
     - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: Página de KDS já consome `stations` e define estação ativa no frontend; falta hardening de estados de erro e UX final.
+    - Observações: Página de KDS consome `stations`, define estação ativa no frontend e agora exibe retry explícito para erro de estações, além de mensagens mais claras de loading/vazio. Fluxo validado manualmente e pronto para uso operacional.
 
-- [~] **FE-18**: Fila KDS por estação com paginação REST e fallback consistente.
+- [x] **FE-18**: Fila KDS por estação com paginação REST e fallback consistente.
   - Dependências: `GET /kds/:organizationId/queue?stationId=...&limit=...&offset=...`.
   - Evidências:
     - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações: Queue REST por estação já integrada com fallback polling e filtro defensivo local por `stationId`; faltam paginação visível na UI e reconciliação final com snapshots/item update.
+    - Observações: Queue REST por estação agora expõe paginação visível na UI, refresh manual e parsing defensivo de `pagination` do backend; segue com fallback polling e filtro local por `stationId`. Fluxo testado manualmente e funcionando com reconciliação operacional esperada.
 
 - [x] **FE-19**: Atualização de status de item KDS com reconciliação via realtime.
   - Dependências: `PATCH /kds/:organizationId/items/:itemId/status`, `kds.item.updated`, `kds.queue.snapshot`.
@@ -366,3 +366,120 @@ Legenda de status:
   - Print/vídeo:
 - Próximo passo:
   - Fechar FE-06 com padronização de mensagens de erro no restante das operações.
+
+### [2026-03-30 - 17:59] FE-17/FE-18 - Hardening inicial do KDS por estação
+- Responsável: Frontend
+- Status: [x] Concluído
+- Alterações realizadas:
+  - Adicionados estados explícitos de loading, vazio e erro com retry manual para estações e fila na tela `KDS`.
+  - Implementada paginação visível da fila por `stationId`, com ações de anterior/próxima e refresh manual.
+  - Ajustado o cliente REST de KDS para aceitar respostas com `data/items` e `pagination/meta.pagination`, preservando fallback para arrays simples.
+- Decisões tomadas:
+  - Manter `stationId` como fonte de verdade na UI e resetar `offset` sempre que a estação ativa mudar.
+  - Não marcar FE-17/FE-18 como concluídos sem validação manual com evidências visuais e reconciliação realtime ponta a ponta.
+- Dependências afetadas:
+  - `GET /kds/:organizationId/stations`
+  - `GET /kds/:organizationId/queue?stationId=...&limit=...&offset=...`
+  - `kds.item.updated`
+  - `kds.queue.snapshot`
+- Riscos/pontos de atenção:
+  - Se o backend continuar retornando apenas array simples na fila, a paginação continuará funcional na UI mas o `total` dependerá do payload recebido.
+  - Ainda falta validação manual cobrindo troca de estação, paginação e reconciliação com realtime/fallback.
+- Validação Wave 1 (obrigatória):
+  - [x] Endpoint/evento do freeze consumido corretamente
+  - [x] Matriz de transição respeitada
+  - [ ] No-op (`changed=false`) tratado como sucesso
+  - [x] Fallback aplicado conforme contrato
+  - [x] Erro tratado por `errorCode`
+- Evidências:
+  - Build/Check: `pnpm build && pnpm check`
+  - Link de PR/commit:
+  - Print/vídeo:
+- Próximo passo:
+  - Avançar para a próxima prioridade do backlog após o fechamento de FE-17/FE-18.
+
+### [2026-03-31 - 08:31] FE-17/FE-18 - Conclusão após validação manual
+- Responsável: Frontend
+- Status: [x] Concluído
+- Alterações realizadas:
+  - Confirmado em validação manual o fluxo completo de seleção de estação, paginação, retry manual e refresh da fila KDS.
+  - Confirmado o reset de `offset` ao trocar de estação, preservando `stationId` como fonte de verdade.
+  - Confirmado o comportamento esperado da integração REST com parsing defensivo de payload.
+- Decisões tomadas:
+  - FE-17 e FE-18 passam a ser considerados concluídos sem necessidade de nova expansão funcional nesta frente.
+- Dependências afetadas:
+  - `GET /kds/:organizationId/stations`
+  - `GET /kds/:organizationId/queue?stationId=...&limit=...&offset=...`
+  - `kds.item.updated`
+  - `kds.queue.snapshot`
+- Riscos/pontos de atenção:
+  - Permanecem apenas validações futuras de hardening operacional mais amplo em FE-24.
+- Validação Wave 1 (obrigatória):
+  - [x] Endpoint/evento do freeze consumido corretamente
+  - [x] Matriz de transição respeitada
+  - [ ] No-op (`changed=false`) tratado como sucesso
+  - [x] Fallback aplicado conforme contrato
+  - [x] Erro tratado por `errorCode`
+- Evidências:
+  - Build/Check: `pnpm build && pnpm check`
+  - Link de PR/commit:
+  - Print/vídeo: teste manual concluído pelo usuário (`testado e funcionando`)
+- Próximo passo:
+  - Seguir para a próxima prioridade executável do backlog.
+
+### [2026-03-31 - 09:00] FE-10 - Resumo operacional com hardening basico
+- Responsável: Frontend
+- Status: [x] Concluído
+- Alterações realizadas:
+  - Adicionados estados de loading, erro com retry e vazio no resumo operacional.
+  - Adicionado feedback visual de sincronização para realtime e fallback polling no summary.
+  - Consolidado bloco de total monitorado para contextualizar os cards de inbox e DLQ.
+- Decisões tomadas:
+  - Manter o resumo na página `Operacoes`, sem criar rota separada, por ja atender o escopo funcional do backlog.
+- Dependências afetadas:
+  - `GET /ops/:organizationId/summary`
+  - estado de conexao do dominio `ops` para fallback polling
+- Riscos/pontos de atenção:
+  - FE-24 ainda deve revisar consistencia transversal de UX/telemetria entre summary, inbox, DLQ e delivery exceptions.
+- Validação Wave 1 (obrigatória):
+  - [x] Endpoint/evento do freeze consumido corretamente
+  - [x] Matriz de transição respeitada
+  - [ ] No-op (`changed=false`) tratado como sucesso
+  - [x] Fallback aplicado conforme contrato
+  - [x] Erro tratado por `errorCode`
+- Evidências:
+  - Build/Check: `pnpm build && pnpm check`
+  - Link de PR/commit:
+  - Print/vídeo:
+- Próximo passo:
+  - Reconciliar backlog restante de FE-13/FE-16 com o que ja foi entregue e atacar FE-24 como hardening final.
+
+### [2026-03-31 - 11:35] FE-16 e FE-24 - reconciliacao de backlog e telemetria de summary
+- Responsável: Frontend
+- Status: [~] Em progresso
+- Alterações realizadas:
+  - Reconciliado o backlog para refletir FE-16 como concluído, alinhado ao que ja foi entregue em delivery exceptions, `reprocess` e `sync` manual.
+  - Marcado FE-13 como bloqueado apenas no trecho de `retry` de DLQ, por ausencia de endpoint/contrato identificado no frontend.
+  - Adicionada telemetria de erro no `summary` operacional com toast e `sentryCaptureException`, alinhando o comportamento aos demais paineis operacionais.
+- Decisões tomadas:
+  - Considerar FE-21/FE-22/FE-23 como evidência funcional do fechamento de FE-16.
+  - Nao forcar fechamento de FE-13 enquanto o `retry` de DLQ continuar sem contrato operacional consumivel.
+- Dependências afetadas:
+  - `GET /ops/:organizationId/summary`
+  - `POST /ops/:organizationId/inbox-events/:eventId/reprocess`
+  - contrato/endpoint ausente para retry de DLQ
+- Riscos/pontos de atenção:
+  - FE-24 ainda exige revisar consistencia final de UX e concorrencia entre summary, inbox, DLQ e delivery exceptions.
+  - FE-13 depende de alinhamento contratual com backend antes de nova implementação.
+- Validação Wave 1 (obrigatória):
+  - [x] Endpoint/evento do freeze consumido corretamente
+  - [x] Matriz de transição respeitada
+  - [ ] No-op (`changed=false`) tratado como sucesso
+  - [x] Fallback aplicado conforme contrato
+  - [x] Erro tratado por `errorCode`
+- Evidências:
+  - Build/Check: `pnpm build && pnpm check`
+  - Link de PR/commit:
+  - Print/vídeo:
+- Próximo passo:
+  - Executar o primeiro recorte funcional de FE-24 focando consistencia de UX operacional e estados concorrentes restantes.
