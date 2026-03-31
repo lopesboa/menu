@@ -170,7 +170,7 @@ export function KitchenPage() {
 				</div>
 			</motion.div>
 
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
 				<motion.div
 					animate={{ opacity: 1, x: 0 }}
 					className="rounded-2xl border-2 border-yellow-200 bg-yellow-50 p-6"
