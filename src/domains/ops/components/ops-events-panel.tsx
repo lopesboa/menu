@@ -123,10 +123,12 @@ export function OpsEventsPanel({ organizationId }: OpsEventsPanelProps) {
 	})
 
 	useEffect(() => {
-		if (!(isInboxError && inboxError) || hasNotifiedInboxError.current) {
-			if (!isInboxError) {
-				hasNotifiedInboxError.current = false
-			}
+		if (!(isInboxError && inboxError)) {
+			hasNotifiedInboxError.current = false
+			return
+		}
+
+		if (hasNotifiedInboxError.current) {
 			return
 		}
 
@@ -139,10 +141,12 @@ export function OpsEventsPanel({ organizationId }: OpsEventsPanelProps) {
 	}, [inboxError, isInboxError, organizationId])
 
 	useEffect(() => {
-		if (!(isDlqError && dlqError) || hasNotifiedDlqError.current) {
-			if (!isDlqError) {
-				hasNotifiedDlqError.current = false
-			}
+		if (!(isDlqError && dlqError)) {
+			hasNotifiedDlqError.current = false
+			return
+		}
+
+		if (hasNotifiedDlqError.current) {
 			return
 		}
 

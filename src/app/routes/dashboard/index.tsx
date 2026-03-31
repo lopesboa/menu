@@ -2,11 +2,11 @@ import { useQueryClient } from "@tanstack/react-query"
 import { Navigate, Outlet, useLocation } from "react-router"
 import "./styles.css"
 import { useOpsRealtimeQueryAdapter } from "@/app/realtime/use-ops-realtime-query-adapter"
-import { invalidateKdsCache } from "@/domains/kds/hooks/kds-query-keys"
+import { invalidateKdsCache } from "@/domains/kds/hooks/use-kds-query-keys"
 import {
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
-} from "@/domains/ops/hooks/ops-query-keys"
+} from "@/domains/ops/hooks/use-ops-query-keys"
 import { useOpsRealtimeSession } from "@/domains/ops/realtime/use-ops-realtime-session"
 import { invalidateOrdersCache } from "@/domains/orders/hooks/orders-query-keys"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"

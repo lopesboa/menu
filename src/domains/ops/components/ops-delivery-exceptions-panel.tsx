@@ -14,7 +14,7 @@ import { formatDateTime, formatRelativeTime } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 import { useOpsDeliveryActions } from "../hooks/use-ops-delivery-actions"
 import { useOpsDeliveryExceptions } from "../hooks/use-ops-delivery-exceptions"
-import type { OpsDeliveryException } from "../types/ops-delivery.types"
+import type { OpsDeliveryException } from "../types/ops-delivery-types"
 
 const PAGE_SIZE = 5
 
@@ -175,10 +175,12 @@ export function OpsDeliveryExceptionsPanel({
 		})
 
 	useEffect(() => {
-		if (!(isError && error) || hasNotifiedError.current) {
-			if (!isError) {
-				hasNotifiedError.current = false
-			}
+		if (!(isError && error)) {
+			hasNotifiedError.current = false
+			return
+		}
+
+		if (hasNotifiedError.current) {
 			return
 		}
 

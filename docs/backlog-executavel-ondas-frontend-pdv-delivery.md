@@ -240,12 +240,12 @@ Legenda de status:
     - Observações: Eventos `delivery.inbox.updated` e `delivery.sync.updated` agora aplicam patch por identificador nas queries de delivery exceptions; quando o payload não basta para inserir/reordenar com segurança, o frontend invalida e refaz a lista.
 
 ### Onda 4B — Hardening operacional
-- [ ] **FE-24**: Hardening de UX operacional (loading, vazio, erro, concorrência e telemetria).
+- [x] **FE-24**: Hardening de UX operacional (loading, vazio, erro, concorrência e telemetria).
   - Dependências: FE-17..FE-23.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Padronizada lógica de error notification (hasNotifiedError ref) em OpsSummarySection, OpsEventsPanel e OpsDeliveryExceptionsPanel com early returns mais legíveis. Todos os painéis operacionais agora têm estados de loading, erro com retry e vazio consistentes.
 
 ---
 
@@ -265,16 +265,11 @@ Legenda de status:
 
 ## Prioridade atual
 
-1. **FE-15** — fundação contratual para KDS por estação
-2. **FE-17** — listagem de estações e seleção da estação ativa
-3. **FE-18** — fila KDS por estação com paginação/fallback
-4. **FE-19** — mutation de status de item KDS com reconciliação via realtime
-5. **FE-16** — camada de delivery exceptions + actions (`reprocess`/`sync`)
-6. **FE-20** — tela de delivery exceptions
-7. **FE-21** — reprocess de inbox event
-8. **FE-22** — sync manual de delivery run
-9. **FE-23** — realtime de delivery exceptions
-10. **FE-24** — hardening operacional final
+1. **FE-02** — fluxo de criação de pedido no PDV com integração real
+2. **FE-03** — fluxo de fechamento de pedido no PDV
+3. **FE-14** — fechamento da execução com DoD "módulo sem mock"
+
+> FE-15 a FE-24 foram concluídos e movidos para o histórico.
 
 ---
 
