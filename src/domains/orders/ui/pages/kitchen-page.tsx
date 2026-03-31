@@ -28,20 +28,28 @@ function playNotificationSound() {
 		return
 	}
 
-	if (Notification.permission === "granted") {
-		new Notification("Novo pedido!", {
-			body: "Há novos pedidos aguardando na cozinha",
-			icon: "/favicon.ico",
-		})
-	} else if (Notification.permission !== "denied") {
-		Notification.requestPermission().then((permission) => {
-			if (permission === "granted") {
-				new Notification("Novo pedido!", {
-					body: "Há novos pedidos aguardando na cozinha",
-					icon: "/favicon.ico",
+	try {
+		if (Notification.permission === "granted") {
+			new Notification("Novo pedido!", {
+				body: "Há novos pedidos aguardando na cozinha",
+				icon: "/favicon.ico",
+			})
+		} else if (Notification.permission !== "denied") {
+			Notification.requestPermission()
+				.then((permission) => {
+					if (permission === "granted") {
+						new Notification("Novo pedido!", {
+							body: "Há novos pedidos aguardando na cozinha",
+							icon: "/favicon.ico",
+						})
+					}
 				})
-			}
-		})
+				.catch(() => {
+					// Silently fail - notification is not critical
+				})
+		}
+	} catch {
+		// Silently fail - notification is not critical
 	}
 }
 
@@ -59,6 +67,7 @@ export function KitchenPage() {
 	const [soundEnabled, setSoundEnabled] = useState(true)
 	const previousPendingCount = useRef(0)
 	const previousPreparingCount = useRef(0)
+	const isFirstRender = useRef(true)
 
 	const pendingOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "aceito"
@@ -69,6 +78,9 @@ export function KitchenPage() {
 	const readyOrders = orders.filter(
 		(order) => toOperationalOrderStatus(order.status) === "pronto"
 	)
+	const finishedOrders = orders.filter(
+		(order) => toOperationalOrderStatus(order.status) === "finalizado"
+	)
 
 	useEffect(() => {
 		const timer = setInterval(() => setCurrentTime(new Date()), 1000)
@@ -77,6 +89,13 @@ export function KitchenPage() {
 
 	useEffect(() => {
 		if (!soundEnabled) {
+			return
+		}
+
+		if (isFirstRender.current) {
+			isFirstRender.current = false
+			previousPendingCount.current = pendingOrders.length
+			previousPreparingCount.current = preparingOrders.length
 			return
 		}
 
@@ -149,22 +168,13 @@ export function KitchenPage() {
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{
-								orders.filter(
-									(order) => toOperationalOrderStatus(order.status) === "pronto"
-								).length
-							}
+							{readyOrders.length}
 						</p>
 						<p className="text-sm text-surface-500">Prontos</p>
 					</div>
 					<div className="rounded-xl bg-surface-50 p-4 text-center">
 						<p className="font-bold text-3xl text-surface-900">
-							{
-								orders.filter(
-									(order) =>
-										toOperationalOrderStatus(order.status) === "finalizado"
-								).length
-							}
+							{finishedOrders.length}
 						</p>
 						<p className="text-sm text-surface-500">Finalizados</p>
 					</div>
