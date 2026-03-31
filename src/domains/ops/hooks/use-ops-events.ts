@@ -3,8 +3,8 @@ import { getDeadLetterEvents, getInboxEvents } from "../api/ops-events-api"
 import type {
 	OpsDeadLetterEventsResult,
 	OpsInboxEventsResult,
-} from "../types/ops-events.types"
-import { opsQueryKeys } from "./ops-query-keys"
+} from "../types/ops-events-types"
+import { opsQueryKeys } from "./use-ops-query-keys"
 
 interface UseOpsEventsParams {
 	organizationId: string | null

@@ -11,7 +11,7 @@ import {
 	invalidateOpsEventsCache,
 	invalidateOpsSummaryCache,
 	opsQueryKeys,
-} from "./ops-query-keys"
+} from "./use-ops-query-keys"
 
 function getDeliveryActionErrorMessage(
 	error: unknown,

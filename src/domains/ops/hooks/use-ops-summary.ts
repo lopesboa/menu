@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { getOpsSummary } from "../api/ops-summary-api"
-import { opsQueryKeys } from "./ops-query-keys"
+import { opsQueryKeys } from "./use-ops-query-keys"
 
 interface UseOpsSummaryOptions {
 	refetchInterval?: number | false

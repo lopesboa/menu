@@ -1,5 +1,5 @@
 import { apiFetch } from "@/utils/fetch"
-import type { OpsSummaryStats } from "../types/ops-summary.types"
+import type { OpsSummaryStats } from "../types/ops-summary-types"
 
 interface OpsSummaryResponseRaw {
 	inbox?: {

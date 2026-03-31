@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { getDeliveryExceptions } from "../api/ops-delivery-api"
-import type { OpsDeliveryExceptionsResult } from "../types/ops-delivery.types"
-import { opsQueryKeys } from "./ops-query-keys"
+import type { OpsDeliveryExceptionsResult } from "../types/ops-delivery-types"
+import { opsQueryKeys } from "./use-ops-query-keys"
 
 interface UseOpsDeliveryExceptionsParams {
 	organizationId: string | null

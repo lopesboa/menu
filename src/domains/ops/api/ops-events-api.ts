@@ -5,7 +5,7 @@ import type {
 	OpsEventsPagination,
 	OpsInboxEvent,
 	OpsInboxEventsResult,
-} from "../types/ops-events.types"
+} from "../types/ops-events-types"
 
 interface OpsEventsQueryParams {
 	limit?: number

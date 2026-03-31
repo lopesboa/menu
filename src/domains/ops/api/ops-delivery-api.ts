@@ -4,7 +4,7 @@ import type {
 	OpsDeliveryExceptionsResult,
 	OpsDeliveryReprocessResult,
 	OpsDeliverySyncResult,
-} from "../types/ops-delivery.types"
+} from "../types/ops-delivery-types"
 
 interface DeliveryExceptionsQueryParams {
 	status?: string
