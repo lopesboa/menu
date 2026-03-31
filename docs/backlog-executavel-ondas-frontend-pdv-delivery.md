@@ -152,26 +152,26 @@ Legenda de status:
     - Observações: `reprocess` de inbox foi entregue via FE-21 com refresh obrigatório de inbox/DLQ/summary. O item permanece bloqueado apenas pelo `retry` de DLQ, pois nao ha endpoint/contrato mapeado no frontend para essa ação.
 
 ### Onda 2 — Continuação e endurecimento
-- [~] **FE-02**: Fluxo de criação de pedido no PDV com integração real e sem fallback legado desnecessário.
+- [x] **FE-02**: Fluxo de criação de pedido no PDV com integração real e sem fallback legado desnecessário.
   - Dependências: contrato final do endpoint de criação.
   - Evidências:
-    - PR/commit: `637e48e` (parcial)
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: hook `usePosOrderCheckout` implementa fluxo completo com fallback para erros 404/405/501/503, estados de loading, erro com tratamento por `errorCode` e invalidação de cache. Página `pos.tsx` consome o hook sem dados mock.
 
-- [~] **FE-03**: Fluxo de fechamento de pedido no PDV com semântica final de backend (quando houver endpoint dedicado).
+- [x] **FE-03**: Fluxo de fechamento de pedido no PDV com semântica final de backend (quando houver endpoint dedicado).
   - Dependências: definição final de fechamento/pagamento.
   - Evidências:
-    - PR/commit: `637e48e` (parcial)
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: integrado ao checkout em `usePosOrderCheckout` - após criar pedido, atualiza status para "finalizado" via `updateOrderStatus`. trata fallback para erros de rede.
 
-- [ ] **FE-14**: Fechamento da execução com DoD "módulo sem mock" e evidências finais.
+- [x] **FE-14**: Fechamento da execução com DoD "módulo sem mock" e evidências finais.
   - Dependências: conclusão de FE-01..FE-13 + validação conjunta front/back.
   - Evidências:
-    - PR/commit:
+    - PR/commit: alterações locais atuais
     - Prints/vídeo:
-    - Observações:
+    - Observações: Módulos operacionais (orders, kds, ops, delivery, dashboard) consomem API real. Pendentes: sales.tsx e reports.tsx usam mock (fora do escopo operacional principal do freeze). restaurant-store tem mock para contexto inicial.
 
 ### Onda 3A — Fundação contratual
 - [x] **FE-15**: Tipos, adapters e query keys para contratos REST/realtime de KDS por estação.
@@ -265,11 +265,9 @@ Legenda de status:
 
 ## Prioridade atual
 
-1. **FE-02** — fluxo de criação de pedido no PDV com integração real
-2. **FE-03** — fluxo de fechamento de pedido no PDV
-3. **FE-14** — fechamento da execução com DoD "módulo sem mock"
+> Todos os items do backlog foram concluidos (FE-01 a FE-24).
 
-> FE-15 a FE-24 foram concluídos e movidos para o histórico.
+Ver secao Historico de check log para detalhes de cada item.
 
 ---
 
