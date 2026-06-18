@@ -62,6 +62,9 @@ function normalizeStation(rawStation: Partial<KdsStation>): KdsStation {
 }
 
 function normalizeKdsQueueItem(rawItem: Partial<KdsQueueItem>): KdsQueueItem {
+	const rawItemType =
+		typeof rawItem.itemType === "string" ? rawItem.itemType.trim() : ""
+
 	return {
 		orderId: rawItem.orderId?.trim() || "pedido-sem-id",
 		orderNumber:
@@ -70,6 +73,9 @@ function normalizeKdsQueueItem(rawItem: Partial<KdsQueueItem>): KdsQueueItem {
 		orderType: rawItem.orderType?.trim() || "delivery",
 		itemId: rawItem.itemId?.trim() || "item-sem-id",
 		productId: rawItem.productId?.trim() || "produto-sem-id",
+		itemType: rawItemType === "combo_component" ? "combo_component" : "product",
+		comboSnapshotId: rawItem.comboSnapshotId?.trim() || null,
+		comboSnapshotName: rawItem.comboSnapshotName?.trim() || null,
 		name: rawItem.name?.trim() || "Item sem nome",
 		quantity: typeof rawItem.quantity === "number" ? rawItem.quantity : 1,
 		itemStatus: rawItem.itemStatus ?? "pending",
