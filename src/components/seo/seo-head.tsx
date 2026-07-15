@@ -1,7 +1,9 @@
 import { useEffect } from "react"
 import { buildAbsoluteUrl } from "@/lib/site-url"
 
-const defaultOgImagePath = "/assets/og-image.jpg"
+const defaultOgImagePath = "/assets/og-image.png"
+const defaultOgImageAlt =
+	"Salão, delivery e balcão conectados em um único fluxo operacional do Menu Bão."
 const ABSOLUTE_URL_REGEX = /^(https?:)?\/\//i
 
 interface SEOHeadProps {
@@ -11,6 +13,7 @@ interface SEOHeadProps {
 	keywords?: string
 	robots?: string
 	ogImage?: string
+	ogImageAlt?: string
 	structuredData?: Record<string, unknown> | Record<string, unknown>[]
 }
 
@@ -21,6 +24,7 @@ export function SEOHead({
 	keywords,
 	robots = "index, follow, max-image-preview:large",
 	ogImage,
+	ogImageAlt = defaultOgImageAlt,
 	structuredData,
 }: SEOHeadProps) {
 	useEffect(() => {
@@ -45,6 +49,10 @@ export function SEOHead({
 		upsertMetaTag({ property: "og:title", content: title })
 		upsertMetaTag({ property: "og:description", content: description })
 		upsertMetaTag({ property: "og:image", content: resolvedOgImage })
+		upsertMetaTag({ property: "og:image:type", content: "image/png" })
+		upsertMetaTag({ property: "og:image:width", content: "1200" })
+		upsertMetaTag({ property: "og:image:height", content: "630" })
+		upsertMetaTag({ property: "og:image:alt", content: ogImageAlt })
 		upsertMetaTag({ property: "og:locale", content: "pt_BR" })
 		upsertMetaTag({ property: "og:site_name", content: "Menu Bão" })
 
@@ -53,6 +61,7 @@ export function SEOHead({
 		upsertMetaTag({ name: "twitter:title", content: title })
 		upsertMetaTag({ name: "twitter:description", content: description })
 		upsertMetaTag({ name: "twitter:image", content: resolvedOgImage })
+		upsertMetaTag({ name: "twitter:image:alt", content: ogImageAlt })
 
 		if (structuredData) {
 			upsertStructuredData(structuredData)
@@ -62,6 +71,7 @@ export function SEOHead({
 		description,
 		keywords,
 		ogImage,
+		ogImageAlt,
 		robots,
 		structuredData,
 		title,

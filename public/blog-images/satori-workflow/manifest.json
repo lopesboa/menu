@@ -1,0 +1,21 @@
+{
+  "images": [
+    {
+      "alt": "Fluxo editorial que transforma o texto de um artigo em uma imagem personalizada usando JSX, SVG e PNG.",
+      "height": 630,
+      "name": "cover",
+      "png": "cover.png",
+      "svg": "cover.svg",
+      "width": 1200
+    },
+    {
+      "alt": "Processo em quatro etapas: analisar o artigo, compor a imagem em JSX, gerar o SVG com Satori e exportar o PNG.",
+      "height": 675,
+      "name": "inline-processo",
+      "png": "inline-processo.png",
+      "svg": "inline-processo.svg",
+      "width": 1200
+    }
+  ],
+  "slug": "satori-workflow"
+}

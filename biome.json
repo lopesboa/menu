@@ -6,7 +6,8 @@
     "useIgnoreFile": false
   },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": false,
+    "includes": ["!public/assets/*.svg", "!public/blog-images/**/*.svg"]
   },
   "formatter": {
     "enabled": true,

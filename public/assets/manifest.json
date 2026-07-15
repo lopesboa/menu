@@ -1,0 +1,29 @@
+{
+  "images": [
+    {
+      "alt": "Salão, delivery e balcão conectados em um único fluxo operacional do Menu Bão.",
+      "height": 630,
+      "name": "og-image",
+      "png": "og-image.png",
+      "svg": "og-image.svg",
+      "width": 1200
+    },
+    {
+      "alt": "Fluxo do Menu Bão organizando os canais de salão, delivery e balcão durante o horário de pico.",
+      "height": 628,
+      "name": "twitter-image",
+      "png": "twitter-image.png",
+      "svg": "twitter-image.svg",
+      "width": 1200
+    },
+    {
+      "alt": "Ícone do Menu Bão com três linhas brancas sobre um quadrado em gradiente roxo.",
+      "height": 180,
+      "name": "apple-touch-icon",
+      "png": "apple-touch-icon.png",
+      "svg": "apple-touch-icon.svg",
+      "width": 180
+    }
+  ],
+  "slug": "site-social-assets"
+}
