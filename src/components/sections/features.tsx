@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/react"
+import { Button } from "../ui/button"
 
 export function FeaturesSection() {
 	return (
@@ -173,22 +174,26 @@ export function FeaturesSection() {
 					</div>
 
 					<div className="absolute right-0 -bottom-16 flex gap-2">
-						<button
+						<Button
 							className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
 							id="prev-card"
 							name="Navegar para esquerda"
 							type="button"
+							variant="ghost"
 						>
+							<span className="sr-only">Navegar para esquerda</span>
 							<Icon icon="solar:arrow-left-bold-duotone" />
-						</button>
-						<button
+						</Button>
+						<Button
 							className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
 							id="next-card"
 							name="Navegar para direita"
 							type="button"
+							variant="ghost"
 						>
+							<span className="sr-only">Navegar para direita</span>
 							<Icon icon="solar:arrow-right-bold-duotone" />
-						</button>
+						</Button>
 					</div>
 				</div>
 			</div>

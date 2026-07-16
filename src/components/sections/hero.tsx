@@ -80,14 +80,6 @@ export function HeroSection({ onShowDemo, onStartRegister }: HeroSectionProps) {
 			<div className="relative z-10 mx-auto max-w-7xl px-6">
 				<div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)] lg:gap-12">
 					<div className="max-w-2xl text-left">
-						<div className="mb-6 inline-flex animate-reveal items-center gap-2 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 font-medium text-indigo-300 text-xs delay-100">
-							<span className="relative flex h-2 w-2">
-								<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
-								<span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
-							</span>
-							Para restaurantes com salão, delivery e balcão no mesmo turno
-						</div>
-
 						<h1 className="mb-6 font-medium text-4xl text-slate-50 leading-[1.05] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
 							<div className="reveal-trigger overflow-hidden text-clip-reveal">
 								<span className="pb-2">Controle pedidos, estoque</span>

@@ -1,5 +1,5 @@
 import { Icon } from "@iconify-icon/react"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router"
 import { Dialog } from "@/components/ui/dialog"
 import { formatCurrency, formatNumber } from "@/utils/helpers"
@@ -24,7 +24,7 @@ export function ShowROI({
 	const [monthlyOrders, setMonthlyOrders] = useState(1500)
 	const [weeklyHours, setWeeklyHours] = useState(10)
 
-	const roiResult = useMemo(() => {
+	const roiResult = (() => {
 		const revenueFactor =
 			0.18 +
 			normalizeValue(monthlyOrders, ordersMin, ordersMax) * 0.08 +
@@ -43,7 +43,7 @@ export function ShowROI({
 			annualHoursSaved,
 			equivalentDaysSaved,
 		}
-	}, [monthlyOrders, monthlyRevenue, weeklyHours])
+	})()
 
 	return (
 		<Dialog id="roi">

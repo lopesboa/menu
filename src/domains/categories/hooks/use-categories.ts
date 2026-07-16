@@ -1,5 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
+import { ApiRequestError } from "@/utils/fetch"
 import {
 	createCategory,
 	deleteCategory,
@@ -16,6 +18,32 @@ import {
 	categoriesQueryKeys,
 	invalidateCategoriesCache,
 } from "./categories-query-keys"
+
+function getErrorCode(error: unknown): string | undefined {
+	if (error instanceof ApiRequestError) {
+		return error.errorCode
+	}
+	return undefined
+}
+
+function getCategoryErrorMessage(error: unknown): string {
+	const errorCode = getErrorCode(error)
+
+	if (errorCode) {
+		switch (errorCode) {
+			case "CATEGORY_NOT_FOUND":
+				return "Categoria não encontrada"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para a categoria"
+			default:
+				return "Não foi possível processar a categoria"
+		}
+	}
+
+	return "Não foi possível processar a categoria"
+}
 
 export function useCategories(organizationId: string | null | undefined) {
 	return useQuery<CategoryApi[]>({
@@ -53,6 +81,7 @@ export function useCreateCategory() {
 			invalidateCategoriesCache(queryClient, variables.data.organizationId)
 		},
 		onError: (error, variables) => {
+			toast.error(getCategoryErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "categories_create",
 				organizationId: variables.data.organizationId,
@@ -85,6 +114,7 @@ export function useUpdateCategory() {
 			)
 		},
 		onError: (error, variables) => {
+			toast.error(getCategoryErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "categories_update",
 				organizationId: variables.organizationId,
@@ -118,6 +148,7 @@ export function useDeleteCategory() {
 			})
 		},
 		onError: (error, variables) => {
+			toast.error(getCategoryErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "categories_delete",
 				organizationId: variables.organizationId,

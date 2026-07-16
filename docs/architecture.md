@@ -88,6 +88,7 @@ src/
 - **Paginas de dominio ja extraidas:**
   - `src/domains/orders/ui/pages/orders-page.tsx`
   - `src/domains/orders/ui/pages/kitchen-page.tsx`
+  - `src/domains/kds/ui/pages/kds-page.tsx`
   - `src/domains/orders/ui/pages/delivery-page.tsx`
   - `src/domains/tables/ui/pages/tables-page.tsx`
 - **Stores de dominio:** `src/domains/<dominio>/store/*`
@@ -103,6 +104,16 @@ src/
 - Removido barrel legado `src/hooks/index.ts`.
 - Atualizado consumo para import canonico de analytics em
   `src/hooks/use-posthog.ts`.
+
+## Decisao operacional: Cozinha + KDS
+
+- A aplicacao mantem duas experiencias em paralelo para operacao de cozinha.
+- `src/domains/orders/ui/pages/kitchen-page.tsx` continua como visao simplificada,
+  adequada para restaurantes que nao operam com estacoes/praças estruturadas.
+- `src/domains/kds/ui/pages/kds-page.tsx` concentra a experiencia por estacao,
+  orientada ao contrato Wave 3/4 e ao fluxo por item.
+- `KDS` nao substitui automaticamente `Cozinha`; a convivencia entre as duas
+  visoes e uma decisao intencional de produto e rollout.
 
 ## Checklist de PR (arquitetura)
 

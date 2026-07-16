@@ -1,0 +1,31 @@
+export const OPS_REALTIME_NAMESPACE = "/ops"
+export const OPS_REALTIME_ACK_TIMEOUT_MS = 2000
+
+export const OPS_REALTIME_DOMAINS = [
+	"orders",
+	"kds",
+	"delivery",
+	"ops",
+] as const
+
+export const OPS_REALTIME_EVENTS = {
+	subscribe: "rt.subscribe",
+	unsubscribe: "rt.unsubscribe",
+	refresh: "rt.refresh.request",
+	orderStatusChangeRequest: "order.status.change.request",
+} as const
+
+export const OPS_REALTIME_DOMAIN_EVENT_NAMES = [
+	"orders.snapshot",
+	"orders.delta",
+	"kds.item.updated",
+	"kds.queue.snapshot",
+	"kds.snapshot",
+	"kds.delta",
+	"delivery.inbox.updated",
+	"delivery.sync.updated",
+	"delivery.snapshot",
+	"delivery.delta",
+	"ops.snapshot",
+	"ops.delta",
+] as const

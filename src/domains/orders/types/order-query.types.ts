@@ -1,4 +1,13 @@
 export interface OrderFilter {
+	channel?: "dine_in" | "takeaway" | "delivery"
+	stage?:
+		| "pending"
+		| "confirmed"
+		| "preparing"
+		| "ready"
+		| "delivered"
+		| "cancelled"
+	delayed?: boolean
 	status?: string
 	orderType?: string
 	startDate?: string

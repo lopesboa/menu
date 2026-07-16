@@ -8,6 +8,7 @@ interface UseOrdersParams {
 	filters?: OrderFilter
 	page?: number
 	count?: number
+	refetchInterval?: number | false
 }
 
 export function useOrders({
@@ -15,10 +16,12 @@ export function useOrders({
 	filters,
 	page,
 	count,
+	refetchInterval,
 }: UseOrdersParams) {
 	return useQuery({
 		queryKey: ordersQueryKeys.list(organizationId, filters, page, count),
 		enabled: Boolean(organizationId),
+		refetchInterval,
 		queryFn: ({ signal }) =>
 			getOrders({
 				organizationId: organizationId as string,

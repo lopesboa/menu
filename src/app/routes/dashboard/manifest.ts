@@ -1,4 +1,5 @@
 import {
+	Activity,
 	BarChart3,
 	ChefHat,
 	LayoutDashboard,
@@ -22,9 +23,11 @@ type DashboardRouteKey =
 	| "inventory"
 	| "orders"
 	| "kitchen"
+	| "kds"
 	| "delivery"
 	| "menu"
 	| "customers"
+	| "operations"
 	| "reports"
 	| "settings"
 	| "account"
@@ -107,6 +110,15 @@ const DASHBOARD_ROUTES: DashboardRouteManifestItem[] = [
 		icon: ChefHat,
 	},
 	{
+		key: "kds",
+		label: "KDS",
+		fullPath: "/dashboard/kds",
+		segment: "kds",
+		showInSidebar: true,
+		showInBottomNav: false,
+		icon: UtensilsCrossed,
+	},
+	{
 		key: "delivery",
 		label: "Delivery",
 		fullPath: "/dashboard/delivery",
@@ -132,6 +144,15 @@ const DASHBOARD_ROUTES: DashboardRouteManifestItem[] = [
 		showInSidebar: true,
 		showInBottomNav: false,
 		icon: Users,
+	},
+	{
+		key: "operations",
+		label: "Operacoes",
+		fullPath: "/dashboard/operations",
+		segment: "operations",
+		showInSidebar: true,
+		showInBottomNav: false,
+		icon: Activity,
 	},
 	{
 		key: "reports",
@@ -185,9 +206,11 @@ export const dashboardRoutePaths = {
 	inventory: "/dashboard/inventory",
 	orders: "/dashboard/orders",
 	kitchen: "/dashboard/kitchen",
+	kds: "/dashboard/kds",
 	delivery: "/dashboard/delivery",
 	menu: "/dashboard/menu",
 	customers: "/dashboard/customers",
+	operations: "/dashboard/operations",
 	reports: "/dashboard/reports",
 	settings: "/dashboard/settings",
 	account: "/dashboard/account",
@@ -202,9 +225,11 @@ export const dashboardRouteSegments = {
 	inventory: "inventory",
 	orders: "orders",
 	kitchen: "kitchen",
+	kds: "kds",
 	delivery: "delivery",
 	menu: "menu",
 	customers: "customers",
+	operations: "operations",
 	reports: "reports",
 	settings: "settings",
 	account: "account",

@@ -6,6 +6,7 @@ export type OrderStatus =
 	| "delivered"
 	| "cancelled"
 	| "rejected"
+	| "unknown"
 
 export type PaymentMethod = "cash" | "credit" | "debit" | "pix" | "meal_voucher"
 
@@ -37,6 +38,9 @@ export interface Order {
 	staffId?: string
 	orderItems: OrderItem[]
 	status: OrderStatus
+	stage?: OrderStatus
+	channel?: OrderType
+	delayed?: boolean
 	approvalStatus?: "pending" | "approved" | "rejected"
 	approvedBy?: string
 	approvalNotes?: string

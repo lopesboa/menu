@@ -3,7 +3,7 @@ name: Publish Docker Image to GHCR
 on:
   push:
     branches:
-      - 'main'
+      - "main"
       # - 'develop'
 
 permissions:
@@ -48,6 +48,8 @@ jobs:
             VITE_APP_SERVER_URL=${{ secrets.VITE_APP_SERVER_URL }}
             VITE_PUBLIC_POSTHOG_KEY=${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
             VITE_PUBLIC_POSTHOG_HOST=${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
+            VITE_PUBLIC_SITE_URL=${{ vars.VITE_PUBLIC_SITE_URL }}
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
+

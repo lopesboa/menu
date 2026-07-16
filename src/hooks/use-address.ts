@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { toast } from "sonner"
 import { sentryCaptureException } from "@/lib/sentry"
 import {
 	type CreateAddressPayload,
@@ -6,6 +7,7 @@ import {
 	getCities,
 	getStates,
 } from "@/services/address-service"
+import { ApiRequestError } from "@/utils/fetch"
 
 export const addressQueryKeys = {
 	all: ["address"] as const,
@@ -17,6 +19,32 @@ export const addressQueryKeys = {
 	mutations: {
 		create: () => [...addressQueryKeys.all, "mutation", "create"] as const,
 	},
+}
+
+function getErrorCode(error: unknown): string | undefined {
+	if (error instanceof ApiRequestError) {
+		return error.errorCode
+	}
+	return undefined
+}
+
+function getAddressErrorMessage(error: unknown): string {
+	const errorCode = getErrorCode(error)
+
+	if (errorCode) {
+		switch (errorCode) {
+			case "ADDRESS_NOT_FOUND":
+				return "Endereço não encontrado"
+			case "FORBIDDEN":
+				return "Seu perfil não tem permissão para esta ação"
+			case "VALIDATION_ERROR":
+				return "Dados inválidos para o endereço"
+			default:
+				return "Não foi possível processar o endereço"
+		}
+	}
+
+	return "Não foi possível processar o endereço"
 }
 
 export function useStates() {
@@ -44,6 +72,7 @@ export function useCreateAddress() {
 			queryClient.invalidateQueries({ queryKey: addressQueryKeys.addresses() })
 		},
 		onError: (error, variables) => {
+			toast.error(getAddressErrorMessage(error))
 			sentryCaptureException(error, {
 				context: "address_create",
 				cityId: variables.cityId,
