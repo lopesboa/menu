@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set short git SHA
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -52,4 +52,3 @@ jobs:
           tags: |
             ghcr.io/lopesboa/menubao-marketing:${{ env.TAG }}
             ghcr.io/lopesboa/menubao-marketing:sha-${{ env.SHORT_SHA }}
-
