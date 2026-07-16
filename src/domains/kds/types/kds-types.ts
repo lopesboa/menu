@@ -8,6 +8,8 @@ export interface KdsStation {
 	active: boolean
 }
 
+export type KdsItemType = "product" | "combo_component"
+
 export interface KdsQueueItem {
 	orderId: string
 	orderNumber: number
@@ -15,6 +17,9 @@ export interface KdsQueueItem {
 	orderType: string
 	itemId: string
 	productId: string
+	itemType: KdsItemType
+	comboSnapshotId: string | null
+	comboSnapshotName: string | null
 	name: string
 	quantity: number
 	itemStatus: KdsItemStatus
@@ -50,6 +55,9 @@ export interface KdsItemUpdatedEvent {
 	orderId: string
 	orderNumber: number
 	productId: string
+	itemType: KdsItemType
+	comboSnapshotId: string | null
+	comboSnapshotName: string | null
 	name: string
 	quantity: number
 	status: KdsItemStatus
