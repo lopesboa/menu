@@ -2,15 +2,18 @@ ARG NODE_VERSION=24.15.0
 ARG PNPM_VERSION=10.18.3
 
 FROM node:${NODE_VERSION}-alpine AS base
+ARG PNPM_VERSION
 WORKDIR /usr/src/app
 RUN --mount=type=cache,target=/root/.npm \
-  npm install -g pnpm@${PNPM_VERSION}
+  npm install --global --no-audit --no-fund "pnpm@${PNPM_VERSION}" \
+  && test "$(pnpm --version)" = "${PNPM_VERSION}"
 
 FROM base AS deps
 RUN --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+  --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
   --mount=type=cache,target=/root/.local/share/pnpm/store \
-  pnpm install --prod --frozen-lockfile
+  pnpm install --prod --frozen-lockfile --config.strict-dep-builds=true
 
 FROM base AS build
 
@@ -20,8 +23,9 @@ ARG VITE_PUBLIC_POSTHOG_HOST
 
 RUN --mount=type=bind,source=package.json,target=package.json \
   --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+  --mount=type=bind,source=pnpm-workspace.yaml,target=pnpm-workspace.yaml \
   --mount=type=cache,target=/root/.local/share/pnpm/store \
-  pnpm install --frozen-lockfile
+  pnpm install --frozen-lockfile --config.strict-dep-builds=true
 
 ENV VITE_APP_SERVER_URL=${VITE_APP_SERVER_URL}
 ENV VITE_PUBLIC_POSTHOG_KEY=${VITE_PUBLIC_POSTHOG_KEY}
