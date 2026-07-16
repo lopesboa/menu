@@ -725,7 +725,9 @@ export default function POSPage() {
 
 					<button
 						className="btn-primary w-full py-3"
-						disabled={isCreating || isFinalizing || isCheckingOut || isActivating}
+						disabled={
+							isCreating || isFinalizing || isCheckingOut || isActivating
+						}
 						onClick={handlePayment}
 						type="button"
 					>

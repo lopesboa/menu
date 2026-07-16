@@ -155,17 +155,23 @@ export function useComboOfferActions(organizationId: string | null) {
 
 	return {
 		createOffer: (payload: Omit<ComboOfferCreatePayload, "organizationId">) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			createMutation.mutate(payload)
 		},
 
 		updateOffer: (comboOfferId: string, payload: ComboOfferUpdatePayload) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			updateMutation.mutate({ comboOfferId, payload })
 		},
 
 		deactivateOffer: (comboOfferId: string) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			deactivateMutation.mutate({ comboOfferId })
 		},
 

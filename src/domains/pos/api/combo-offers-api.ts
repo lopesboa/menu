@@ -8,7 +8,7 @@ import type {
 	ComboOfferUpdateResult,
 } from "../types/combo-offer-types"
 
-export async function getComboOffers(
+export function getComboOffers(
 	organizationId: string,
 	includeInactive = false,
 	signal?: AbortSignal
@@ -25,7 +25,7 @@ export async function getComboOffers(
 	return apiFetch<ComboOffer[]>(endpoint, { signal })
 }
 
-export async function getComboOffer(
+export function getComboOffer(
 	organizationId: string,
 	comboOfferId: string,
 	signal?: AbortSignal
@@ -36,7 +36,7 @@ export async function getComboOffer(
 	)
 }
 
-export async function createComboOffer(
+export function createComboOffer(
 	payload: ComboOfferCreatePayload,
 	signal?: AbortSignal
 ): Promise<ComboOfferCreateResult> {
@@ -47,7 +47,7 @@ export async function createComboOffer(
 	})
 }
 
-export async function updateComboOffer(
+export function updateComboOffer(
 	organizationId: string,
 	comboOfferId: string,
 	payload: ComboOfferUpdatePayload,
@@ -63,7 +63,7 @@ export async function updateComboOffer(
 	)
 }
 
-export async function deactivateComboOffer(
+export function deactivateComboOffer(
 	organizationId: string,
 	comboOfferId: string,
 	signal?: AbortSignal

@@ -252,27 +252,37 @@ export function usePosOrderActions(organizationId: string | null) {
 
 	return {
 		createDraft: (payload: Omit<PosCreateOrderPayload, "organizationId">) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			return createMutation.mutateAsync(payload)
 		},
 
 		replaceDraft: (orderId: string, payload: PosDraftReplacePayload) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			replaceDraftMutation.mutate({ orderId, payload })
 		},
 
 		finalize: (orderId: string) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			return finalizeMutation.mutateAsync({ orderId })
 		},
 
 		activate: (orderId: string) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			return activateMutation.mutateAsync({ orderId })
 		},
 
 		checkout: (orderId: string, paymentMethod: PosPaymentMethod) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			return checkoutMutation.mutateAsync({
 				orderId,
 				payload: { paymentMethod },
@@ -280,12 +290,16 @@ export function usePosOrderActions(organizationId: string | null) {
 		},
 
 		reopen: (orderId: string) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			return reopenMutation.mutateAsync({ orderId })
 		},
 
 		cancel: (orderId: string, reason: string) => {
-			if (!guardOrganization()) return
+			if (!guardOrganization()) {
+				return
+			}
 			cancelMutation.mutate({ orderId, payload: { reason } })
 		},
 

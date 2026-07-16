@@ -14,7 +14,7 @@ import type {
 	PosReopenResult,
 } from "../types/pos-order-types"
 
-export async function createPosDraft(
+export function createPosDraft(
 	payload: PosCreateOrderPayload,
 	signal?: AbortSignal
 ): Promise<PosCreateOrderResult> {
@@ -25,7 +25,7 @@ export async function createPosDraft(
 	})
 }
 
-export async function getPosOrder(
+export function getPosOrder(
 	organizationId: string,
 	orderId: string,
 	signal?: AbortSignal
@@ -35,7 +35,7 @@ export async function getPosOrder(
 	})
 }
 
-export async function replacePosDraft(
+export function replacePosDraft(
 	organizationId: string,
 	orderId: string,
 	payload: PosDraftReplacePayload,
@@ -51,7 +51,7 @@ export async function replacePosDraft(
 	)
 }
 
-export async function finalizePosDraft(
+export function finalizePosDraft(
 	organizationId: string,
 	orderId: string,
 	signal?: AbortSignal
@@ -65,7 +65,7 @@ export async function finalizePosDraft(
 	)
 }
 
-export async function activatePosOrder(
+export function activatePosOrder(
 	organizationId: string,
 	orderId: string,
 	signal?: AbortSignal
@@ -79,7 +79,7 @@ export async function activatePosOrder(
 	)
 }
 
-export async function checkoutPosOrder(
+export function checkoutPosOrder(
 	organizationId: string,
 	orderId: string,
 	payload: PosCheckoutPayload,
@@ -95,7 +95,7 @@ export async function checkoutPosOrder(
 	)
 }
 
-export async function reopenPosOrder(
+export function reopenPosOrder(
 	organizationId: string,
 	orderId: string,
 	signal?: AbortSignal
@@ -109,7 +109,7 @@ export async function reopenPosOrder(
 	)
 }
 
-export async function cancelPosOrder(
+export function cancelPosOrder(
 	organizationId: string,
 	orderId: string,
 	payload: PosCancelPayload,
