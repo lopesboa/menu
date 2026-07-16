@@ -1,10 +1,11 @@
 import type { UserRole } from "@/shared/types/user-role-types"
 
-export type CriticalOrderAction = "cancelar" | "liberar"
+export type CriticalOrderAction = "cancelar" | "liberar" | "reabrir"
 
 const ACTION_ALLOWED_ROLES: Record<CriticalOrderAction, UserRole[]> = {
 	cancelar: ["owner", "manager", "cashier"],
 	liberar: ["owner", "manager", "cashier", "waiter"],
+	reabrir: ["owner", "manager"],
 }
 
 export function canExecuteCriticalOrderAction(
@@ -26,6 +27,8 @@ export function getCriticalOrderPermissionMessage(
 			"Seu perfil não tem permissão para cancelar pedidos. Procure um gerente.",
 		liberar:
 			"Seu perfil não tem permissão para liberar pedidos. Procure um gerente.",
+		reabrir:
+			"Seu perfil não tem permissão para reabrir pedidos. Procure um gerente.",
 	}
 
 	return messages[action]

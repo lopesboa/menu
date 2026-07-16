@@ -462,6 +462,9 @@ function applyKdsItemUpdatedEvent(
 		previousStatus: payload.data.previousStatus as
 			| KdsQueueItem["previousStatus"]
 			| undefined,
+		itemType: payload.data.itemType as KdsQueueItem["itemType"] | undefined,
+		comboSnapshotId: payload.data.comboSnapshotId as string | undefined,
+		comboSnapshotName: payload.data.comboSnapshotName as string | undefined,
 	})
 
 	forEachKdsQueueQuery(queryClient, organizationId, (queryKey, params) => {

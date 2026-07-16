@@ -1,13 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" 
-xmlns:xlink="http://www.w3.org/1999/xlink" 
-aria-hidden="true" role="img" 
-class="iconify iconify--logos" 
-width="31.88" height="32" preserveAspectRatio="xMidYMid meet" 
-viewBox="0 0 24 24">
-<path fill="currentColor" 
-d="M12 22c-4.714 0-7.071 0-8.536-1.465C2 19.072 2 16.714 2 12s0-7.071 1.464-8.536C4.93 2 7.286 2 12 2s7.071 0 8.535 1.464C22 4.93 22 7.286 22 12s0 7.071-1.465 8.535C19.072 22 16.714 22 12 22"
-</path>
-<path fill="currentColor" 
-d="M18.75 8a.75.75 0 0 1-.75.75H6a.75.75 0 0 1 0-1.5h12a.75.75 0 0 1 .75.75m0 4a.75.75 0 0 1-.75.75H6a.75.75 0 0 1 0-1.5h12a.75.75 0 0 1 .75.75m0 4a.75.75 0 0 1-.75.75H6a.75.75 0 0 1 0-1.5h12a.75.75 0 0 1 .75.75"
-</path>
+<svg
+	height="32"
+	viewBox="0 0 32 32"
+	width="32"
+	xmlns="http://www.w3.org/2000/svg"
+>
+	<title>Menu Bão</title>
+	<defs>
+		<linearGradient id="brand" x1="3" x2="29" y1="3" y2="29">
+			<stop offset="0" stop-color="#6366f1" />
+			<stop offset="1" stop-color="#a855f7" />
+		</linearGradient>
+	</defs>
+	<rect fill="url(#brand)" height="28" rx="8" width="28" x="2" y="2" />
+	<path
+		d="M9 11h14M9 16h14M9 21h14"
+		fill="none"
+		stroke="#f8fafc"
+		stroke-linecap="round"
+		stroke-width="2.5"
+	/>
 </svg>

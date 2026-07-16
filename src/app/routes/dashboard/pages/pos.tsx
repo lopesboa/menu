@@ -5,6 +5,7 @@ import {
 	Grid,
 	List,
 	Minus,
+	Package,
 	Plus,
 	Search,
 	ShoppingCart,
@@ -18,33 +19,23 @@ import { toast } from "sonner"
 import { Modal } from "@/components/ui/modal"
 import { useCategories } from "@/domains/categories/hooks/use-categories"
 import { useProducts } from "@/domains/menu/hooks/use-products"
-import { usePosOrderCheckout } from "@/domains/orders/hooks/use-pos-order-checkout"
+import { usePosOrderActions } from "@/domains/pos/hooks/use-pos-order-actions"
 import { useCartStore } from "@/domains/pos/store/cart-store"
+import type { CartItem } from "@/domains/pos/types/cart-types"
+import type { PosPaymentMethod } from "@/domains/pos/types/pos-order-types"
 import { useRestaurantStore } from "@/domains/restaurant/store/restaurant-store"
 import { useOrganizationCheck } from "@/hooks/use-organization-check"
 import { sentryCaptureException } from "@/lib/sentry"
-import type { PaymentMethod } from "@/shared/types/commerce-types"
 import { formatCurrency } from "@/utils/helpers"
 import { cn } from "@/utils/misc"
 
-interface LastOrderItem {
-	menuItem: {
-		id: string
-		name: string
-		price: string | number
-		image: string
-	}
-	quantity: number
-	notes?: string
-}
-
 interface LastOrder {
 	id: string
-	items: LastOrderItem[]
+	items: CartItem[]
 	subtotal: number
 	tax: number
 	total: number
-	paymentMethod: PaymentMethod
+	paymentMethod: PosPaymentMethod
 	createdAt: Date
 	syncMode: "api" | "fallback"
 }
@@ -98,17 +89,16 @@ function useQueryErrorNotification({
 export default function POSPage() {
 	const {
 		items,
-		customerId,
 		tableId,
 		notes,
 		type,
-		addItem,
+		addProductItem,
 		removeItem,
 		updateQuantity,
 		clearCart,
 		setType,
-		getSubtotal,
-		getTotal,
+		getPreviewSubtotal,
+		getPreviewTotal,
 	} = useCartStore()
 	const { activeRestaurant } = useRestaurantStore()
 	const { organizationId } = useOrganizationCheck()
@@ -117,7 +107,7 @@ export default function POSPage() {
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
 	const [showPayment, setShowPayment] = useState(false)
 	const [showReceipt, setShowReceipt] = useState(false)
-	const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pix")
+	const [paymentMethod, setPaymentMethod] = useState<PosPaymentMethod>("pix")
 	const [splitCount, setSplitCountLocal] = useState(1)
 	const [lastOrder, setLastOrder] = useState<LastOrder | null>(null)
 	const [lastSyncMode, setLastSyncMode] = useState<"api" | "fallback" | null>(
@@ -125,8 +115,16 @@ export default function POSPage() {
 	)
 	const selectedCategoryFilterId =
 		selectedCategoryId === "all" ? null : selectedCategoryId
-	const { checkoutOrder, isCheckoutPending } =
-		usePosOrderCheckout(organizationId)
+	const {
+		createDraft,
+		finalize,
+		checkout,
+		activate,
+		isCreating,
+		isFinalizing,
+		isCheckingOut,
+		isActivating,
+	} = usePosOrderActions(organizationId)
 
 	const {
 		data: menuItems = [],
@@ -209,30 +207,58 @@ export default function POSPage() {
 		}
 
 		try {
-			const checkoutResult = await checkoutOrder({
-				items,
-				type,
-				tableId,
-				customerId,
-				notes,
-				paymentMethod,
-				taxRate,
-				splitCount,
+			const orderItems = items.map((item) => {
+				if (item.kind === "combo") {
+					return {
+						comboOfferId: item.comboOfferId,
+						quantity: item.quantity,
+						notes: item.notes,
+					}
+				}
+
+				return {
+					productId: item.productId,
+					quantity: item.quantity,
+					notes: item.notes,
+					optionalItemIds: item.optionalItemIds,
+				}
 			})
 
+			const result = await createDraft({
+				orderType: type,
+				tableId: tableId || undefined,
+				notes: notes || undefined,
+				orderItems,
+			})
+
+			if (!result) {
+				return
+			}
+
+			const orderId = result.order.id
+
+			// Encerra comercialmente e autoriza o pagamento
+			await finalize(orderId)
+			await checkout(orderId, paymentMethod)
+
+			// Para delivery/retirada criados via POS, ativamos a operação imediatamente
+			if (type !== "dine_in") {
+				await activate(orderId)
+			}
+
 			const order: LastOrder = {
-				id: checkoutResult.orderId,
+				id: result.order.id,
 				items,
-				subtotal: getSubtotal(),
-				tax: getTotal(taxRate) - getSubtotal(),
-				total: getTotal(taxRate),
+				subtotal: getPreviewSubtotal(),
+				tax: getPreviewTotal(taxRate) - getPreviewSubtotal(),
+				total: result.order.total,
 				paymentMethod,
-				createdAt: checkoutResult.createdAt,
-				syncMode: checkoutResult.syncMode,
+				createdAt: new Date(),
+				syncMode: "api",
 			}
 
 			setLastOrder(order)
-			setLastSyncMode(checkoutResult.syncMode)
+			setLastSyncMode("api")
 			clearCart()
 			setShowPayment(false)
 			setShowReceipt(true)
@@ -413,7 +439,7 @@ export default function POSPage() {
 								)}
 								initial={{ opacity: 0, scale: 0.9 }}
 								key={item.id}
-								onClick={() => addItem(item)}
+								onClick={() => addProductItem(item)}
 								transition={{ delay: index * 0.02 }}
 							>
 								{viewMode === "grid" ? (
@@ -490,69 +516,80 @@ export default function POSPage() {
 
 				<div className="flex-1 space-y-3 overflow-y-auto p-4">
 					<AnimatePresence>
-						{items.map((item) => (
-							<motion.div
-								animate={{ opacity: 1, x: 0 }}
-								className="flex items-center gap-3 rounded-xl bg-surface-50 p-3"
-								exit={{ opacity: 0, x: -20 }}
-								initial={{ opacity: 0, x: 20 }}
-								key={item.menuItem.id}
-							>
-								<div className="h-12 w-12 overflow-hidden rounded-lg bg-surface-200">
-									{item.menuItem.image ? (
-										<img
-											alt={item.menuItem.name}
-											className="h-full w-full object-cover"
-											height={48}
-											src={item.menuItem.image}
-											width={48}
-										/>
-									) : (
-										<div className="flex h-full items-center justify-center text-[10px] text-surface-500">
-											Sem imagem
-										</div>
-									)}
-								</div>
-								<div className="min-w-0 flex-1">
-									<p className="truncate font-medium text-surface-900">
-										{item.menuItem.name}
-									</p>
-									<p className="text-sm text-surface-500">
-										{formatCurrency(+item.menuItem.price)}
-									</p>
-								</div>
-								<div className="flex items-center gap-2">
-									<button
-										className="rounded-lg p-1 hover:bg-surface-200"
-										onClick={() =>
-											updateQuantity(item.menuItem.id, item.quantity - 1)
-										}
-										type="button"
-									>
-										<Minus className="h-4 w-4" />
-									</button>
-									<span className="w-8 text-center font-medium">
-										{item.quantity}
-									</span>
-									<button
-										className="rounded-lg p-1 hover:bg-surface-200"
-										onClick={() =>
-											updateQuantity(item.menuItem.id, item.quantity + 1)
-										}
-										type="button"
-									>
-										<Plus className="h-4 w-4" />
-									</button>
-								</div>
-								<button
-									className="rounded-lg p-2 text-red-600 hover:bg-red-100"
-									onClick={() => removeItem(item.menuItem.id)}
-									type="button"
+						{items.map((item) => {
+							const itemKey =
+								item.kind === "product"
+									? `product:${item.productId}`
+									: `combo:${item.comboOfferId}`
+							const itemName =
+								item.kind === "product" ? item.menuItem.name : item.comboName
+							const itemPrice =
+								item.kind === "product" ? +item.menuItem.price : item.comboPrice
+
+							return (
+								<motion.div
+									animate={{ opacity: 1, x: 0 }}
+									className="flex items-center gap-3 rounded-xl bg-surface-50 p-3"
+									exit={{ opacity: 0, x: -20 }}
+									initial={{ opacity: 0, x: 20 }}
+									key={itemKey}
 								>
-									<Trash2 className="h-4 w-4" />
-								</button>
-							</motion.div>
-						))}
+									<div className="h-12 w-12 overflow-hidden rounded-lg bg-surface-200">
+										{item.kind === "product" && item.menuItem.image ? (
+											<img
+												alt={itemName}
+												className="h-full w-full object-cover"
+												height={48}
+												src={item.menuItem.image}
+												width={48}
+											/>
+										) : (
+											<div className="flex h-full items-center justify-center text-[10px] text-surface-500">
+												{item.kind === "combo" ? (
+													<Package className="h-5 w-5" />
+												) : (
+													"Sem imagem"
+												)}
+											</div>
+										)}
+									</div>
+									<div className="min-w-0 flex-1">
+										<p className="truncate font-medium text-surface-900">
+											{itemName}
+										</p>
+										<p className="text-sm text-surface-500">
+											{formatCurrency(itemPrice)}
+										</p>
+									</div>
+									<div className="flex items-center gap-2">
+										<button
+											className="rounded-lg p-1 hover:bg-surface-200"
+											onClick={() => updateQuantity(itemKey, item.quantity - 1)}
+											type="button"
+										>
+											<Minus className="h-4 w-4" />
+										</button>
+										<span className="w-8 text-center font-medium">
+											{item.quantity}
+										</span>
+										<button
+											className="rounded-lg p-1 hover:bg-surface-200"
+											onClick={() => updateQuantity(itemKey, item.quantity + 1)}
+											type="button"
+										>
+											<Plus className="h-4 w-4" />
+										</button>
+									</div>
+									<button
+										className="rounded-lg p-2 text-red-600 hover:bg-red-100"
+										onClick={() => removeItem(itemKey)}
+										type="button"
+									>
+										<Trash2 className="h-4 w-4" />
+									</button>
+								</motion.div>
+							)
+						})}
 					</AnimatePresence>
 
 					{items.length === 0 && (
@@ -569,7 +606,7 @@ export default function POSPage() {
 						<div className="flex justify-between text-sm">
 							<span className="text-surface-500">Subtotal</span>
 							<span className="text-surface-900">
-								{formatCurrency(getSubtotal())}
+								{formatCurrency(getPreviewSubtotal())}
 							</span>
 						</div>
 						<div className="flex justify-between text-sm">
@@ -577,13 +614,15 @@ export default function POSPage() {
 								Taxa de serviço ({taxRate}%)
 							</span>
 							<span className="text-surface-900">
-								{formatCurrency(getTotal(taxRate) - getSubtotal())}
+								{formatCurrency(
+									getPreviewTotal(taxRate) - getPreviewSubtotal()
+								)}
 							</span>
 						</div>
 						<div className="flex justify-between border-surface-100 border-t pt-2 font-bold text-lg">
 							<span>Total</span>
 							<span className="text-primary-600">
-								{formatCurrency(getTotal(taxRate))}
+								{formatCurrency(getPreviewTotal(taxRate))}
 							</span>
 						</div>
 
@@ -629,7 +668,7 @@ export default function POSPage() {
 					<div className="rounded-xl bg-surface-50 p-6 text-center">
 						<p className="text-sm text-surface-500">Total a pagar</p>
 						<p className="font-bold text-3xl text-surface-900">
-							{formatCurrency(getTotal(taxRate))}
+							{formatCurrency(getPreviewTotal(taxRate))}
 						</p>
 					</div>
 
@@ -649,7 +688,7 @@ export default function POSPage() {
 										onClick={() => setSplitCountLocal(n)}
 										type="button"
 									>
-										{n}x {formatCurrency(getTotal(taxRate) / n)}
+										{n}x {formatCurrency(getPreviewTotal(taxRate) / n)}
 									</button>
 								))}
 							</div>
@@ -663,8 +702,7 @@ export default function POSPage() {
 						<div className="grid grid-cols-2 gap-2">
 							{[
 								{ method: "pix", icon: Smartphone, label: "PIX" },
-								{ method: "credit", icon: CreditCard, label: "Cartão Crédito" },
-								{ method: "debit", icon: CreditCard, label: "Cartão Débito" },
+								{ method: "card", icon: CreditCard, label: "Cartão" },
 								{ method: "cash", icon: DollarSign, label: "Dinheiro" },
 							].map(({ method, icon: Icon, label }) => (
 								<button
@@ -675,7 +713,7 @@ export default function POSPage() {
 											: "border-surface-200"
 									)}
 									key={method}
-									onClick={() => setPaymentMethod(method as PaymentMethod)}
+									onClick={() => setPaymentMethod(method as PosPaymentMethod)}
 									type="button"
 								>
 									<Icon className="h-5 w-5 text-surface-600" />
@@ -687,11 +725,15 @@ export default function POSPage() {
 
 					<button
 						className="btn-primary w-full py-3"
-						disabled={isCheckoutPending}
+						disabled={
+							isCreating || isFinalizing || isCheckingOut || isActivating
+						}
 						onClick={handlePayment}
 						type="button"
 					>
-						{isCheckoutPending ? "Finalizando..." : "Confirmar Pagamento"}
+						{isCreating || isFinalizing || isCheckingOut || isActivating
+							? "Processando..."
+							: "Confirmar Pagamento"}
 					</button>
 				</div>
 			</Modal>
@@ -719,19 +761,27 @@ export default function POSPage() {
 							</p>
 						</div>
 						<div className="space-y-2">
-							{lastOrder.items.map((item: LastOrderItem) => (
-								<div
-									className="flex justify-between text-sm"
-									key={item.menuItem.id}
-								>
-									<span>
-										{item.quantity}x {item.menuItem.name}
-									</span>
-									<span>
-										{formatCurrency(+item.menuItem.price * item.quantity)}
-									</span>
-								</div>
-							))}
+							{lastOrder.items.map((item) => {
+								const key =
+									item.kind === "product"
+										? `product:${item.productId}`
+										: `combo:${item.comboOfferId}`
+								const name =
+									item.kind === "product" ? item.menuItem.name : item.comboName
+								const price =
+									item.kind === "product"
+										? +item.menuItem.price
+										: item.comboPrice
+
+								return (
+									<div className="flex justify-between text-sm" key={key}>
+										<span>
+											{item.quantity}x {name}
+										</span>
+										<span>{formatCurrency(price * item.quantity)}</span>
+									</div>
+								)
+							})}
 						</div>
 						<div className="space-y-1 border-surface-100 border-t pt-2">
 							<div className="flex justify-between text-sm">
