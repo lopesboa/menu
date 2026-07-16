@@ -18,6 +18,7 @@
     "src/domains/categories/hooks/categories-query-keys.ts",
     "src/domains/categories/types/category.types.ts",
     "src/domains/menu/hooks/products-query-keys.ts",
+    "src/domains/pos/hooks/pos-query-keys.ts",
     "src/domains/menu/types/menu.types.ts",
     "src/domains/menu/types/product.types.ts",
     "src/domains/orders/hooks/orders-query-keys.ts",
