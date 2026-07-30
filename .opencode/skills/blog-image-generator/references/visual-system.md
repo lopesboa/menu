@@ -47,7 +47,8 @@ linhas no título da capa.
 - Grid preferencial: blocos de 8 px.
 - Bordas: 1 ou 2 px com contraste discreto.
 - Raios: 18 a 32 px para superfícies, menores para pills.
-- Sombras e glows devem reforçar profundidade e foco.
+- Prefira campos de cor sólidos e linhas estruturais. Não use glows ou
+  gradientes decorativos como assinatura da marca.
 - Elementos posicionados depois no JSX aparecem na frente.
 
 ## Marca

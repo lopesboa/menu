@@ -131,7 +131,7 @@ const accentColors: Record<Accent, string> = {
 }
 
 export function ImageCanvas({
-	accent = "indigo",
+	accent = "urucum",
 	children,
 	height,
 	width,
@@ -155,28 +155,25 @@ export function ImageCanvas({
 		>
 			<div
 				style={{
-					backgroundImage: `radial-gradient(circle, ${accentColor}33 0%, ${accentColor}0 68%)`,
+					backgroundColor: accentColor,
 					display: "flex",
-					height: 760,
+					height: 6,
 					position: "absolute",
-					right: -210,
-					top: -310,
-					width: 760,
+					right: 64,
+					top: 0,
+					width: 240,
 				}}
 			/>
 			<div
 				style={{
-					backgroundImage:
-						"linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-					backgroundSize: "48px 48px",
+					backgroundColor: brandColors.paper,
 					display: "flex",
-					height,
-					left: 0,
-					maskImage:
-						"linear-gradient(to bottom, rgba(0,0,0,0.75), transparent 85%)",
+					height: 1,
+					opacity: 0.16,
 					position: "absolute",
-					top: 0,
-					width,
+					right: 64,
+					top: 14,
+					width: 240,
 				}}
 			/>
 			{children}
