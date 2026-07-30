@@ -32,7 +32,7 @@ function playNotificationSound() {
 		if (Notification.permission === "granted") {
 			new Notification("Novo pedido!", {
 				body: "Há novos pedidos aguardando na cozinha",
-				icon: "/favicon.ico",
+				icon: "/favicon.svg",
 			})
 		} else if (Notification.permission !== "denied") {
 			Notification.requestPermission()
@@ -40,7 +40,7 @@ function playNotificationSound() {
 					if (permission === "granted") {
 						new Notification("Novo pedido!", {
 							body: "Há novos pedidos aguardando na cozinha",
-							icon: "/favicon.ico",
+							icon: "/favicon.svg",
 						})
 					}
 				})
