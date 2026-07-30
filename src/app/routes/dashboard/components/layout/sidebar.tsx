@@ -1,7 +1,7 @@
-import { Icon } from "@iconify-icon/react"
 import { AnimatePresence, motion } from "framer-motion"
 import { Columns, Menu, X } from "lucide-react"
 import { useState } from "react"
+import { MenuBaoMark, MenuBaoWordmark } from "@/components/brand/menu-bao-logo"
 import { cn } from "@/utils/misc"
 import { DashboardNavbar } from "./navbar"
 
@@ -54,14 +54,11 @@ export function Sidebar() {
 									exit={{ opacity: 0 }}
 									initial={{ opacity: 0 }}
 								>
-									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
-										<Icon
-											className="h-5 w-5 text-white"
-											icon="solar:shop-bold-duotone"
-										/>
+									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-petroleum shadow-brand-petroleum/25 shadow-lg">
+										<MenuBaoMark className="size-6 text-brand-paper" />
 									</div>
 									<div>
-										<h1 className="font-bold text-surface-900">MenuBao</h1>
+										<MenuBaoWordmark className="text-base text-surface-900" />
 										<p className="text-surface-500 text-xs">Restaurante</p>
 									</div>
 								</motion.div>

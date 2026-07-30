@@ -342,7 +342,7 @@ export default function DashboardHome() {
 				transition={{ duration: 0.5 }}
 			>
 				<h1 className="font-bold text-2xl text-surface-900">Dashboard</h1>
-				<p className="mt-1 text-surface-500">Bem-vindo ao MenuBao Restaurant</p>
+				<p className="mt-1 text-surface-500">Bem-vindo ao Menu Bão</p>
 			</motion.div>
 
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">

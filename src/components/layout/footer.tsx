@@ -1,18 +1,16 @@
 import { Icon } from "@iconify-icon/react"
 import { Link } from "react-router"
+import { MenuBaoLogo } from "@/components/brand/menu-bao-logo"
 
 export function Footer() {
 	return (
 		<footer className="border-white/5 border-t bg-black py-12">
 			<div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 md:flex-row">
-				<div className="flex items-center gap-2">
-					<div className="flex h-5 w-5 items-center justify-center rounded bg-linear-to-tr from-indigo-500 to-purple-500 text-white">
-						<Icon icon="solar:hamburger-menu-bold-duotone" width="12" />
-					</div>
-					<span className="font-medium text-slate-200 text-sm tracking-tight">
-						Menu Bão
-					</span>
-				</div>
+				<MenuBaoLogo
+					className="text-slate-200"
+					markClassName="size-5 text-brand-paper"
+					markTilClassName="text-brand-urucum"
+				/>
 				<div className="text-slate-500 text-xs">
 					© 2024 Menu Bão Ltda. Todos os direitos reservados.
 				</div>

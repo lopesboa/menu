@@ -2,8 +2,8 @@
 
 ## Direção
 
-A linguagem é editorial, técnica e operacional. Ela combina o fundo escuro da
-landing page com superfícies bem delimitadas, tipografia clara e acentos usados
+A linguagem é editorial, humana e operacional. Ela combina a segurança do
+petróleo com superfícies inspiradas em papel, tipografia clara e acentos usados
 para explicar hierarquia ou estado.
 
 As imagens devem parecer diagramas editoriais bem projetados, não screenshots
@@ -13,25 +13,25 @@ genéricos nem anúncios promocionais.
 
 | Papel | Cor |
 | --- | --- |
-| Fundo principal | `#030712` |
-| Fundo profundo | `#050505` |
-| Superfície | `#0f111a` |
-| Superfície elevada | `#18181b` |
-| Borda | `#27272a` |
-| Texto principal | `#f8fafc` |
-| Texto secundário | `#a1a1aa` |
-| Indigo | `#6366f1` |
-| Roxo | `#a855f7` |
+| Fundo principal | `#0d2f2e` |
+| Fundo profundo | `#0a2423` |
+| Superfície | `#123b3a` |
+| Superfície elevada | `#194745` |
+| Borda | `#2a5552` |
+| Texto principal / papel | `#fff7e8` |
+| Texto secundário | `#c8c0b4` |
+| Urucum | `#f05a3c` |
 | Verde | `#22c55e` |
 | Âmbar | `#f59e0b` |
 | Azul | `#38bdf8` |
 
-Use indigo e roxo para identidade. Verde, âmbar e azul devem comunicar estados,
-canais ou categorias, não decorar aleatoriamente.
+Use petróleo, papel e urucum para identidade. Verde, âmbar e azul devem
+comunicar estados, canais ou categorias, não decorar aleatoriamente.
 
 ## Tipografia
 
-- Família: Inter.
+- Títulos e corpo: Inter.
+- Assinatura da marca: Bricolage Grotesque.
 - Pesos disponíveis: 400, 600 e 700.
 - Títulos de capa: 64 a 82 px.
 - Títulos inline: 42 a 58 px.

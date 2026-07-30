@@ -1,4 +1,10 @@
-import { brandColors, ImageCanvas, Surface } from "../brand"
+import {
+	BrandMark,
+	BrandWordmark,
+	brandColors,
+	ImageCanvas,
+	Surface,
+} from "../brand"
 import { defineBlogImages } from "../types"
 
 const definition = defineBlogImages({
@@ -20,21 +26,35 @@ const definition = defineBlogImages({
 			alt: "Fluxo do Menu Bão organizando os canais de salão, delivery e balcão durante o horário de pico.",
 			element: (
 				<SocialCard
-					height={628}
+					height={630}
 					summary="Centralize os canais, reduza erros e dê à equipe a informação certa antes de virar problema."
 					title="Controle o horário de pico sem perder o fluxo"
 				/>
 			),
-			height: 628,
+			height: 630,
 			name: "twitter-image",
 			width: 1200,
 		},
 		{
-			alt: "Ícone do Menu Bão com três linhas brancas sobre um quadrado em gradiente roxo.",
+			alt: "Símbolo ã do Menu Bão em papel sobre fundo petróleo.",
 			element: <AppleTouchIcon />,
 			height: 180,
 			name: "apple-touch-icon",
 			width: 180,
+		},
+		{
+			alt: "Símbolo do Menu Bão construído a partir do ã do nome da marca.",
+			element: <BrandSymbolAsset />,
+			height: 512,
+			name: "brand-symbol",
+			width: 512,
+		},
+		{
+			alt: "Assinatura Menu Bão com símbolo ã e wordmark personalizado.",
+			element: <BrandLockupAsset />,
+			height: 180,
+			name: "brand-lockup",
+			width: 640,
 		},
 	],
 	outputDirectory: "assets",
@@ -53,7 +73,7 @@ function SocialCard({
 	title: string
 }) {
 	return (
-		<ImageCanvas height={height} width={1200}>
+		<ImageCanvas accent="urucum" height={height} width={1200}>
 			<div
 				style={{
 					display: "flex",
@@ -65,6 +85,7 @@ function SocialCard({
 					width: 1200,
 				}}
 			>
+				<BrandSignature />
 				<div
 					style={{
 						alignItems: "center",
@@ -111,6 +132,28 @@ function SocialCard({
 	)
 }
 
+function BrandSignature() {
+	return (
+		<div
+			style={{
+				alignItems: "center",
+				display: "flex",
+				gap: 12,
+				left: 64,
+				position: "absolute",
+				top: 48,
+			}}
+		>
+			<BrandMark
+				bodyColor={brandColors.paper}
+				size={34}
+				tilColor={brandColors.urucum}
+			/>
+			<BrandWordmark color={brandColors.paper} fontSize={22} />
+		</div>
+	)
+}
+
 function OperationFlow() {
 	return (
 		<Surface
@@ -132,15 +175,15 @@ function OperationFlow() {
 				}}
 			>
 				<Channel color={brandColors.sky} label="Salão" />
-				<Channel color={brandColors.purple} label="Delivery" />
+				<Channel color={brandColors.urucum} label="Delivery" />
 				<Channel color={brandColors.amber} label="Balcão" />
 			</div>
 			<FlowArrow />
 			<div
 				style={{
 					alignItems: "center",
-					backgroundImage: `linear-gradient(135deg, ${brandColors.indigo}33, ${brandColors.purple}22)`,
-					border: `1px solid ${brandColors.indigo}77`,
+					backgroundImage: `linear-gradient(135deg, ${brandColors.urucum}33, ${brandColors.amber}18)`,
+					border: `1px solid ${brandColors.urucum}77`,
 					borderRadius: 18,
 					display: "flex",
 					flexDirection: "column",
@@ -240,45 +283,54 @@ function AppleTouchIcon() {
 		<div
 			style={{
 				alignItems: "center",
-				backgroundColor: brandColors.background,
+				backgroundColor: brandColors.petroleum,
 				display: "flex",
 				height: 180,
 				justifyContent: "center",
 				width: 180,
 			}}
 		>
-			<div
-				style={{
-					alignItems: "center",
-					backgroundImage: `linear-gradient(135deg, ${brandColors.indigo}, ${brandColors.purple})`,
-					borderRadius: 36,
-					boxShadow: `0 18px 50px ${brandColors.indigo}55`,
-					display: "flex",
-					flexDirection: "column",
-					gap: 12,
-					height: 124,
-					justifyContent: "center",
-					width: 124,
-				}}
-			>
-				<IconLine />
-				<IconLine />
-				<IconLine />
-			</div>
+			<BrandMark color={brandColors.paper} size={132} />
 		</div>
 	)
 }
 
-function IconLine() {
+function BrandSymbolAsset() {
 	return (
 		<div
 			style={{
-				backgroundColor: brandColors.text,
-				borderRadius: 999,
+				alignItems: "center",
+				backgroundColor: brandColors.petroleum,
 				display: "flex",
-				height: 8,
-				width: 64,
+				height: 512,
+				justifyContent: "center",
+				width: 512,
 			}}
-		/>
+		>
+			<BrandMark color={brandColors.paper} size={380} />
+		</div>
+	)
+}
+
+function BrandLockupAsset() {
+	return (
+		<div
+			style={{
+				alignItems: "center",
+				backgroundColor: "transparent",
+				display: "flex",
+				gap: 28,
+				height: 180,
+				justifyContent: "center",
+				width: 640,
+			}}
+		>
+			<BrandMark
+				bodyColor={brandColors.petroleum}
+				size={92}
+				tilColor={brandColors.urucum}
+			/>
+			<BrandWordmark color={brandColors.petroleum} fontSize={54} />
+		</div>
 	)
 }
