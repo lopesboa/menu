@@ -1,6 +1,6 @@
-import { Icon } from "@iconify-icon/react"
 import { Link, useLocation } from "react-router"
 import { authRoutePaths } from "@/app/routes/auth/manifest"
+import { MenuBaoLogo } from "@/components/brand/menu-bao-logo"
 import { usePostHogEvent } from "@/hooks/use-posthog"
 import { AnalyticsEvents } from "@/lib/analytics/events"
 import {
@@ -36,12 +36,11 @@ export function Navbar() {
 						className="group flex items-center gap-2"
 						to="/"
 					>
-						<div className="flex h-6 w-6 items-center justify-center rounded bg-linear-to-tr from-indigo-500 to-purple-500 text-white">
-							<Icon icon="solar:hamburger-menu-bold-duotone" width="14" />
-						</div>
-						<span className="font-medium text-slate-200 text-sm tracking-tight transition-colors group-hover:text-white">
-							Menu Bão
-						</span>
+						<MenuBaoLogo
+							className="text-slate-200 transition-colors group-hover:text-white"
+							markClassName="text-brand-paper"
+							markTilClassName="text-brand-urucum"
+						/>
 					</Link>
 				</header>
 				<div className="hidden items-center gap-6 font-medium text-slate-400 text-xs md:flex">

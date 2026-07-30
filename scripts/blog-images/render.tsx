@@ -38,11 +38,15 @@ async function main() {
 	const definition = await loadDefinition(path.resolve(sourceArgument))
 	validateDefinition(definition)
 
-	const [regular, semibold, bold] = await Promise.all([
-		readFile(path.join(FONT_DIRECTORY, "Inter-Regular.ttf")),
-		readFile(path.join(FONT_DIRECTORY, "Inter-SemiBold.ttf")),
-		readFile(path.join(FONT_DIRECTORY, "Inter-Bold.ttf")),
-	])
+	const [regular, semibold, bold, brandSemibold, brandBold] = await Promise.all(
+		[
+			readFile(path.join(FONT_DIRECTORY, "Inter-Regular.ttf")),
+			readFile(path.join(FONT_DIRECTORY, "Inter-SemiBold.ttf")),
+			readFile(path.join(FONT_DIRECTORY, "Inter-Bold.ttf")),
+			readFile(path.join(FONT_DIRECTORY, "BricolageGrotesque-SemiBold.ttf")),
+			readFile(path.join(FONT_DIRECTORY, "BricolageGrotesque-Bold.ttf")),
+		]
+	)
 	const outputDirectory = definition.outputDirectory
 		? path.join(PUBLIC_ROOT, definition.outputDirectory)
 		: path.join(OUTPUT_ROOT, definition.slug)
@@ -59,6 +63,18 @@ async function main() {
 				{ data: regular, name: "Inter", style: "normal", weight: 400 },
 				{ data: semibold, name: "Inter", style: "normal", weight: 600 },
 				{ data: bold, name: "Inter", style: "normal", weight: 700 },
+				{
+					data: brandSemibold,
+					name: "Bricolage Grotesque",
+					style: "normal",
+					weight: 600,
+				},
+				{
+					data: brandBold,
+					name: "Bricolage Grotesque",
+					style: "normal",
+					weight: 700,
+				},
 			],
 			height: image.height,
 			width: image.width,

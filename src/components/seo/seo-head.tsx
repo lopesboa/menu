@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { buildAbsoluteUrl } from "@/lib/site-url"
 
 const defaultOgImagePath = "/assets/og-image.png"
+const defaultTwitterImagePath = "/assets/twitter-image.png"
 const defaultOgImageAlt =
 	"Salão, delivery e balcão conectados em um único fluxo operacional do Menu Bão."
 const ABSOLUTE_URL_REGEX = /^(https?:)?\/\//i
@@ -33,6 +34,9 @@ export function SEOHead({
 			: `/${canonicalPath}`
 		const canonicalUrl = buildAbsoluteUrl(normalizedPath)
 		const resolvedOgImage = resolveMetaImageUrl(ogImage)
+		const resolvedTwitterImage = resolveMetaImageUrl(
+			ogImage ?? defaultTwitterImagePath
+		)
 
 		document.title = title
 		upsertMetaTag({ name: "description", content: description })
@@ -60,7 +64,7 @@ export function SEOHead({
 		upsertMetaTag({ name: "twitter:url", content: canonicalUrl })
 		upsertMetaTag({ name: "twitter:title", content: title })
 		upsertMetaTag({ name: "twitter:description", content: description })
-		upsertMetaTag({ name: "twitter:image", content: resolvedOgImage })
+		upsertMetaTag({ name: "twitter:image", content: resolvedTwitterImage })
 		upsertMetaTag({ name: "twitter:image:alt", content: ogImageAlt })
 
 		if (structuredData) {

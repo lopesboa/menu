@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import {
 	Bell,
-	Building2,
 	ChevronDown,
 	CreditCard,
 	Crown,
@@ -16,6 +15,7 @@ import {
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { authRoutePaths } from "@/app/routes/auth/manifest"
+import { MenuBaoMark, MenuBaoWordmark } from "@/components/brand/menu-bao-logo"
 import {
 	useAuthActions,
 	useAuthSelectors,
@@ -320,12 +320,12 @@ export function TopBar({ healthState, onRefreshDomain }: TopBarProps) {
 						>
 							<div className="flex items-center justify-between border-surface-100 border-b p-4">
 								<div className="flex items-center gap-3">
-									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 shadow-lg shadow-primary-500/25">
-										<Building2 className="h-5 w-5 text-white" />
+									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-petroleum shadow-brand-petroleum/25 shadow-lg">
+										<MenuBaoMark className="size-6 text-brand-paper" />
 									</div>
 									<div>
-										<h1 className="font-bold text-surface-900">MenuBao</h1>
-										<p className="text-surface-500 text-xs">Restaurant</p>
+										<MenuBaoWordmark className="text-base text-surface-900" />
+										<p className="text-surface-500 text-xs">Restaurante</p>
 									</div>
 								</div>
 								<button

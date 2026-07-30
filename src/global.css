@@ -1,6 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 @import "tailwindcss";
 
+@font-face {
+	font-display: swap;
+	font-family: "Bricolage Grotesque";
+	font-style: normal;
+	font-weight: 600;
+	src: url("../scripts/blog-images/fonts/BricolageGrotesque-SemiBold.ttf")
+		format("truetype");
+}
+
+@font-face {
+	font-display: swap;
+	font-family: "Bricolage Grotesque";
+	font-style: normal;
+	font-weight: 700;
+	src: url("../scripts/blog-images/fonts/BricolageGrotesque-Bold.ttf")
+		format("truetype");
+}
+
 body {
 	font-family: "Inter", sans-serif;
 	background-color: #030712;
@@ -10,6 +28,10 @@ body {
 
 @theme {
 	--font-sans: "Inter", sans-serif;
+	--font-brand: "Bricolage Grotesque", "Inter", sans-serif;
+	--color-brand-paper: #fff7e8;
+	--color-brand-petroleum: #123b3a;
+	--color-brand-urucum: #f05a3c;
 
 	--color-background: #050505;
 	--color-surface: #0a0a0a;

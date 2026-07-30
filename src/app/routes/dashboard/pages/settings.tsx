@@ -159,7 +159,7 @@ export default function SettingsPage() {
 									</label>
 									<input
 										className="input-field"
-										defaultValue="MenuBao Restaurant"
+										defaultValue="Menu Bão Restaurante"
 										id="restaurant-name"
 										type="text"
 									/>

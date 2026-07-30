@@ -1,4 +1,5 @@
 import { Icon } from "@iconify-icon/react"
+import { MenuBaoMark, MenuBaoWordmark } from "@/components/brand/menu-bao-logo"
 
 export function IntegrationSection() {
 	return (
@@ -21,16 +22,10 @@ export function IntegrationSection() {
 				</div>
 
 				<div className="relative mx-auto flex h-100 max-w-3xl items-center justify-center">
-					<div className="relative z-20 h-24 w-24 rounded-2xl bg-linear-to-tr from-indigo-600 to-purple-600 p-px shadow-[0_0_50px_rgba(79,70,229,0.3)]">
+					<div className="relative z-20 h-24 w-24 rounded-2xl bg-brand-urucum p-px shadow-[0_0_50px_rgba(240,90,60,0.2)]">
 						<div className="flex h-full w-full flex-col items-center justify-center gap-1 rounded-2xl bg-[#0a0a0a]">
-							<Icon
-								className="text-white"
-								icon="solar:hamburger-menu-bold-duotone"
-								width="32"
-							/>
-							<span className="font-bold text-[10px] text-white tracking-wide">
-								BÃO
-							</span>
+							<MenuBaoMark className="size-9 text-brand-paper" />
+							<MenuBaoWordmark className="text-[10px] text-brand-paper" />
 						</div>
 						<div className="hub-pulse h-32 w-32" />
 						<div className="hub-pulse h-48 w-48 delay-300" />
