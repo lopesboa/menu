@@ -10,6 +10,8 @@ import { seoRouteSegments } from "./seo/manifest"
 
 const HomeLayout = lazy(() => import("../../components/layout/layout"))
 const HomeContent = lazy(() => import("./home"))
+const PrivacyPolicy = lazy(() => import("./privacy-policy"))
+const AccountDeletionRequest = lazy(() => import("./account-deletion-request"))
 const AcquisitionPage = lazy(() => import("./seo/acquisition-page"))
 const AuthLayout = lazy(() => import("./auth"))
 const Login = lazy(() => import("./auth/login"))
@@ -86,6 +88,14 @@ export const router = createBrowserRouter([
 			{
 				index: true,
 				Component: HomeContent,
+			},
+			{
+				path: "privacidade",
+				Component: PrivacyPolicy,
+			},
+			{
+				path: "exclusao-de-conta",
+				Component: AccountDeletionRequest,
 			},
 			{
 				path: `${seoRouteSegments.solutions}/:landingSlug`,
